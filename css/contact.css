@@ -1,0 +1,998 @@
+/* ================================================================
+   VENTUS INSURANCE AGENCY — Contact Page Stylesheet
+   File: css/contact.css
+   Inherits design tokens from css/index.css
+================================================================ */
+
+/* ----------------------------------------------------------------
+   TABLE OF CONTENTS
+   1.  Contact Page Hero
+   2.  Contact Main Section & Layout
+   3.  Contact Info Panel  (left column)
+   4.  Quick Links Panel
+   5.  Contact Form Card   (right column)
+   6.  Form Fields & Validation
+   7.  SMS Consent Checkbox
+   8.  Form Status Messages
+   9.  Map Section
+   10. Trust Strip
+   11. Floating Buttons
+   12. Responsive — Tablet  (≤ 1024px)
+   13. Responsive — Mobile  (≤ 768px)
+   14. Responsive — Small   (≤ 480px)
+---------------------------------------------------------------- */
+
+
+/* ================================================================
+   1. CONTACT PAGE HERO
+================================================================ */
+.contact-hero {
+  position: relative;
+  min-height: 550px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: var(--color-navy-darkest);
+  padding-block: var(--space-20) var(--space-14);
+}
+
+.contact-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 80% at 0% 55%,  rgba(30,56,104,0.60) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 55% at 100% 15%, rgba(0,97,158,0.25) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 60% 95%,  rgba(197,171,98,0.08) 0%, transparent 70%),
+    linear-gradient(150deg, #070e1f 0%, #122147 45%, #1c3264 100%);
+}
+
+.contact-hero__img-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 56px 56px;
+  pointer-events: none;
+}
+
+.contact-hero__content {
+  position: relative;
+  z-index: 2;
+  max-width: 680px;
+}
+
+/* Breadcrumb */
+.contact-breadcrumb         { margin-bottom: var(--space-6); }
+.contact-breadcrumb ol      { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.contact-breadcrumb li      { display: flex; align-items: center; gap: var(--space-2); }
+.contact-breadcrumb a {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: var(--font-secondary); font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold); color: rgba(255,255,255,0.55);
+  letter-spacing: 0.05em; text-transform: uppercase;
+  transition: color var(--transition-fast);
+}
+.contact-breadcrumb a:hover                { color: var(--color-gold-light); }
+.contact-breadcrumb i.ri-arrow-right-s-line { color: rgba(255,255,255,0.25); font-size: var(--fs-md); }
+.contact-breadcrumb span[aria-current] {
+  font-family: var(--font-secondary); font-size: var(--fs-xs);
+  font-weight: var(--fw-bold); color: var(--color-gold);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.contact-hero__title {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  font-weight: var(--fw-black);
+  color: var(--color-white);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.contact-hero__title--accent {
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.contact-hero__desc {
+  font-size: clamp(var(--fs-base), 2vw, var(--fs-lg));
+  color: rgba(255,255,255,0.70);
+  line-height: var(--lh-loose);
+  max-width: 560px;
+  margin-bottom: var(--space-9);
+}
+
+/* Hero pills */
+.contact-hero__pills {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.contact-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-secondary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: rgba(255,255,255,0.80);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  backdrop-filter: blur(6px);
+  transition:
+    color var(--transition-normal),
+    background var(--transition-normal),
+    border-color var(--transition-normal),
+    transform var(--transition-bounce);
+}
+
+.contact-pill i { color: var(--color-gold); font-size: var(--fs-md); flex-shrink: 0; }
+
+.contact-pill:hover {
+  color: var(--color-white);
+  background: rgba(197,171,98,0.18);
+  border-color: rgba(197,171,98,0.45);
+  transform: translateY(-2px);
+}
+
+.contact-pill--hours          { cursor: default; }
+.contact-pill--hours:hover    { transform: none; background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.13); }
+
+
+/* ================================================================
+   2. CONTACT MAIN SECTION & LAYOUT
+================================================================ */
+.contact-main {
+  background: var(--color-bg-alt);
+  /* Generous vertical padding so nothing feels cramped */
+  padding-block: var(--space-16) var(--space-20);
+}
+
+/* Override section default padding since we set it explicitly above */
+.contact-main.section { padding-block: var(--space-16) var(--space-20); }
+
+/* Two-column: left info (fixed 400px) | right form (flexible) */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 400px 1fr;
+  gap: 2.5rem;
+  align-items: start;
+}
+
+
+/* ================================================================
+   3. CONTACT INFO PANEL  (left column)
+================================================================ */
+.contact-info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: calc(var(--nav-total) + 1.5rem);
+}
+
+/* ── Info Card ── */
+.cinfo-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(18,33,71,0.07);
+}
+
+/* Gold accent bar at top */
+.cinfo-card::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: var(--gradient-gold);
+}
+
+/* Card header */
+.cinfo-card__title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.cinfo-card__title i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  background: var(--gradient-navy);
+  color: var(--color-white);
+  border-radius: 12px;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.cinfo-card__title span {
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-navy-darkest);
+  line-height: 1.2;
+}
+
+/* Info list */
+.cinfo-list {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+
+.cinfo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px 28px;
+  border-bottom: 1px solid rgba(18,33,71,0.06);
+  transition: background var(--transition-fast);
+}
+
+.cinfo-item:last-child { border-bottom: none; }
+
+.cinfo-item:hover { background: rgba(197,171,98,0.04); }
+
+/* Icon box */
+.cinfo-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  background: linear-gradient(135deg, rgba(18,33,71,0.05), rgba(197,171,98,0.07));
+  border: 1px solid rgba(197,171,98,0.22);
+  border-radius: 10px;
+  color: var(--color-gold-dark);
+  font-size: 1.15rem;
+  margin-top: 2px;
+  transition:
+    background var(--transition-normal),
+    color var(--transition-normal),
+    transform var(--transition-bounce);
+}
+
+.cinfo-item:hover .cinfo-item__icon {
+  background: var(--gradient-navy);
+  color: var(--color-white);
+  transform: scale(1.08) rotate(-4deg);
+}
+
+/* Text */
+.cinfo-item__body {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0; /* prevent overflow */
+}
+
+.cinfo-item__body strong {
+  font-family: var(--font-secondary);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--color-navy-darkest);
+}
+
+.cinfo-item__body span,
+.cinfo-item__body a {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  line-height: 1.55;
+  word-break: break-word;
+  transition: color var(--transition-fast);
+}
+
+.cinfo-item__body a:hover { color: var(--color-navy-mid); }
+
+/* Social bar */
+.cinfo-social {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 28px;
+  background: rgba(18,33,71,0.025);
+  border-top: 1px solid var(--color-border);
+}
+
+.cinfo-social__label {
+  font-family: var(--font-secondary);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-text-light);
+}
+
+.cinfo-social__links { display: flex; gap: 8px; }
+
+.cinfo-social__link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  color: var(--color-navy-mid);
+  font-size: 1.1rem;
+  transition:
+    background var(--transition-normal),
+    color var(--transition-normal),
+    border-color var(--transition-normal),
+    transform var(--transition-bounce);
+}
+
+.cinfo-social__link:hover {
+  background: var(--gradient-navy);
+  color: var(--color-white);
+  border-color: transparent;
+  transform: translateY(-3px);
+}
+
+
+/* ================================================================
+   4. QUICK LINKS PANEL
+================================================================ */
+.cinfo-quicklinks {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 2px 16px rgba(18,33,71,0.07);
+}
+
+.cinfo-quicklinks__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-secondary);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-navy-darkest);
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 2px solid var(--color-gold);
+}
+
+.cinfo-quicklinks__title i { color: var(--color-gold-dark); font-size: 1rem; }
+
+.cinfo-quicklinks__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.cinfo-ql-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  text-decoration: none;
+  transition:
+    background var(--transition-normal),
+    border-color var(--transition-normal),
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal);
+}
+
+.cinfo-ql-btn:hover {
+  background: rgba(18,33,71,0.04);
+  border-color: rgba(18,33,71,0.16);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(18,33,71,0.08);
+}
+
+.cinfo-ql-btn i {
+  font-size: 1.2rem;
+  color: var(--color-navy-dark);
+  flex-shrink: 0;
+}
+
+.cinfo-ql-btn span {
+  font-family: var(--font-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-navy-darkest);
+  line-height: 1.3;
+}
+
+.cinfo-ql-btn--whatsapp:hover { background: rgba(37,211,102,0.07); border-color: rgba(37,211,102,0.28); }
+.cinfo-ql-btn--whatsapp i    { color: #25d366; }
+
+
+/* ================================================================
+   5. CONTACT FORM CARD  (right column)
+================================================================ */
+.contact-form-panel { min-width: 0; } /* prevent overflow in grid */
+
+.cform-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(18,33,71,0.09);
+}
+
+/* Navy accent bar */
+.cform-card::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: var(--gradient-navy);
+}
+
+/* Card header */
+.cform-card__header {
+  padding: 32px 36px 24px;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(135deg, #f8fafc 0%, #fff 60%);
+}
+
+.cform-card__title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.cform-card__title i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  min-width: 46px;
+  background: var(--gradient-gold);
+  color: var(--color-white);
+  border-radius: 12px;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.cform-card__title span {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-navy-darkest);
+  line-height: 1.2;
+}
+
+.cform-card__subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  line-height: 1.65;
+  padding-left: 60px; /* align under title text */
+}
+
+/* Form body */
+.cform {
+  padding: 32px 36px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+/* ================================================================
+   6. FORM FIELDS & VALIDATION
+================================================================ */
+
+/* Two-column row for Name + Email */
+.cform__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.cform__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Label */
+.cform__label {
+  font-family: var(--font-secondary);
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: var(--color-navy-darkest);
+}
+
+.cform__required { color: #dc2626; margin-left: 2px; }
+
+/* Input wrapper with icon */
+.cform__input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cform__input-wrap--textarea { align-items: flex-start; }
+
+.cform__input-icon {
+  position: absolute;
+  left: 16px;
+  color: rgba(100,116,139,0.55);
+  font-size: 1.15rem;
+  pointer-events: none;
+  z-index: 1;
+  transition: color var(--transition-fast);
+}
+
+.cform__input-icon--top { top: 16px; align-self: flex-start; }
+
+.cform__input-wrap:focus-within .cform__input-icon { color: var(--color-navy-mid); }
+
+/* Input base */
+.cform__input {
+  width: 100%;
+  font-family: var(--font-primary);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  background: var(--color-bg-alt);
+  border: 1.5px solid var(--color-border);
+  border-radius: 12px;
+  /* left padding leaves room for icon */
+  padding: 14px 16px 14px 48px;
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    background var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+
+.cform__input::placeholder { color: rgba(100,116,139,0.55); }
+
+.cform__input:focus {
+  border-color: var(--color-navy-mid);
+  background: var(--color-white);
+  box-shadow: 0 0 0 4px rgba(59,82,131,0.09);
+}
+
+/* Textarea */
+.cform__textarea {
+  resize: vertical;
+  min-height: 140px;
+  line-height: 1.65;
+}
+
+/* Validation states */
+.cform__input.is-valid   { border-color: #22c55e; background: rgba(34,197,94,0.03); }
+.cform__input.is-invalid { border-color: #ef4444; background: rgba(239,68,68,0.03); }
+
+/* Inline error */
+.cform__error {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  color: #dc2626;
+  padding-left: 2px;
+}
+
+.cform__error[hidden] { display: none; }
+
+.cform__error::before {
+  content: '\f041';
+  font-family: 'remixicon';
+  font-size: 0.8rem;
+}
+
+
+/* ================================================================
+   7. SMS CONSENT CHECKBOX
+================================================================ */
+.cform__consent {
+  background: rgba(18,33,71,0.025);
+  border: 1px solid rgba(18,33,71,0.09);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.cform__consent-label {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 12px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+/* Hide native input */
+.cform__consent-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Custom box */
+.cform__consent-custom {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  background: var(--color-white);
+  border: 2px solid var(--color-border);
+  border-radius: 5px;
+  margin-top: 2px;
+  transition: background var(--transition-normal), border-color var(--transition-normal);
+}
+
+.cform__consent-label:hover .cform__consent-custom { border-color: var(--color-navy-mid); }
+
+.cform__consent-checkbox:focus ~ .cform__consent-custom {
+  box-shadow: 0 0 0 3px rgba(59,82,131,0.18);
+  border-color: var(--color-navy-mid);
+}
+
+/* Checked */
+.cform__consent-checkbox:checked ~ .cform__consent-custom {
+  background: var(--gradient-navy);
+  border-color: var(--color-navy-mid);
+}
+
+/* Checkmark tick */
+.cform__consent-checkbox:checked ~ .cform__consent-custom::after {
+  content: '';
+  position: absolute;
+  width: 5px;
+  height: 9px;
+  border: 2px solid var(--color-white);
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+}
+
+/* Consent text */
+.cform__consent-text {
+  font-size: 0.75rem;
+  color: var(--color-text-light);
+  line-height: 1.70;
+}
+
+.cform__consent-text strong { color: var(--color-navy-darkest); font-weight: 700; }
+
+.cform__consent-text a {
+  color: var(--color-navy-mid);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition-fast);
+}
+
+.cform__consent-text a:hover { color: var(--color-gold-dark); }
+
+
+/* ================================================================
+   8. FORM STATUS MESSAGES
+================================================================ */
+.cform__message { display: flex; flex-direction: column; gap: 10px; }
+.cform__message[hidden] { display: none; }
+
+.cform__message-success,
+.cform__message-error,
+.cform__message-loading {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.5;
+  animation: cformMsgIn 0.35s ease;
+}
+
+@keyframes cformMsgIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cform__message-success {
+  background: rgba(34,197,94,0.09);
+  border: 1px solid rgba(34,197,94,0.28);
+  color: #166534;
+}
+.cform__message-error {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.24);
+  color: #991b1b;
+}
+.cform__message-loading {
+  background: rgba(59,82,131,0.06);
+  border: 1px solid rgba(59,82,131,0.14);
+  color: var(--color-navy-mid);
+}
+
+.cform__message-success i { color: #22c55e; font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+.cform__message-error   i { color: #ef4444; font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+.cform__message-loading i { color: var(--color-navy-mid); font-size: 1.25rem; flex-shrink: 0; }
+
+/* Submit button */
+.cform__submit {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.cform__submit:disabled   { opacity: 0.72; cursor: not-allowed; }
+.cform__submit-text[hidden]    { display: none; }
+.cform__submit-loading[hidden] { display: none; }
+
+@keyframes cformSpin { to { transform: rotate(360deg); } }
+.cform__spinner { display: inline-block; animation: cformSpin 0.8s linear infinite; }
+
+
+/* ================================================================
+   9. MAP SECTION
+================================================================ */
+.map-section       { background: var(--color-bg); }
+.map-section__header { padding-block: var(--space-14) var(--space-8); }
+.map-section__text   { max-width: 540px; }
+
+.map-section__embed {
+  overflow: hidden;
+  border-top: 4px solid var(--color-gold);
+}
+
+.map-section__embed iframe {
+  display: block;
+  width: 100%;
+  height: 460px;
+  border: none;
+  filter: saturate(0.88) contrast(1.05);
+  transition: filter var(--transition-normal);
+}
+
+.map-section__embed:hover iframe { filter: saturate(1) contrast(1); }
+
+
+/* ================================================================
+   10. TRUST STRIP
+================================================================ */
+.contact-trust         { background: var(--color-bg-alt); }
+.contact-trust__grid   {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+}
+
+.ctrust-item {
+  text-align: center;
+  padding: var(--space-8) var(--space-5);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.ctrust-item:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(197,171,98,0.35);
+}
+
+.ctrust-item__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px; height: 64px;
+  background: linear-gradient(135deg, rgba(18,33,71,0.05), rgba(197,171,98,0.06));
+  border: 1px solid rgba(197,171,98,0.20);
+  border-radius: 16px;
+  color: var(--color-gold-dark);
+  font-size: 1.75rem;
+  margin: 0 auto var(--space-5);
+  transition:
+    background var(--transition-normal),
+    color var(--transition-normal),
+    transform var(--transition-bounce);
+}
+
+.ctrust-item:hover .ctrust-item__icon {
+  background: var(--gradient-navy);
+  color: var(--color-white);
+  transform: scale(1.10) rotate(-5deg);
+}
+
+.ctrust-item h3 {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  margin-bottom: var(--space-2);
+}
+
+.ctrust-item p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: var(--lh-loose);
+}
+
+
+/* ================================================================
+   11. FLOATING BUTTONS
+================================================================ */
+.floating-buttons {
+  position: fixed;
+  bottom: 2rem;
+  right: 1.5rem;
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.float-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  color: var(--color-white);
+  font-size: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.20);
+  text-decoration: none;
+  transition: transform var(--transition-bounce), box-shadow var(--transition-normal);
+  position: relative;
+}
+
+/* Tooltip */
+.float-btn::before {
+  content: attr(aria-label);
+  position: absolute;
+  right: calc(100% + 10px);
+  white-space: nowrap;
+  font-family: var(--font-secondary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-white);
+  background: rgba(18,33,71,0.88);
+  padding: 5px 10px;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
+}
+
+.float-btn:hover::before { opacity: 1; }
+.float-btn:hover { transform: scale(1.10) translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.24); }
+
+.float-btn--payment  { background: var(--gradient-navy); }
+.float-btn--whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
+
+
+/* ================================================================
+   12. RESPONSIVE — TABLET (≤ 1024px)
+================================================================ */
+@media (max-width: 1024px) {
+
+  /* Stack the two columns vertically */
+  .contact-layout {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  /* Info panel: unstick, side-by-side cards */
+  .contact-info-panel {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  /* Trust: 2 columns */
+  .contact-trust__grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* Form: slightly less padding */
+  .cform             { padding: 28px 30px 32px; }
+  .cform-card__header { padding: 28px 30px 22px; }
+  .cform-card__subtitle { padding-left: 0; }
+}
+
+
+/* ================================================================
+   13. RESPONSIVE — MOBILE (≤ 768px)
+================================================================ */
+@media (max-width: 768px) {
+
+  /* Hero */
+  .contact-hero {
+    min-height: 340px;
+    padding-block: var(--space-12) var(--space-10);
+  }
+  .contact-hero__title { font-size: clamp(1.8rem, 7vw, 2.5rem); }
+  .contact-hero__pills { flex-direction: column; align-items: flex-start; gap: 8px; }
+
+  /* Main section padding */
+  .contact-main,
+  .contact-main.section { padding-block: var(--space-10) var(--space-14); }
+
+  /* Info panel: single column */
+  .contact-info-panel { grid-template-columns: 1fr; }
+
+  /* Reduce info card padding slightly */
+  .cinfo-item           { padding: 14px 20px; }
+  .cinfo-card__title    { padding: 22px 20px 16px; }
+  .cinfo-social         { padding: 14px 20px; }
+  .cinfo-quicklinks     { padding: 20px; }
+
+  /* Form: reduce padding */
+  .cform               { padding: 22px 20px 28px; gap: 16px; }
+  .cform-card__header  { padding: 22px 20px 18px; }
+  .cform__row          { grid-template-columns: 1fr; gap: 16px; }
+
+  /* Map */
+  .map-section__embed iframe { height: 340px; }
+
+  /* Trust: 2-column */
+  .contact-trust__grid { grid-template-columns: 1fr 1fr; }
+
+  /* Floating buttons */
+  .float-btn { width: 50px; height: 50px; font-size: 1.35rem; }
+}
+
+
+/* ================================================================
+   14. RESPONSIVE — SMALL MOBILE (≤ 480px)
+================================================================ */
+@media (max-width: 480px) {
+
+  .contact-hero__title { font-size: 1.75rem; }
+
+  /* Trust: single column */
+  .contact-trust__grid { grid-template-columns: 1fr; }
+
+  /* Quick links: still 2 cols */
+  .cinfo-quicklinks__grid { grid-template-columns: 1fr 1fr; }
+
+  /* Consent text tiny */
+  .cform__consent-text { font-size: 0.71rem; }
+
+  /* Form card no rounded corners on small screens for full bleed feel */
+  .cform-card {
+    border-radius: 16px;
+  }
+
+  .cinfo-card,
+  .cinfo-quicklinks { border-radius: 16px; }
+
+  /* Floating buttons smaller */
+  .floating-buttons { bottom: 1.25rem; right: 1rem; }
+}

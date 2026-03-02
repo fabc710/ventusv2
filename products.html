@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Explore Ventus Insurance Agency's full range of insurance products — Home, Auto, Business, Truck, and Personal Life Insurance in New York." />
+  <meta name="keywords" content="home insurance New York, auto insurance, business insurance, truck insurance, life insurance, Long Island City" />
+  <meta name="author" content="Ventus Insurance Agency" />
+
+  <meta property="og:title" content="Our Products | Ventus Insurance Agency" />
+  <meta property="og:description" content="Comprehensive insurance coverage for every stage of your life and business. Serving New York with integrity and expertise." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/images/og-products.webp" />
+
+  <title>Our Products | Ventus Insurance Agency — New York</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/products.css" />
+  <link rel="icon" type="image/png" href="assets/icons/favicon.png" />
+</head>
+<body>
+
+  <!-- ============================================================
+       HEADER / NAVIGATION
+  ============================================================ -->
+  <header class="header" id="header">
+    <div class="header__topbar">
+      <div class="container">
+        <div class="topbar__info">
+          <a href="tel:+19177228266" class="topbar__item" aria-label="Call us">
+            <i class="ri-phone-line" aria-hidden="true"></i>
+            <span>(917) 722-8266</span>
+          </a>
+          <a href="mailto:contact@ventus-insurance.com" class="topbar__item" aria-label="Email us">
+            <i class="ri-mail-line" aria-hidden="true"></i>
+            <span>contact@ventus-insurance.com</span>
+          </a>
+          <span class="topbar__item topbar__hours">
+            <i class="ri-time-line" aria-hidden="true"></i>
+            <span>Mon – Fri: 09:00 AM – 6:00 PM</span>
+          </span>
+        </div>
+        <div class="topbar__social">
+          <a href="#" aria-label="Facebook" class="social__link"><i class="ri-facebook-fill"></i></a>
+          <a href="#" aria-label="Instagram" class="social__link"><i class="ri-instagram-line"></i></a>
+          <a href="#" aria-label="LinkedIn" class="social__link"><i class="ri-linkedin-fill"></i></a>
+          <a href="#" aria-label="Twitter / X" class="social__link"><i class="ri-twitter-x-line"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+      <div class="container navbar__inner">
+        <a href="index.html" class="navbar__logo" aria-label="Ventus Insurance Agency – Home">
+          <img src="assets/images/logo-ventus.webp" alt="Ventus Insurance Agency logo" width="180" height="60" loading="eager" />
+        </a>
+
+        <ul class="navbar__menu" role="list" id="nav-menu">
+          <li><a href="index.html" class="nav__link">Home</a></li>
+          <li><a href="about.html" class="nav__link">About Us</a></li>
+          <li class="nav__dropdown" aria-haspopup="true">
+            <a href="products.html" class="nav__link nav__link--active nav__link--dropdown" aria-current="page">
+              Our Products <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
+            </a>
+            <ul class="dropdown__menu" role="list" aria-label="Products submenu">
+              <li>
+                <a href="#home-insurance" class="dropdown__item">
+                  <span class="dropdown__icon"><i class="ri-home-2-line"></i></span>
+                  <span class="dropdown__text"><strong>Home Insurance</strong><small>Protect your property</small></span>
+                </a>
+              </li>
+              <li>
+                <a href="#auto-insurance" class="dropdown__item">
+                  <span class="dropdown__icon"><i class="ri-car-line"></i></span>
+                  <span class="dropdown__text"><strong>Auto Insurance</strong><small>Drive with confidence</small></span>
+                </a>
+              </li>
+              <li>
+                <a href="#business-insurance" class="dropdown__item">
+                  <span class="dropdown__icon"><i class="ri-building-line"></i></span>
+                  <span class="dropdown__text"><strong>Business Insurance</strong><small>Safeguard your company</small></span>
+                </a>
+              </li>
+              <li>
+                <a href="#truck-insurance" class="dropdown__item">
+                  <span class="dropdown__icon"><i class="ri-truck-line"></i></span>
+                  <span class="dropdown__text"><strong>Truck Insurance</strong><small>Coverage for your fleet</small></span>
+                </a>
+              </li>
+              <li>
+                <a href="#life-insurance" class="dropdown__item">
+                  <span class="dropdown__icon"><i class="ri-heart-pulse-line"></i></span>
+                  <span class="dropdown__text"><strong>Personal Life Insurance</strong><small>Secure your family's future</small></span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li><a href="services.html" class="nav__link">Our Services</a></li>
+          <li><a href="blog.html" class="nav__link">Blog</a></li>
+          <li><a href="contact.html" class="nav__link">Contact</a></li>
+        </ul>
+
+        <a href="contact.html" class="btn btn--gold navbar__cta">Get a Free Quote</a>
+
+        <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+          <span class="hamburger__line"></span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Drawer -->
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Mobile navigation">
+      <div class="mobile-menu__overlay" id="menu-overlay"></div>
+      <div class="mobile-menu__drawer">
+        <div class="mobile-menu__header">
+          <img src="assets/images/logo-ventus-white.webp" alt="Ventus Insurance" width="150" height="50" />
+          <button class="mobile-menu__close" id="menu-close-btn" aria-label="Close menu">
+            <i class="ri-close-line"></i>
+          </button>
+        </div>
+        <nav class="mobile-nav">
+          <ul role="list">
+            <li><a href="index.html" class="mobile-nav__link">Home</a></li>
+            <li><a href="about.html" class="mobile-nav__link">About Us</a></li>
+            <li class="mobile-nav__accordion">
+              <button class="mobile-nav__accordion-btn" aria-expanded="true">
+                Our Products <i class="ri-arrow-down-s-line"></i>
+              </button>
+              <ul class="mobile-nav__sub is-open" aria-hidden="false">
+                <li><a href="#home-insurance"><i class="ri-home-2-line"></i> Home Insurance</a></li>
+                <li><a href="#auto-insurance"><i class="ri-car-line"></i> Auto Insurance</a></li>
+                <li><a href="#business-insurance"><i class="ri-building-line"></i> Business Insurance</a></li>
+                <li><a href="#truck-insurance"><i class="ri-truck-line"></i> Truck Insurance</a></li>
+                <li><a href="#life-insurance"><i class="ri-heart-pulse-line"></i> Personal Life Insurance</a></li>
+              </ul>
+            </li>
+            <li><a href="services.html" class="mobile-nav__link">Our Services</a></li>
+            <li><a href="blog.html" class="mobile-nav__link">Blog</a></li>
+            <li><a href="contact.html" class="mobile-nav__link">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="mobile-menu__footer">
+          <a href="tel:+19177228266" class="mobile-contact__item">
+            <i class="ri-phone-line"></i> (917) 722-8266
+          </a>
+          <a href="mailto:contact@ventus-insurance.com" class="mobile-contact__item">
+            <i class="ri-mail-line"></i> contact@ventus-insurance.com
+          </a>
+          <a href="contact.html" class="btn btn--gold btn--full-width">Get a Free Quote</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <main id="main-content">
+
+    <!-- ============================================================
+         PAGE HERO
+    ============================================================ -->
+    <section class="page-hero prod-hero" aria-labelledby="prod-hero-title">
+      <div class="prod-hero__bg" aria-hidden="true"></div>
+      <div class="prod-hero__grid-overlay" aria-hidden="true"></div>
+
+      <div class="container prod-hero__content">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <ol role="list">
+            <li><a href="index.html"><i class="ri-home-4-line"></i> Home</a></li>
+            <li aria-hidden="true"><i class="ri-arrow-right-s-line"></i></li>
+            <li><span aria-current="page">Our Products</span></li>
+          </ol>
+        </nav>
+
+        <div class="prod-hero__text">
+          <span class="section__tag section__tag--light" data-aos="fade-up">Complete Coverage</span>
+          <h1 class="prod-hero__title" id="prod-hero-title" data-aos="fade-up" data-aos-delay="100">
+            Insurance Built<br />
+            <span class="prod-hero__title--accent">Around Your Life</span>
+          </h1>
+          <p class="prod-hero__desc" data-aos="fade-up" data-aos-delay="200">
+            Five comprehensive insurance products designed to protect every aspect
+            of what you've worked hard to build — from your home and car to your
+            business, fleet, and family's future.
+          </p>
+        </div>
+
+        <!-- Product Quick Nav Pills -->
+        <nav class="prod-nav-pills" aria-label="Jump to product section" data-aos="fade-up" data-aos-delay="300">
+          <a href="#home-insurance" class="prod-pill prod-pill--active">
+            <i class="ri-home-2-line"></i> Home
+          </a>
+          <a href="#auto-insurance" class="prod-pill">
+            <i class="ri-car-line"></i> Auto
+          </a>
+          <a href="#business-insurance" class="prod-pill">
+            <i class="ri-building-line"></i> Business
+          </a>
+          <a href="#truck-insurance" class="prod-pill">
+            <i class="ri-truck-line"></i> Truck
+          </a>
+          <a href="#life-insurance" class="prod-pill">
+            <i class="ri-heart-pulse-line"></i> Life
+          </a>
+        </nav>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PRODUCT 1 — HOME INSURANCE
+    ============================================================ -->
+    <section class="product-detail section" id="home-insurance" aria-labelledby="home-ins-title">
+      <div class="container">
+        <div class="product-detail__grid">
+
+          <div class="product-detail__visual" data-aos="fade-right">
+            <div class="product-detail__img-wrap">
+              <img src="assets/images/products/home-insurance.webp"
+                   alt="Beautiful home exterior representing home insurance coverage"
+                   width="580" height="440" loading="lazy" />
+            </div>
+            <div class="product-detail__icon-badge">
+              <i class="ri-home-2-line"></i>
+            </div>
+          </div>
+
+          <div class="product-detail__content" data-aos="fade-left">
+            <span class="section__tag">Product 01</span>
+            <h2 class="section__title" id="home-ins-title">Home Insurance</h2>
+            <p class="product-detail__lead">
+              Your home is likely your biggest investment. Our home insurance policies
+              give you the peace of mind knowing that your property, belongings, and
+              family are fully protected — no matter what happens.
+            </p>
+
+            <!-- Coverage Tabs -->
+            <div class="coverage__tabs" role="tablist" aria-label="Home insurance coverage options">
+              <button class="coverage__tab coverage__tab--active" role="tab" aria-selected="true" aria-controls="home-standard" data-tab="home-standard">Standard</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="home-enhanced" data-tab="home-enhanced">Enhanced</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="home-premium" data-tab="home-premium">Premium</button>
+            </div>
+
+            <div class="coverage__panel is-active" id="home-standard" role="tabpanel">
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Dwelling structure protection</li>
+                <li><i class="ri-check-line"></i> Personal property coverage up to $75,000</li>
+                <li><i class="ri-check-line"></i> Liability protection up to $100,000</li>
+                <li><i class="ri-check-line"></i> Fire, smoke & water damage</li>
+                <li><i class="ri-check-line"></i> Theft & vandalism</li>
+                <li><i class="ri-check-line"></i> Additional living expenses</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="home-enhanced" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in Standard, plus:</li>
+                <li><i class="ri-check-line"></i> Personal property coverage up to $150,000</li>
+                <li><i class="ri-check-line"></i> Liability protection up to $300,000</li>
+                <li><i class="ri-check-line"></i> Jewelry & valuables rider</li>
+                <li><i class="ri-check-line"></i> Equipment breakdown coverage</li>
+                <li><i class="ri-check-line"></i> Identity theft protection</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="home-premium" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in Enhanced, plus:</li>
+                <li><i class="ri-check-line"></i> Replacement cost coverage (no depreciation)</li>
+                <li><i class="ri-check-line"></i> Liability up to $500,000</li>
+                <li><i class="ri-check-line"></i> Sewer & water backup</li>
+                <li><i class="ri-check-line"></i> Earthquake coverage available</li>
+                <li><i class="ri-check-line"></i> Dedicated claim concierge</li>
+              </ul>
+            </div>
+
+            <div class="product-detail__actions">
+              <a href="contact.html?product=home" class="btn btn--gold btn--lg">
+                <i class="ri-file-text-line"></i> Get a Quote
+              </a>
+              <a href="tel:+19177228266" class="btn btn--navy btn--lg">
+                <i class="ri-phone-line"></i> Speak to an Agent
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PRODUCT 2 — AUTO INSURANCE
+    ============================================================ -->
+    <section class="product-detail product-detail--alt section" id="auto-insurance" aria-labelledby="auto-ins-title">
+      <div class="container">
+        <div class="product-detail__grid product-detail__grid--reverse">
+
+          <div class="product-detail__content" data-aos="fade-right">
+            <span class="section__tag">Product 02</span>
+            <h2 class="section__title" id="auto-ins-title">Auto Insurance</h2>
+            <p class="product-detail__lead">
+              Whether you're commuting through Queens or driving across the state,
+              our auto insurance keeps you, your passengers, and your vehicle
+              protected on every mile of the journey.
+            </p>
+
+            <div class="coverage__tabs" role="tablist" aria-label="Auto insurance coverage options">
+              <button class="coverage__tab coverage__tab--active" role="tab" aria-selected="true" aria-controls="auto-basic" data-tab="auto-basic">Basic</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="auto-full" data-tab="auto-full">Full Coverage</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="auto-plus" data-tab="auto-plus">Plus</button>
+            </div>
+
+            <div class="coverage__panel is-active" id="auto-basic" role="tabpanel">
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> New York state minimum liability</li>
+                <li><i class="ri-check-line"></i> Property damage liability</li>
+                <li><i class="ri-check-line"></i> Personal injury protection (PIP)</li>
+                <li><i class="ri-check-line"></i> Uninsured motorist coverage</li>
+                <li><i class="ri-check-line"></i> No-fault coverage (NY required)</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="auto-full" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in Basic, plus:</li>
+                <li><i class="ri-check-line"></i> Collision coverage</li>
+                <li><i class="ri-check-line"></i> Comprehensive (theft, weather, animals)</li>
+                <li><i class="ri-check-line"></i> Rental car reimbursement</li>
+                <li><i class="ri-check-line"></i> Enhanced liability limits</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="auto-plus" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in Full Coverage, plus:</li>
+                <li><i class="ri-check-line"></i> 24/7 roadside assistance</li>
+                <li><i class="ri-check-line"></i> Loan/lease gap coverage</li>
+                <li><i class="ri-check-line"></i> New car replacement (first 3 years)</li>
+                <li><i class="ri-check-line"></i> Diminishing deductible rewards</li>
+              </ul>
+            </div>
+
+            <div class="product-detail__actions">
+              <a href="contact.html?product=auto" class="btn btn--gold btn--lg">
+                <i class="ri-file-text-line"></i> Get a Quote
+              </a>
+              <a href="tel:+19177228266" class="btn btn--navy btn--lg">
+                <i class="ri-phone-line"></i> Speak to an Agent
+              </a>
+            </div>
+          </div>
+
+          <div class="product-detail__visual" data-aos="fade-left">
+            <div class="product-detail__img-wrap">
+              <img src="assets/images/products/auto-insurance.webp"
+                   alt="Modern car on a New York road representing auto insurance"
+                   width="580" height="440" loading="lazy" />
+            </div>
+            <div class="product-detail__icon-badge">
+              <i class="ri-car-line"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PRODUCT 3 — BUSINESS INSURANCE
+    ============================================================ -->
+    <section class="product-detail section" id="business-insurance" aria-labelledby="biz-ins-title">
+      <div class="container">
+        <div class="product-detail__grid">
+
+          <div class="product-detail__visual" data-aos="fade-right">
+            <div class="product-detail__img-wrap">
+              <img src="assets/images/products/business-insurance.webp"
+                   alt="Professional business environment representing business insurance"
+                   width="580" height="440" loading="lazy" />
+            </div>
+            <div class="product-detail__icon-badge product-detail__icon-badge--gold">
+              <i class="ri-building-line"></i>
+            </div>
+            <!-- Featured tag -->
+            <div class="product-detail__featured-tag" aria-label="Most popular product">
+              <i class="ri-star-line"></i> Most Popular
+            </div>
+          </div>
+
+          <div class="product-detail__content" data-aos="fade-left">
+            <span class="section__tag">Product 03</span>
+            <h2 class="section__title" id="biz-ins-title">Business Insurance</h2>
+            <p class="product-detail__lead">
+              Your business is your livelihood. From a single-location shop in Queens to
+              a multi-site operation across New York, we build commercial coverage that
+              shields your assets, employees, and reputation.
+            </p>
+
+            <div class="coverage__tabs" role="tablist" aria-label="Business insurance coverage options">
+              <button class="coverage__tab coverage__tab--active" role="tab" aria-selected="true" aria-controls="biz-bop" data-tab="biz-bop">BOP</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="biz-commercial" data-tab="biz-commercial">Commercial</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="biz-enterprise" data-tab="biz-enterprise">Enterprise</button>
+            </div>
+
+            <div class="coverage__panel is-active" id="biz-bop" role="tabpanel">
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> General liability up to $1M</li>
+                <li><i class="ri-check-line"></i> Commercial property coverage</li>
+                <li><i class="ri-check-line"></i> Business interruption insurance</li>
+                <li><i class="ri-check-line"></i> Accounts receivable protection</li>
+                <li><i class="ri-check-line"></i> Ideal for small businesses (BOP)</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="biz-commercial" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in BOP, plus:</li>
+                <li><i class="ri-check-line"></i> Commercial auto policy</li>
+                <li><i class="ri-check-line"></i> Workers' compensation</li>
+                <li><i class="ri-check-line"></i> Professional liability (E&O)</li>
+                <li><i class="ri-check-line"></i> Cyber liability coverage</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="biz-enterprise" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in Commercial, plus:</li>
+                <li><i class="ri-check-line"></i> Directors & officers (D&O) coverage</li>
+                <li><i class="ri-check-line"></i> Employment practices liability (EPLI)</li>
+                <li><i class="ri-check-line"></i> Umbrella/excess liability up to $10M</li>
+                <li><i class="ri-check-line"></i> Dedicated risk management advisor</li>
+              </ul>
+            </div>
+
+            <div class="product-detail__actions">
+              <a href="contact.html?product=business" class="btn btn--gold btn--lg">
+                <i class="ri-file-text-line"></i> Get a Quote
+              </a>
+              <a href="tel:+19177228266" class="btn btn--navy btn--lg">
+                <i class="ri-phone-line"></i> Speak to an Agent
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PRODUCT 4 — TRUCK INSURANCE
+    ============================================================ -->
+    <section class="product-detail product-detail--alt section" id="truck-insurance" aria-labelledby="truck-ins-title">
+      <div class="container">
+        <div class="product-detail__grid product-detail__grid--reverse">
+
+          <div class="product-detail__content" data-aos="fade-right">
+            <span class="section__tag">Product 04</span>
+            <h2 class="section__title" id="truck-ins-title">Truck Insurance</h2>
+            <p class="product-detail__lead">
+              Commercial trucking demands specialized coverage. Whether you run a single
+              rig or manage an entire fleet, our truck insurance solutions are built to
+              keep your business moving safely and profitably.
+            </p>
+
+            <div class="coverage__tabs" role="tablist" aria-label="Truck insurance coverage options">
+              <button class="coverage__tab coverage__tab--active" role="tab" aria-selected="true" aria-controls="truck-owner" data-tab="truck-owner">Owner-Operator</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="truck-fleet" data-tab="truck-fleet">Fleet</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="truck-cargo" data-tab="truck-cargo">Cargo+</button>
+            </div>
+
+            <div class="coverage__panel is-active" id="truck-owner" role="tabpanel">
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Primary liability (FMCSA compliant)</li>
+                <li><i class="ri-check-line"></i> Physical damage (collision & comprehensive)</li>
+                <li><i class="ri-check-line"></i> Motor truck cargo coverage</li>
+                <li><i class="ri-check-line"></i> Bobtail / non-trucking liability</li>
+                <li><i class="ri-check-line"></i> Occupational accident coverage</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="truck-fleet" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in Owner-Operator, plus:</li>
+                <li><i class="ri-check-line"></i> Fleet liability policy (3+ vehicles)</li>
+                <li><i class="ri-check-line"></i> Hired & non-owned auto</li>
+                <li><i class="ri-check-line"></i> Driver safety monitoring program</li>
+                <li><i class="ri-check-line"></i> Fleet discount pricing</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="truck-cargo" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Everything in Fleet, plus:</li>
+                <li><i class="ri-check-line"></i> High-value cargo endorsement</li>
+                <li><i class="ri-check-line"></i> Refrigeration breakdown coverage</li>
+                <li><i class="ri-check-line"></i> Hazardous materials rider</li>
+                <li><i class="ri-check-line"></i> Intermodal cargo coverage</li>
+              </ul>
+            </div>
+
+            <div class="product-detail__actions">
+              <a href="contact.html?product=truck" class="btn btn--gold btn--lg">
+                <i class="ri-file-text-line"></i> Get a Quote
+              </a>
+              <a href="tel:+19177228266" class="btn btn--navy btn--lg">
+                <i class="ri-phone-line"></i> Speak to an Agent
+              </a>
+            </div>
+          </div>
+
+          <div class="product-detail__visual" data-aos="fade-left">
+            <div class="product-detail__img-wrap">
+              <img src="assets/images/products/truck-insurance.webp"
+                   alt="Commercial truck on highway representing truck insurance"
+                   width="580" height="440" loading="lazy" />
+            </div>
+            <div class="product-detail__icon-badge">
+              <i class="ri-truck-line"></i>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         PRODUCT 5 — PERSONAL LIFE INSURANCE
+    ============================================================ -->
+    <section class="product-detail product-detail--life section" id="life-insurance" aria-labelledby="life-ins-title">
+      <div class="container">
+        <div class="product-detail__grid">
+
+          <div class="product-detail__visual" data-aos="fade-right">
+            <div class="product-detail__img-wrap">
+              <img src="assets/images/products/life-insurance.webp"
+                   alt="Happy family together representing personal life insurance"
+                   width="580" height="440" loading="lazy" />
+            </div>
+            <div class="product-detail__icon-badge">
+              <i class="ri-heart-pulse-line"></i>
+            </div>
+          </div>
+
+          <div class="product-detail__content" data-aos="fade-left">
+            <span class="section__tag">Product 05</span>
+            <h2 class="section__title" id="life-ins-title">Personal Life Insurance</h2>
+            <p class="product-detail__lead">
+              Life insurance is one of the most important financial decisions you'll make.
+              Our personal life insurance plans ensure your family's financial security
+              and peace of mind — whatever tomorrow may bring.
+            </p>
+
+            <div class="coverage__tabs" role="tablist" aria-label="Life insurance plan options">
+              <button class="coverage__tab coverage__tab--active" role="tab" aria-selected="true" aria-controls="life-term" data-tab="life-term">Term Life</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="life-whole" data-tab="life-whole">Whole Life</button>
+              <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="life-universal" data-tab="life-universal">Universal</button>
+            </div>
+
+            <div class="coverage__panel is-active" id="life-term" role="tabpanel">
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Coverage for 10, 20, or 30-year terms</li>
+                <li><i class="ri-check-line"></i> Death benefit from $100K to $2M+</li>
+                <li><i class="ri-check-line"></i> Affordable, fixed premium payments</li>
+                <li><i class="ri-check-line"></i> Convertible to whole life option</li>
+                <li><i class="ri-check-line"></i> Ideal for income replacement</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="life-whole" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Lifetime (permanent) coverage</li>
+                <li><i class="ri-check-line"></i> Cash value accumulation over time</li>
+                <li><i class="ri-check-line"></i> Policy loan options available</li>
+                <li><i class="ri-check-line"></i> Guaranteed level premiums</li>
+                <li><i class="ri-check-line"></i> Estate planning & wealth transfer tool</li>
+              </ul>
+            </div>
+            <div class="coverage__panel" id="life-universal" role="tabpanel" hidden>
+              <ul class="coverage__list">
+                <li><i class="ri-check-line"></i> Flexible premium & death benefit</li>
+                <li><i class="ri-check-line"></i> Interest-credited cash value growth</li>
+                <li><i class="ri-check-line"></i> Adjustable coverage as needs change</li>
+                <li><i class="ri-check-line"></i> Indexed Universal Life (IUL) options</li>
+                <li><i class="ri-check-line"></i> Comprehensive financial protection tool</li>
+              </ul>
+            </div>
+
+            <div class="product-detail__actions">
+              <a href="contact.html?product=life" class="btn btn--gold btn--lg">
+                <i class="ri-file-text-line"></i> Get a Quote
+              </a>
+              <a href="tel:+19177228266" class="btn btn--navy btn--lg">
+                <i class="ri-phone-line"></i> Speak to an Agent
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         WHY CHOOSE VENTUS (Comparison Table)
+    ============================================================ -->
+    <section class="compare-section section section--alt" id="why-ventus" aria-labelledby="compare-title">
+      <div class="container">
+        <div class="section__header" data-aos="fade-up">
+          <span class="section__tag">The Ventus Advantage</span>
+          <h2 class="section__title" id="compare-title">Why Choose Ventus Over Going Direct?</h2>
+          <p class="section__desc">
+            As an independent agency, we're on your side — not the insurance company's.
+            Here's what that means for you.
+          </p>
+        </div>
+
+        <div class="compare__table-wrapper" data-aos="fade-up">
+          <table class="compare__table" aria-label="Comparison between Ventus Insurance and direct carriers">
+            <thead>
+              <tr>
+                <th scope="col">Feature</th>
+                <th scope="col" class="compare__col--ventus">
+                  <span class="compare__ventus-label">
+                    <img src="assets/images/logo-ventus.webp" alt="Ventus Insurance" width="100" height="34" loading="lazy" />
+                  </span>
+                </th>
+                <th scope="col" class="compare__col--other">Direct / Online Carriers</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Multiple carrier options</td>
+                <td class="compare__col--ventus"><i class="ri-checkbox-circle-fill compare__yes" aria-label="Yes"></i></td>
+                <td><i class="ri-close-circle-fill compare__no" aria-label="No"></i></td>
+              </tr>
+              <tr>
+                <td>Personalized coverage advice</td>
+                <td class="compare__col--ventus"><i class="ri-checkbox-circle-fill compare__yes" aria-label="Yes"></i></td>
+                <td><i class="ri-close-circle-fill compare__no" aria-label="No"></i></td>
+              </tr>
+              <tr>
+                <td>Bilingual support (EN/ES)</td>
+                <td class="compare__col--ventus"><i class="ri-checkbox-circle-fill compare__yes" aria-label="Yes"></i></td>
+                <td><i class="ri-close-circle-fill compare__no" aria-label="No"></i></td>
+              </tr>
+              <tr>
+                <td>Claims advocacy on your behalf</td>
+                <td class="compare__col--ventus"><i class="ri-checkbox-circle-fill compare__yes" aria-label="Yes"></i></td>
+                <td><i class="ri-close-circle-fill compare__no" aria-label="No"></i></td>
+              </tr>
+              <tr>
+                <td>Annual policy review</td>
+                <td class="compare__col--ventus"><i class="ri-checkbox-circle-fill compare__yes" aria-label="Yes"></i></td>
+                <td><i class="ri-close-circle-fill compare__no" aria-label="No"></i></td>
+              </tr>
+              <tr>
+                <td>Local NY market expertise</td>
+                <td class="compare__col--ventus"><i class="ri-checkbox-circle-fill compare__yes" aria-label="Yes"></i></td>
+                <td><i class="ri-indeterminate-circle-fill compare__partial" aria-label="Partial"></i></td>
+              </tr>
+              <tr>
+                <td>Competitive rate shopping</td>
+                <td class="compare__col--ventus"><i class="ri-checkbox-circle-fill compare__yes" aria-label="Yes"></i></td>
+                <td><i class="ri-close-circle-fill compare__no" aria-label="No"></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         FAQ SECTION
+    ============================================================ -->
+    <section class="faq-section section" id="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section__header" data-aos="fade-up">
+          <span class="section__tag">Common Questions</span>
+          <h2 class="section__title" id="faq-title">Frequently Asked Questions</h2>
+          <p class="section__desc">
+            Have questions about our insurance products? We've answered the most
+            common ones below. Don't see yours? Call us anytime.
+          </p>
+        </div>
+
+        <div class="faq__grid" data-aos="fade-up">
+          <div class="faq__col">
+
+            <div class="faq__item">
+              <button class="faq__question" aria-expanded="false">
+                How do I know which insurance product I need?
+                <i class="ri-add-line faq__icon" aria-hidden="true"></i>
+              </button>
+              <div class="faq__answer" hidden>
+                <p>Our licensed agents start with a free consultation to understand your situation, assets, and risks. We then recommend the products and coverage levels that make the most sense for your life and budget — with no pressure to buy anything you don't need.</p>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <button class="faq__question" aria-expanded="false">
+                Can I bundle multiple insurance products?
+                <i class="ri-add-line faq__icon" aria-hidden="true"></i>
+              </button>
+              <div class="faq__answer" hidden>
+                <p>Absolutely. Bundling home and auto insurance, for example, often qualifies you for significant multi-policy discounts with many of our carriers. We'll show you exactly how much you save by combining your coverage with Ventus.</p>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <button class="faq__question" aria-expanded="false">
+                How quickly can I get coverage?
+                <i class="ri-add-line faq__icon" aria-hidden="true"></i>
+              </button>
+              <div class="faq__answer" hidden>
+                <p>In many cases, same-day or next-day coverage is available, especially for auto and home insurance. Commercial and specialty products may require a few business days for underwriting. Our team moves fast to get you protected as quickly as possible.</p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="faq__col">
+
+            <div class="faq__item">
+              <button class="faq__question" aria-expanded="false">
+                Do you serve clients outside New York?
+                <i class="ri-add-line faq__icon" aria-hidden="true"></i>
+              </button>
+              <div class="faq__answer" hidden>
+                <p>Our primary focus is the New York metropolitan area, and our agents are licensed in New York State. For clients with needs in neighboring states, we can often assist through carrier partnerships. Contact us to discuss your specific situation.</p>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <button class="faq__question" aria-expanded="false">
+                What happens if I need to file a claim?
+                <i class="ri-add-line faq__icon" aria-hidden="true"></i>
+              </button>
+              <div class="faq__answer" hidden>
+                <p>Call us first. We guide you through the entire claims process, help you document your loss, communicate with the carrier on your behalf, and advocate for a fair and fast resolution. You never have to navigate a claim alone when you're a Ventus client.</p>
+              </div>
+            </div>
+
+            <div class="faq__item">
+              <button class="faq__question" aria-expanded="false">
+                Are your rates competitive compared to online insurers?
+                <i class="ri-add-line faq__icon" aria-hidden="true"></i>
+              </button>
+              <div class="faq__answer" hidden>
+                <p>Yes — and often better. Because we work with multiple carriers, we shop the market for you and find pricing that online direct insurers simply can't match. Plus, you get the added value of personalized service and a real person in your corner at no extra cost.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ============================================================
+         CTA SECTION
+    ============================================================ -->
+    <section class="cta-section" id="products-cta" aria-labelledby="products-cta-title">
+      <div class="cta__bg-overlay" aria-hidden="true"></div>
+      <div class="container cta__content" data-aos="fade-up">
+        <div class="cta__text">
+          <h2 class="cta__title" id="products-cta-title">
+            Not Sure Where to Start?
+          </h2>
+          <p class="cta__desc">
+            Our agents are here to help you find the right coverage at the best price.
+            Get a free, no-obligation quote today — it takes just a few minutes.
+          </p>
+        </div>
+        <div class="cta__actions">
+          <a href="contact.html" class="btn btn--gold btn--lg">
+            <i class="ri-file-text-line"></i> Request a Free Quote
+          </a>
+          <a href="tel:+19177228266" class="btn btn--white-outline btn--lg">
+            <i class="ri-phone-line"></i> (917) 722-8266
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="footer" role="contentinfo">
+    <div class="footer__main">
+      <div class="container footer__grid">
+
+        <div class="footer__col footer__col--brand">
+          <a href="index.html" aria-label="Ventus Insurance Agency">
+            <img src="assets/images/logo-ventus-white.webp" alt="Ventus Insurance Agency" width="180" height="60" loading="lazy" />
+          </a>
+          <p class="footer__tagline">Protecting what matters most — with integrity, expertise, and a commitment to every client we serve across New York.</p>
+          <div class="footer__social" aria-label="Social media links">
+            <a href="#" aria-label="Facebook" class="social__link"><i class="ri-facebook-fill"></i></a>
+            <a href="#" aria-label="Instagram" class="social__link"><i class="ri-instagram-line"></i></a>
+            <a href="#" aria-label="LinkedIn" class="social__link"><i class="ri-linkedin-fill"></i></a>
+            <a href="#" aria-label="Twitter / X" class="social__link"><i class="ri-twitter-x-line"></i></a>
+          </div>
+          <div class="footer__license">
+            <i class="ri-shield-check-line" aria-hidden="true"></i>
+            <span>Licensed Insurance Agency – State of New York</span>
+          </div>
+        </div>
+
+        <nav class="footer__col" aria-label="Quick links">
+          <h4 class="footer__col-title">Quick Links</h4>
+          <ul role="list">
+            <li><a href="index.html"><i class="ri-arrow-right-s-line"></i> Home</a></li>
+            <li><a href="about.html"><i class="ri-arrow-right-s-line"></i> About Us</a></li>
+            <li><a href="services.html"><i class="ri-arrow-right-s-line"></i> Our Services</a></li>
+            <li><a href="blog.html"><i class="ri-arrow-right-s-line"></i> Blog</a></li>
+            <li><a href="contact.html"><i class="ri-arrow-right-s-line"></i> Contact</a></li>
+          </ul>
+        </nav>
+
+        <nav class="footer__col" aria-label="Insurance products">
+          <h4 class="footer__col-title">Our Products</h4>
+          <ul role="list">
+            <li><a href="#home-insurance"><i class="ri-home-2-line"></i> Home Insurance</a></li>
+            <li><a href="#auto-insurance"><i class="ri-car-line"></i> Auto Insurance</a></li>
+            <li><a href="#business-insurance"><i class="ri-building-line"></i> Business Insurance</a></li>
+            <li><a href="#truck-insurance"><i class="ri-truck-line"></i> Truck Insurance</a></li>
+            <li><a href="#life-insurance"><i class="ri-heart-pulse-line"></i> Life Insurance</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer__col">
+          <h4 class="footer__col-title">Contact Us</h4>
+          <address class="footer__address">
+            <p><i class="ri-map-pin-2-line" aria-hidden="true"></i> 4-29 27th Avenue Suite 3R,<br />Long Island City, NY 11102</p>
+            <p><i class="ri-phone-line" aria-hidden="true"></i> <a href="tel:+19177228266">(917) 722-8266</a></p>
+            <p><i class="ri-printer-line" aria-hidden="true"></i> <a href="tel:+15182453863">(518) 245-3863</a></p>
+            <p><i class="ri-mail-line" aria-hidden="true"></i> <a href="mailto:contact@ventus-insurance.com">contact@ventus-insurance.com</a></p>
+            <p><i class="ri-time-line" aria-hidden="true"></i> Mon – Fri: 09:00 AM – 6:00 PM</p>
+          </address>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <div class="container footer__bottom-inner">
+        <p class="footer__copy">&copy; <span id="current-year"></span> Ventus Insurance Agency. All rights reserved.</p>
+        <nav class="footer__legal" aria-label="Legal links">
+          <a href="privacy.html">Privacy Policy</a>
+          <span aria-hidden="true">|</span>
+          <a href="terms.html">Terms of Service</a>
+          <span aria-hidden="true">|</span>
+          <a href="accessibility.html">Accessibility</a>
+        </nav>
+      </div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">
+    <i class="ri-arrow-up-line"></i>
+  </button>
+
+  <script src="js/index.js" defer></script>
+  <script src="js/products.js" defer></script>
+</body>
+</html>
