@@ -2,33 +2,12 @@
  * ================================================================
  * VENTUS INSURANCE AGENCY — Main JavaScript
  * File: js/index.js
- * Version: 2.2
- * Description: All interactive functionality for index.html
- *
- * TABLE OF CONTENTS
- * 1.  DOMContentLoaded Init
- * 2.  Utility Helpers
- * 3.  Navbar — Scroll Effect & Active State
- * 4.  Hamburger Menu Toggle
- * 5.  Mobile Menu — Open / Close / Overlay
- * 6.  Mobile Accordion (Products Submenu)
- * 7.  Desktop Dropdown — Keyboard Accessibility
- * 8.  AOS — Animate On Scroll (native lightweight)
- * 9.  Hero Stats Counter Animation
- * 10. Back To Top Button
- * 11. Current Year (Footer)
- * 12. Smooth Anchor Scrolling
- * 13. Navbar Hide/Show on Scroll Direction
- * 14. Hero Image Slider (5 product slides, auto-advance, swipe)
- * 15. Active Nav Link on Scroll (Spy)
+ * Version: 3.0 — Slider siempre activo, sin hover-pause
  * ================================================================
  */
 
 'use strict';
 
-/* ================================================================
-   1. DOM CONTENT LOADED — INIT
-================================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   initNavbarScroll();
   initNavbarScrollDirection();
@@ -49,22 +28,11 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ================================================================
    2. UTILITY HELPERS
 ================================================================ */
-function debounce(fn, delay = 150) {
-  let timer;
-  return (...args) => {
-    clearTimeout(timer);
-    timer = setTimeout(() => fn.apply(this, args), delay);
-  };
-}
-
 function throttle(fn, limit = 100) {
   let lastCall = 0;
   return (...args) => {
     const now = Date.now();
-    if (now - lastCall >= limit) {
-      lastCall = now;
-      fn.apply(this, args);
-    }
+    if (now - lastCall >= limit) { lastCall = now; fn.apply(this, args); }
   };
 }
 
@@ -87,13 +55,9 @@ function lockBodyScroll(lock) {
 function initNavbarScroll() {
   const navbar = qs('#navbar');
   if (!navbar) return;
-
-  const SCROLL_THRESHOLD = 80;
-
   const handleScroll = throttle(() => {
-    navbar.classList.toggle('navbar--scrolled', window.scrollY > SCROLL_THRESHOLD);
+    navbar.classList.toggle('navbar--scrolled', window.scrollY > 80);
   }, 80);
-
   window.addEventListener('scroll', handleScroll, { passive: true });
   handleScroll();
 }
@@ -121,7 +85,7 @@ function initHamburger() {
 
 
 /* ================================================================
-   5. MOBILE MENU — OPEN / CLOSE / OVERLAY
+   5. MOBILE MENU
 ================================================================ */
 function initMobileMenu() {
   const mobileMenu = qs('#mobile-menu');
@@ -129,12 +93,8 @@ function initMobileMenu() {
   const closeBtn   = qs('#menu-close-btn');
   const hamburger  = qs('#hamburger-btn');
   if (!mobileMenu) return;
-
-  overlay?.addEventListener('click', () => toggleMobileMenu(false, hamburger, mobileMenu));
-  closeBtn?.addEventListener('click', () => {
-    toggleMobileMenu(false, hamburger, mobileMenu);
-    hamburger?.focus();
-  });
+  overlay?.addEventListener('click',  () => toggleMobileMenu(false, hamburger, mobileMenu));
+  closeBtn?.addEventListener('click', () => { toggleMobileMenu(false, hamburger, mobileMenu); hamburger?.focus(); });
 }
 
 function toggleMobileMenu(open, hamburger, mobileMenu) {
@@ -147,69 +107,53 @@ function toggleMobileMenu(open, hamburger, mobileMenu) {
 
 
 /* ================================================================
-   6. MOBILE ACCORDION (Products Submenu)
+   6. MOBILE ACCORDION
 ================================================================ */
 function initMobileAccordion() {
-  const accordionBtns = qsAll('.mobile-nav__accordion-btn');
-
-  accordionBtns.forEach((btn) => {
-    const submenu = btn.nextElementSibling;
-    if (!submenu) return;
-
+  const btns = qsAll('.mobile-nav__accordion-btn');
+  btns.forEach((btn) => {
+    const sub = btn.nextElementSibling;
+    if (!sub) return;
     btn.addEventListener('click', () => {
-      const isExpanded = btn.classList.contains('is-expanded');
-
-      accordionBtns.forEach((other) => {
-        if (other !== btn) {
-          const otherSub = other.nextElementSibling;
-          other.classList.remove('is-expanded');
-          other.setAttribute('aria-expanded', 'false');
-          otherSub?.classList.remove('is-open');
-          otherSub?.setAttribute('aria-hidden', 'true');
-        }
+      const expanded = btn.classList.contains('is-expanded');
+      btns.forEach((b) => {
+        b.classList.remove('is-expanded');
+        b.setAttribute('aria-expanded', 'false');
+        b.nextElementSibling?.classList.remove('is-open');
+        b.nextElementSibling?.setAttribute('aria-hidden', 'true');
       });
-
-      btn.classList.toggle('is-expanded', !isExpanded);
-      btn.setAttribute('aria-expanded', String(!isExpanded));
-      submenu.classList.toggle('is-open', !isExpanded);
-      submenu.setAttribute('aria-hidden', String(isExpanded));
+      if (!expanded) {
+        btn.classList.add('is-expanded');
+        btn.setAttribute('aria-expanded', 'true');
+        sub.classList.add('is-open');
+        sub.setAttribute('aria-hidden', 'false');
+      }
     });
   });
 }
 
 
 /* ================================================================
-   7. DESKTOP DROPDOWN — KEYBOARD ACCESSIBILITY
+   7. DESKTOP DROPDOWN — KEYBOARD
 ================================================================ */
 function initDropdownKeyboard() {
-  const dropdowns = qsAll('.nav__dropdown');
-
-  dropdowns.forEach((dropdown) => {
+  qsAll('.nav__dropdown').forEach((dropdown) => {
     const trigger = qs('.nav__link--dropdown', dropdown);
     const menu    = qs('.dropdown__menu', dropdown);
     const items   = qsAll('.dropdown__item', dropdown);
     if (!trigger || !menu) return;
 
     trigger.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        const isOpen = menu.style.opacity === '1';
-        setDropdownState(menu, !isOpen);
-        if (!isOpen) items[0]?.focus();
-      }
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const open = menu.style.opacity === '1'; setDropdownState(menu, !open); if (!open) items[0]?.focus(); }
       if (e.key === 'Escape') { setDropdownState(menu, false); trigger.focus(); }
     });
 
     items.forEach((item, i) => {
       item.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowDown') { e.preventDefault(); items[i + 1]?.focus(); }
-        if (e.key === 'ArrowUp')   {
-          e.preventDefault();
-          if (i === 0) { trigger.focus(); setDropdownState(menu, false); }
-          else items[i - 1]?.focus();
-        }
-        if (e.key === 'Escape') { setDropdownState(menu, false); trigger.focus(); }
-        if (e.key === 'Tab')    { setDropdownState(menu, false); }
+        if (e.key === 'ArrowUp')   { e.preventDefault(); i === 0 ? (trigger.focus(), setDropdownState(menu, false)) : items[i - 1]?.focus(); }
+        if (e.key === 'Escape')    { setDropdownState(menu, false); trigger.focus(); }
+        if (e.key === 'Tab')       { setDropdownState(menu, false); }
       });
     });
 
@@ -220,9 +164,9 @@ function initDropdownKeyboard() {
 }
 
 function setDropdownState(menu, open) {
-  menu.style.opacity      = open ? '1' : '';
-  menu.style.visibility   = open ? 'visible' : '';
-  menu.style.transform    = open ? 'translateX(-50%) translateY(0)' : '';
+  menu.style.opacity       = open ? '1' : '';
+  menu.style.visibility    = open ? 'visible' : '';
+  menu.style.transform     = open ? 'translateX(-50%) translateY(0)' : '';
   menu.style.pointerEvents = open ? 'auto' : '';
 }
 
@@ -243,10 +187,9 @@ function initAOS() {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const el    = entry.target;
-          const delay = parseInt(el.dataset.aosDelay || '0', 10);
-          setTimeout(() => el.classList.add('aos-animate'), delay);
-          observer.unobserve(el);
+          const delay = parseInt(entry.target.dataset.aosDelay || '0', 10);
+          setTimeout(() => entry.target.classList.add('aos-animate'), delay);
+          observer.unobserve(entry.target);
         }
       });
     },
@@ -258,70 +201,68 @@ function initAOS() {
 
 
 /* ================================================================
-   9. HERO STATS COUNTER ANIMATION
+   9. HERO STATS COUNTER
 ================================================================ */
 function initStatsCounter() {
-  const statNumbers   = qsAll('.stat__number[data-target]');
-  if (!statNumbers.length) return;
+  const els = qsAll('.stat__number[data-target]');
+  if (!els.length) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el     = entry.target;
-          const target = parseInt(el.dataset.target, 10);
-          prefersReduced ? (el.textContent = target.toLocaleString()) : animateCounter(el, target);
-          observer.unobserve(el);
-        }
-      });
-    },
-    { threshold: 0.5 }
-  );
+  new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const el     = entry.target;
+        const target = parseInt(el.dataset.target, 10);
+        reduced ? (el.textContent = target.toLocaleString()) : animateCounter(el, target);
+        obs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 }).observe(...els);
 
-  statNumbers.forEach((el) => observer.observe(el));
+  // observe each individually
+  const obs2 = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.target, 10);
+        reduced ? (el.textContent = target.toLocaleString()) : animateCounter(el, target);
+        obs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  els.forEach((el) => obs2.observe(el));
 }
 
 function animateCounter(el, target, duration = 2000) {
-  const startTime = performance.now();
-  const ease = t => 1 - Math.pow(1 - t, 4);
-
-  function step(now) {
-    const progress = Math.min((now - startTime) / duration, 1);
-    el.textContent = Math.round(ease(progress) * target).toLocaleString();
-    if (progress < 1) requestAnimationFrame(step);
+  const start = performance.now();
+  const ease  = (t) => 1 - Math.pow(1 - t, 4);
+  const step  = (now) => {
+    const p = Math.min((now - start) / duration, 1);
+    el.textContent = Math.round(ease(p) * target).toLocaleString();
+    if (p < 1) requestAnimationFrame(step);
     else el.textContent = target.toLocaleString();
-  }
-
+  };
   requestAnimationFrame(step);
 }
 
 
 /* ================================================================
-   10. BACK TO TOP BUTTON
+   10. BACK TO TOP
 ================================================================ */
 function initBackToTop() {
   const btn = qs('#back-to-top');
   if (!btn) return;
-
-  const handleScroll = throttle(() => {
-    btn.classList.toggle('is-visible', window.scrollY > 400);
-  }, 100);
-
-  window.addEventListener('scroll', handleScroll, { passive: true });
-
-  btn.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    qs('a, button, [tabindex="0"]')?.focus({ preventScroll: true });
-  });
-
-  handleScroll();
+  const handle = throttle(() => btn.classList.toggle('is-visible', window.scrollY > 400), 100);
+  window.addEventListener('scroll', handle, { passive: true });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  handle();
 }
 
 
 /* ================================================================
-   11. CURRENT YEAR (Footer Copyright)
+   11. CURRENT YEAR
 ================================================================ */
 function initCurrentYear() {
   const el = qs('#current-year');
@@ -330,286 +271,176 @@ function initCurrentYear() {
 
 
 /* ================================================================
-   12. SMOOTH ANCHOR SCROLLING
+   12. SMOOTH SCROLL
 ================================================================ */
 function initSmoothScroll() {
   document.addEventListener('click', (e) => {
     const anchor = e.target.closest('a[href^="#"]');
     if (!anchor) return;
-
-    const targetId = anchor.getAttribute('href');
-    if (targetId === '#') return;
-
-    const target = qs(targetId);
+    const id = anchor.getAttribute('href');
+    if (id === '#') return;
+    const target = qs(id);
     if (!target) return;
-
     e.preventDefault();
-
-    const header    = qs('#header');
-    const offset    = header ? header.offsetHeight : 120;
-    const targetTop = target.getBoundingClientRect().top + window.scrollY - offset - 16;
-
-    window.scrollTo({ top: targetTop, behavior: 'smooth' });
-
-    const mobileMenu = qs('#mobile-menu');
-    const hamburger  = qs('#hamburger-btn');
-    if (mobileMenu?.classList.contains('is-open')) {
-      toggleMobileMenu(false, hamburger, mobileMenu);
-    }
+    const offset = (qs('#header')?.offsetHeight ?? 120) + 16;
+    window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: 'smooth' });
+    const mm = qs('#mobile-menu');
+    if (mm?.classList.contains('is-open')) toggleMobileMenu(false, qs('#hamburger-btn'), mm);
   });
 }
 
 
 /* ================================================================
-   13. NAVBAR HIDE / SHOW ON SCROLL DIRECTION
+   13. NAVBAR HIDE ON SCROLL DOWN
 ================================================================ */
 function initNavbarScrollDirection() {
   const header = qs('#header');
   if (!header) return;
-
-  let lastScrollY = window.scrollY;
-  let ticking     = false;
-
-  function updateHeader() {
-    const current    = window.scrollY;
-    const goingDown  = current > lastScrollY;
-
-    if (current > 160) {
-      header.classList.toggle('header--topbar-hidden', goingDown);
-    } else {
-      header.classList.remove('header--topbar-hidden');
-    }
-
-    lastScrollY = current <= 0 ? 0 : current;
-    ticking = false;
-  }
-
+  let last = window.scrollY, ticking = false;
   window.addEventListener('scroll', () => {
-    if (!ticking) { requestAnimationFrame(updateHeader); ticking = true; }
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const cur  = window.scrollY;
+        if (cur > 160) header.classList.toggle('header--topbar-hidden', cur > last);
+        else           header.classList.remove('header--topbar-hidden');
+        last    = cur <= 0 ? 0 : cur;
+        ticking = false;
+      });
+      ticking = true;
+    }
   }, { passive: true });
 }
 
 
 /* ================================================================
    14. HERO IMAGE SLIDER
-   FIX v2.2:
-   ─ Usa #hero-progress-fill del HTML (NO crea uno dinámico)
-   ─ Inicializa con doble requestAnimationFrame para garantizar
-     que el browser haya pintado antes de arrancar setInterval
-   ─ Elimina el getBoundingClientRect() que rompía el init
+   - El slider avanza SIEMPRE automáticamente cada 5 segundos.
+   - No se pausa con el mouse ni con ningún evento de hover.
+   - Solo el botón de pausa (⏸) puede detenerlo y reanudarlo.
+   - Las flechas y dots cambian el slide sin interrumpir el timer.
+   - Swipe táctil funciona en móvil y tablet.
 ================================================================ */
 function initHeroSlider() {
-
-  /* ── Elementos ── */
-  const slides   = qsAll('.hero__slide');
-  const texts    = qsAll('.hero__slide-text');
-  const dots     = qsAll('.hero__dot');
-  const tabs     = qsAll('.hero__tab');        // vacío si no hay tabs — no importa
-  const prevBtn  = qs('#hero-prev');
-  const nextBtn  = qs('#hero-next');
-  const pauseBtn = qs('#hero-pause');
+  const slides       = qsAll('.hero__slide');
+  const texts        = qsAll('.hero__slide-text');
+  const dots         = qsAll('.hero__dot');
+  const prevBtn      = qs('#hero-prev');
+  const nextBtn      = qs('#hero-next');
+  const pauseBtn     = qs('#hero-pause');
+  const progressFill = qs('#hero-progress-fill');
 
   if (!slides.length) return;
 
-  /* ── Barra de progreso: usa el del HTML, no crea uno dinámico ── */
-  const progressFill = qs('#hero-progress-fill');
-  const hasProgress  = !!progressFill;
+  const TOTAL    = slides.length;
+  const INTERVAL = 5000;
 
-  /* ── Estado ── */
-  const TOTAL    = slides.length;  // 5
-  const INTERVAL = 5000;           // ms por slide
-  let current    = 0;
-  let timer      = null;
-  let isPaused   = false;
+  let current  = 0;
+  let isPaused = false;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* ================================================================
-     goTo(index) — cambia al slide indicado
-  ================================================================ */
+  /* ── Cambiar al slide N ── */
   function goTo(index) {
     const prev = current;
-    const next = ((index % TOTAL) + TOTAL) % TOTAL;
+    current = ((index % TOTAL) + TOTAL) % TOTAL;
+    if (prev === current) return;
 
-    if (prev === next) return;   // ya estamos ahí, nada que hacer
-    current = next;
-
-    /* Fondos */
     slides[prev].classList.remove('is-active');
     slides[prev].classList.add('is-leaving');
     slides[current].classList.add('is-active');
-    slides[current].classList.remove('is-leaving');
     setTimeout(() => slides[prev].classList.remove('is-leaving'), 1000);
 
-    /* Textos */
-    texts.forEach((t, i) => t.classList.toggle('is-active', i === current));
+    texts[prev]?.classList.remove('is-active');
+    texts[current]?.classList.add('is-active');
 
-    /* Dots */
     dots.forEach((d, i) => {
       d.classList.toggle('is-active', i === current);
-      d.setAttribute('aria-selected', String(i === current));
       d.setAttribute('aria-current', i === current ? 'true' : 'false');
     });
 
-    /* Tabs (no-op si vacío) */
-    tabs.forEach((t, i) => t.classList.toggle('is-active', i === current));
-
-    /* Reiniciar barra */
-    if (!isPaused && !prefersReduced) startProgress();
+    if (!isPaused) restartProgress();
   }
 
-  /* ================================================================
-     Auto-avance
-  ================================================================ */
-  function startAuto() {
-    clearInterval(timer);
-    if (isPaused || prefersReduced) return;
-    timer = setInterval(() => goTo(current + 1), INTERVAL);
-  }
+  /* ── Timer principal — un solo setInterval, siempre activo ── */
+  const autoTimer = setInterval(() => {
+    if (!isPaused) goTo(current + 1);
+  }, INTERVAL);
 
-  function stopAuto() {
-    clearInterval(timer);
-    timer = null;
-  }
-
-  /* ================================================================
-     Barra de progreso
-     FIX: Doble requestAnimationFrame en lugar de getBoundingClientRect().
-     1er rAF: espera fin del frame actual.
-     2do rAF: garantiza que el layout del primer slide está completo.
-     Esto evita la race condition que rompía el setInterval.
-  ================================================================ */
-  function startProgress() {
-    if (!hasProgress) return;
+  /* ── Progress bar ── */
+  function restartProgress() {
+    if (!progressFill) return;
     progressFill.style.transition = 'none';
     progressFill.style.width      = '0%';
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        progressFill.style.transition = `width ${INTERVAL}ms linear`;
-        progressFill.style.width      = '100%';
-      });
-    });
+    void progressFill.offsetWidth;
+    progressFill.style.transition = `width ${INTERVAL}ms linear`;
+    progressFill.style.width      = '100%';
   }
 
   function stopProgress() {
-    if (!hasProgress) return;
+    if (!progressFill) return;
     progressFill.style.transition = 'none';
     progressFill.style.width      = '0%';
   }
 
-  /* ================================================================
-     Controles: flechas, dots, tabs, pausa
-  ================================================================ */
-  prevBtn?.addEventListener('click', () => {
-    goTo(current - 1);
-    stopAuto(); startAuto();
-    if (!isPaused) startProgress();
+  /* ── Flechas ── */
+  prevBtn?.addEventListener('click', () => goTo(current - 1));
+  nextBtn?.addEventListener('click', () => goTo(current + 1));
+
+  /* ── Dots ── */
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => goTo(Number(dot.dataset.target)));
   });
 
-  nextBtn?.addEventListener('click', () => {
-    goTo(current + 1);
-    stopAuto(); startAuto();
-    if (!isPaused) startProgress();
-  });
-
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      goTo(Number(dot.dataset.target));
-      stopAuto(); startAuto();
-      if (!isPaused) startProgress();
-    });
-  });
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      goTo(Number(tab.dataset.target));
-      stopAuto(); startAuto();
-      if (!isPaused) startProgress();
-    });
-  });
-
+  /* ── Botón pausa — único control para detener el slider ── */
   pauseBtn?.addEventListener('click', () => {
     isPaused = !isPaused;
-    pauseBtn.setAttribute('aria-pressed', String(isPaused));
     const icon = pauseBtn.querySelector('i');
     if (isPaused) {
-      pauseBtn.setAttribute('aria-label', 'Resume slideshow');
       if (icon) icon.className = 'ri-play-line';
-      stopAuto();
+      pauseBtn.setAttribute('aria-label',   'Reanudar');
+      pauseBtn.setAttribute('aria-pressed', 'true');
       stopProgress();
     } else {
-      pauseBtn.setAttribute('aria-label', 'Pause slideshow');
       if (icon) icon.className = 'ri-pause-line';
-      startAuto();
-      startProgress();
+      pauseBtn.setAttribute('aria-label',   'Pausar');
+      pauseBtn.setAttribute('aria-pressed', 'false');
+      restartProgress();
     }
   });
 
-  /* Pausa al pasar el mouse (desktop) */
-  const heroEl = qs('.hero');
-  heroEl?.addEventListener('mouseenter', () => { if (!isPaused) { stopAuto(); stopProgress(); } });
-  heroEl?.addEventListener('mouseleave', () => { if (!isPaused) { startAuto(); startProgress(); } });
-
-  /* Swipe en móvil */
+  /* ── Swipe táctil ── */
   let touchStartX = 0;
-  heroEl?.addEventListener('touchstart', e => {
-    touchStartX = e.touches[0].clientX;
-  }, { passive: true });
-
-  heroEl?.addEventListener('touchend', e => {
+  const heroEl = qs('.hero');
+  heroEl?.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  heroEl?.addEventListener('touchend',   (e) => {
     const delta = e.changedTouches[0].clientX - touchStartX;
-    if (Math.abs(delta) < 40) return;
-    goTo(delta < 0 ? current + 1 : current - 1);
-    stopAuto(); startAuto();
-    if (!isPaused) startProgress();
+    if (Math.abs(delta) > 40) goTo(delta < 0 ? current + 1 : current - 1);
   }, { passive: true });
 
-  /* Teclado */
-  heroEl?.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft')  { goTo(current - 1); stopAuto(); startAuto(); }
-    if (e.key === 'ArrowRight') { goTo(current + 1); stopAuto(); startAuto(); }
-  });
-
-  /* Pausa cuando la pestaña está oculta */
+  /* ── Pausa al minimizar la pestaña ── */
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden)      { stopAuto(); stopProgress(); }
-    else if (!isPaused)       { startAuto(); startProgress(); }
+    if (document.hidden) stopProgress();
+    else if (!isPaused)  restartProgress();
   });
 
-  /* ================================================================
-     Init
-     FIX: Los 3 estados iniciales se aplican de inmediato.
-     El setInterval y la barra arrancan DESPUÉS de 2 frames pintados,
-     garantizando que el DOM esté listo antes de iniciar la animación.
-  ================================================================ */
-  slides[0]?.classList.add('is-active');
-  texts[0]?.classList.add('is-active');
-  dots[0]?.classList.add('is-active');
-  tabs[0]?.classList.add('is-active');  // no-op si tabs está vacío
+  /* ── Init ── */
+  slides.forEach((s, i) => { s.classList.toggle('is-active', i === 0); s.classList.remove('is-leaving'); });
+  texts.forEach( (t, i) =>   t.classList.toggle('is-active', i === 0));
+  dots.forEach(  (d, i) => { d.classList.toggle('is-active', i === 0); d.setAttribute('aria-current', i === 0 ? 'true' : 'false'); });
 
-  if (!prefersReduced) {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        startAuto();       // arranca setInterval
-        startProgress();   // arranca barra de progreso
-      });
-    });
-  }
+  restartProgress();
 }
 
 
 /* ================================================================
-   15. ACTIVE NAV LINK ON SCROLL (Scroll Spy)
+   15. SCROLL SPY
 ================================================================ */
 function initScrollSpy() {
   const sections = qsAll('section[id]');
   const navLinks = qsAll('.nav__link');
   if (!sections.length || !navLinks.length) return;
 
-  const header = qs('#header');
-  const offset = (header?.offsetHeight ?? 120) + 40;
+  const offset = (qs('#header')?.offsetHeight ?? 120) + 40;
 
-  const observer = new IntersectionObserver(
+  new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -622,16 +453,38 @@ function initScrollSpy() {
               (id === 'products' && href === 'products.html') ||
               (id === 'why-us'   && href === 'about.html') ||
               (id === 'blog'     && href === 'blog.html');
-
             link.classList.toggle('nav__link--active', !!isMatch);
             if (isMatch) link.setAttribute('aria-current', 'page');
-            else link.removeAttribute('aria-current');
+            else         link.removeAttribute('aria-current');
           });
         }
       });
     },
     { rootMargin: `-${offset}px 0px -55% 0px`, threshold: 0 }
+  ).observe(...[...sections]);  // spread para observar todas
+
+  // Workaround: IntersectionObserver.observe() acepta un solo elemento
+  const spy = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const id = entry.target.id;
+        navLinks.forEach((link) => {
+          const href    = link.getAttribute('href');
+          const isMatch =
+            href === `#${id}` ||
+            (id === 'hero'     && href === 'index.html') ||
+            (id === 'products' && href === 'products.html') ||
+            (id === 'why-us'   && href === 'about.html') ||
+            (id === 'blog'     && href === 'blog.html');
+          link.classList.toggle('nav__link--active', !!isMatch);
+          if (isMatch) link.setAttribute('aria-current', 'page');
+          else         link.removeAttribute('aria-current');
+        });
+      });
+    },
+    { rootMargin: `-${offset}px 0px -55% 0px`, threshold: 0 }
   );
 
-  sections.forEach((section) => observer.observe(section));
+  sections.forEach((s) => spy.observe(s));
 }
