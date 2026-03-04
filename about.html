@@ -6,38 +6,21 @@
   <meta name="description" content="Learn about Ventus Insurance Agency — our story, mission, values, and the dedicated team protecting families and businesses across New York." />
   <meta name="keywords" content="about Ventus Insurance, insurance agency New York, Long Island City insurance, trusted insurance agents" />
   <meta name="author" content="Ventus Insurance Agency" />
-
-  <!-- Open Graph -->
   <meta property="og:title" content="About Us | Ventus Insurance Agency" />
   <meta property="og:description" content="Trusted insurance professionals serving New York with integrity, expertise, and genuine care for every client." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="assets/images/og-about.webp" />
-
   <title>About Us | Ventus Insurance Agency — New York</title>
-
-  <!-- Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet" />
-
-  <!-- Icons -->
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
-
-  <!-- Shared Base CSS (design tokens + header/footer/buttons) -->
   <link rel="stylesheet" href="css/index.css" />
-
-  <!-- About Page CSS -->
   <link rel="stylesheet" href="css/about.css" />
-
   <link rel="icon" type="image/png" href="assets/icons/faviconventus.svg" />
 </head>
 <body>
 
-  <!-- ============================================================
-       HEADER / NAVIGATION  (identical across all pages)
-  ============================================================ -->
   <header class="header" id="header">
     <div class="header__topbar">
       <div class="container">
@@ -46,9 +29,9 @@
             <i class="ri-phone-line" aria-hidden="true"></i>
             <span>(917) 722-8266</span>
           </a>
-          <a href="/cdn-cgi/l/email-protection#4c2f2322382d2f380c3a292238393f6125223f393e2d222f29622f2321" class="topbar__item" aria-label="Email us">
+          <a href="mailto:contact@ventus-insurance.com" class="topbar__item" aria-label="Email us">
             <i class="ri-mail-line" aria-hidden="true"></i>
-            <span><span class="__cf_email__" data-cfemail="cfaca0a1bbaeacbb8fb9aaa1bbbabce2a6a1bcbabdaea1acaae1aca0a2">contact@ventus-insurance.com&#160;</span></span>
+            <span>contact@ventus-insurance.com</span>
           </a>
           <span class="topbar__item topbar__hours">
             <i class="ri-time-line" aria-hidden="true"></i>
@@ -69,7 +52,6 @@
         <a href="index.html" class="navbar__logo" aria-label="Ventus Insurance Agency – Home">
           <img src="assets/images/logo-ventus.webp" alt="Ventus Insurance Agency logo" width="180" height="60" loading="eager" />
         </a>
-
         <ul class="navbar__menu" role="list" id="nav-menu">
           <li><a href="index.html" class="nav__link">Home</a></li>
           <li><a href="about.html" class="nav__link nav__link--active" aria-current="page">About Us</a></li>
@@ -114,9 +96,7 @@
           <li><a href="blog.html" class="nav__link">Blog</a></li>
           <li><a href="contact.html" class="nav__link">Contact</a></li>
         </ul>
-
         <a href="contact.html" class="btn btn--gold navbar__cta">Get a Free Quote</a>
-
         <button class="hamburger" id="hamburger-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-menu">
           <span class="hamburger__line"></span>
           <span class="hamburger__line"></span>
@@ -125,7 +105,6 @@
       </div>
     </nav>
 
-    <!-- Mobile Drawer -->
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true" role="dialog" aria-label="Mobile navigation">
       <div class="mobile-menu__overlay" id="menu-overlay"></div>
       <div class="mobile-menu__drawer">
@@ -160,8 +139,8 @@
           <a href="tel:+19177228266" class="mobile-contact__item">
             <i class="ri-phone-line"></i> (917) 722-8266
           </a>
-          <a href="/cdn-cgi/l/email-protection#fb9894958f9a988fbb8d9e958f8e88d69295888e899a95989ed5989496" class="mobile-contact__item">
-            <i class="ri-mail-line"></i> <span class="__cf_email__" data-cfemail="88ebe7e6fce9ebfcc8feede6fcfdfba5e1e6fbfdfae9e6ebeda6ebe7e5">[email&#160;protected]</span>
+          <a href="mailto:contact@ventus-insurance.com" class="mobile-contact__item">
+            <i class="ri-mail-line"></i> contact@ventus-insurance.com
           </a>
           <a href="contact.html" class="btn btn--gold btn--full-width">Get a Free Quote</a>
         </div>
@@ -173,17 +152,34 @@
   <main id="main-content">
 
     <!-- ============================================================
-         PAGE HERO — ABOUT US BANNER
+         PAGE HERO — ABOUT US
+         CAMBIO: .page-hero__bg ahora contiene una imagen real
+         más un overlay para mantener legibilidad del texto.
+         Reemplaza: assets/images/about-hero.webp
+         con tu propia foto (recomendado: 1920×640px o similar).
     ============================================================ -->
     <section class="page-hero" aria-labelledby="page-hero-title">
-      <div class="page-hero__bg" aria-hidden="true"></div>
-      <!-- Geometric decorative shapes -->
+
+      <!-- Fondo: imagen + overlay en capas -->
+      <div class="page-hero__bg" aria-hidden="true">
+        <img
+          class="page-hero__bg-img"
+          src="assets/images/about-hero.webp"
+          alt=""
+          width="1920"
+          height="640"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <div class="page-hero__bg-overlay"></div>
+      </div>
+
+      <!-- Formas decorativas -->
       <div class="page-hero__shape page-hero__shape--1" aria-hidden="true"></div>
       <div class="page-hero__shape page-hero__shape--2" aria-hidden="true"></div>
       <div class="page-hero__shape page-hero__shape--3" aria-hidden="true"></div>
 
       <div class="container page-hero__content">
-        <!-- Breadcrumb -->
         <nav class="breadcrumb" aria-label="Breadcrumb">
           <ol role="list">
             <li><a href="index.html"><i class="ri-home-4-line"></i> Home</a></li>
@@ -204,7 +200,6 @@
           </p>
         </div>
 
-        <!-- Quick Stats Bar -->
         <div class="page-hero__stats" data-aos="fade-up" data-aos-delay="350">
           <div class="ph-stat">
             <strong>15+</strong>
@@ -230,149 +225,73 @@
     </section>
 
 
-    <!-- ============================================================
-         OUR STORY SECTION
-    ============================================================ -->
+    <!-- OUR STORY -->
     <section class="story-section section" id="our-story" aria-labelledby="story-title">
       <div class="container">
         <div class="story__grid">
-
-          <!-- Left: Images collage -->
           <div class="story__visual" data-aos="fade-right">
             <div class="story__img-main">
-              <img src="assets/images/about-office.webp"
-                   alt="Ventus Insurance Agency office in Long Island City, New York"
-                   width="520" height="420"
-                   loading="lazy" />
+              <img src="assets/images/about-office.webp" alt="Ventus Insurance Agency office in Long Island City, New York" width="520" height="420" loading="lazy" />
             </div>
             <div class="story__img-secondary">
-              <img src="assets/images/about-team.webp"
-                   alt="Ventus Insurance team members at work"
-                   width="260" height="220"
-                   loading="lazy" />
+              <img src="assets/images/about-team.webp" alt="Ventus Insurance team members at work" width="260" height="220" loading="lazy" />
             </div>
-            <!-- Experience Badge -->
             <div class="story__badge" aria-label="15 plus years of experience">
               <span class="story__badge-number">15<sup>+</sup></span>
               <span class="story__badge-text">Years of<br/>Excellence</span>
             </div>
           </div>
-
-          <!-- Right: Story Content -->
           <div class="story__content" data-aos="fade-left">
             <span class="section__tag">Who We Are</span>
-            <h2 class="section__title" id="story-title">
-              Your Neighbors.<br />Your Insurance Experts.
-            </h2>
-            <p class="story__lead">
-              Ventus Insurance Agency was founded with a single, powerful belief: every person
-              and every business deserves honest, reliable insurance guidance — not just a policy.
-            </p>
-            <p class="story__body">
-              Nestled in the heart of Long Island City, New York, we've spent over 15 years
-              building relationships with the families, entrepreneurs, and professionals
-              who make this community thrive. We understand the unique challenges of living
-              and working in New York — from the high cost of real estate to the complexity
-              of running a small business in one of the world's most competitive cities.
-            </p>
-            <p class="story__body">
-              Our team of licensed, bilingual insurance agents brings deep industry knowledge
-              and a personal touch to every client interaction. We don't just match you with
-              a policy — we take the time to understand your life, your risks, and your goals
-              so that we can craft coverage that truly fits.
-            </p>
-
-            <!-- Story Highlights -->
+            <h2 class="section__title" id="story-title">Your Neighbors.<br />Your Insurance Experts.</h2>
+            <p class="story__lead">Ventus Insurance Agency was founded with a single, powerful belief: every person and every business deserves honest, reliable insurance guidance — not just a policy.</p>
+            <p class="story__body">Nestled in the heart of Long Island City, New York, we've spent over 15 years building relationships with the families, entrepreneurs, and professionals who make this community thrive.</p>
+            <p class="story__body">Our team of licensed, bilingual insurance agents brings deep industry knowledge and a personal touch to every client interaction. We don't just match you with a policy — we take the time to understand your life, your risks, and your goals so that we can craft coverage that truly fits.</p>
             <div class="story__highlights">
               <div class="story__highlight-item">
-                <div class="story__highlight-icon" aria-hidden="true">
-                  <i class="ri-shield-star-line"></i>
-                </div>
-                <div>
-                  <strong>Licensed & Regulated</strong>
-                  <p>Fully licensed by the State of New York Department of Financial Services.</p>
-                </div>
+                <div class="story__highlight-icon" aria-hidden="true"><i class="ri-shield-star-line"></i></div>
+                <div><strong>Licensed & Regulated</strong><p>Fully licensed by the State of New York Department of Financial Services.</p></div>
               </div>
               <div class="story__highlight-item">
-                <div class="story__highlight-icon" aria-hidden="true">
-                  <i class="ri-global-line"></i>
-                </div>
-                <div>
-                  <strong>Bilingual Service</strong>
-                  <p>Proudly serving our community in both English and Spanish.</p>
-                </div>
+                <div class="story__highlight-icon" aria-hidden="true"><i class="ri-global-line"></i></div>
+                <div><strong>Bilingual Service</strong><p>Proudly serving our community in both English and Spanish.</p></div>
               </div>
               <div class="story__highlight-item">
-                <div class="story__highlight-icon" aria-hidden="true">
-                  <i class="ri-handshake-line"></i>
-                </div>
-                <div>
-                  <strong>Independent Agency</strong>
-                  <p>We work with multiple top-rated carriers to find you the best rates.</p>
-                </div>
+                <div class="story__highlight-icon" aria-hidden="true"><i class="ri-scales-3-line"></i></div>
+                <div><strong>Independent Agency</strong><p>We work with multiple top-rated carriers to find you the best rates.</p></div>
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </section>
 
 
-    <!-- ============================================================
-         MISSION, VISION & VALUES
-    ============================================================ -->
+    <!-- MISSION, VISION & VALUES -->
     <section class="mvv-section section section--alt" id="mission" aria-labelledby="mvv-title">
       <div class="container">
-
         <div class="section__header" data-aos="fade-up">
           <span class="section__tag">What Drives Us</span>
           <h2 class="section__title" id="mvv-title">Mission, Vision & Values</h2>
-          <p class="section__desc">
-            Our foundation is built on three pillars that guide every decision,
-            every conversation, and every policy we place.
-          </p>
+          <p class="section__desc">Our foundation is built on three pillars that guide every decision, every conversation, and every policy we place.</p>
         </div>
-
         <div class="mvv__grid">
-
-          <!-- Mission -->
           <div class="mvv-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="mvv-card__icon-wrap" aria-hidden="true">
-              <i class="ri-focus-3-line"></i>
-            </div>
+            <div class="mvv-card__icon-wrap" aria-hidden="true"><i class="ri-focus-3-line"></i></div>
             <div class="mvv-card__line" aria-hidden="true"></div>
             <h3 class="mvv-card__label">Our Mission</h3>
             <h4 class="mvv-card__title">To Protect What Matters Most</h4>
-            <p class="mvv-card__desc">
-              We are committed to providing personalized, comprehensive insurance solutions
-              that give our clients the confidence to live and work without fear of the
-              unexpected. We achieve this through honest advice, superior service, and an
-              unwavering dedication to every client's best interests.
-            </p>
+            <p class="mvv-card__desc">We are committed to providing personalized, comprehensive insurance solutions that give our clients the confidence to live and work without fear of the unexpected.</p>
           </div>
-
-          <!-- Vision -->
           <div class="mvv-card mvv-card--featured" data-aos="fade-up" data-aos-delay="150">
-            <div class="mvv-card__icon-wrap" aria-hidden="true">
-              <i class="ri-eye-line"></i>
-            </div>
+            <div class="mvv-card__icon-wrap" aria-hidden="true"><i class="ri-eye-line"></i></div>
             <div class="mvv-card__line" aria-hidden="true"></div>
             <h3 class="mvv-card__label">Our Vision</h3>
             <h4 class="mvv-card__title">New York's Most Trusted Agency</h4>
-            <p class="mvv-card__desc">
-              To be recognized as the most trusted and client-centered insurance agency
-              in the New York metropolitan area — a place where every client feels heard,
-              valued, and protected. We envision a future where access to quality insurance
-              is simple, transparent, and tailored to every individual's needs.
-            </p>
+            <p class="mvv-card__desc">To be recognized as the most trusted and client-centered insurance agency in the New York metropolitan area — a place where every client feels heard, valued, and protected.</p>
           </div>
-
-          <!-- Values -->
           <div class="mvv-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="mvv-card__icon-wrap" aria-hidden="true">
-              <i class="ri-heart-line"></i>
-            </div>
+            <div class="mvv-card__icon-wrap" aria-hidden="true"><i class="ri-heart-line"></i></div>
             <div class="mvv-card__line" aria-hidden="true"></div>
             <h3 class="mvv-card__label">Our Values</h3>
             <h4 class="mvv-card__title">Integrity Above All Else</h4>
@@ -384,279 +303,122 @@
               <li><i class="ri-check-double-line" aria-hidden="true"></i> <strong>Innovation</strong> — Modern solutions for modern lives.</li>
             </ul>
           </div>
-
         </div>
       </div>
     </section>
 
 
-    <!-- ============================================================
-         TIMELINE — OUR JOURNEY
-    ============================================================ -->
+    <!-- TIMELINE -->
     <section class="timeline-section section" id="our-journey" aria-labelledby="timeline-title">
       <div class="container">
-
         <div class="section__header" data-aos="fade-up">
           <span class="section__tag">Our Journey</span>
           <h2 class="section__title" id="timeline-title">A Decade and a Half of Growth</h2>
-          <p class="section__desc">
-            From our first office to serving thousands of clients, every milestone
-            reflects our commitment to the communities we protect.
-          </p>
+          <p class="section__desc">From our first office to serving thousands of clients, every milestone reflects our commitment to the communities we protect.</p>
         </div>
-
         <div class="timeline" role="list">
-
           <div class="timeline__item" data-aos="fade-up" data-aos-delay="0" role="listitem">
-            <div class="timeline__marker" aria-hidden="true">
-              <span class="timeline__year">2009</span>
-              <div class="timeline__dot"></div>
-            </div>
-            <div class="timeline__content">
-              <h3 class="timeline__event-title">Founded in Long Island City</h3>
-              <p class="timeline__event-desc">
-                Ventus Insurance Agency opens its doors in Queens, NY, with a mission
-                to bring honest, accessible insurance to the local community.
-                We started with a small team of 3 dedicated agents.
-              </p>
-            </div>
+            <div class="timeline__marker" aria-hidden="true"><span class="timeline__year">2009</span><div class="timeline__dot"></div></div>
+            <div class="timeline__content"><h3 class="timeline__event-title">Founded in Long Island City</h3><p class="timeline__event-desc">Ventus Insurance Agency opens its doors in Queens, NY, with a mission to bring honest, accessible insurance to the local community. We started with a small team of 3 dedicated agents.</p></div>
           </div>
-
           <div class="timeline__item" data-aos="fade-up" data-aos-delay="100" role="listitem">
-            <div class="timeline__marker" aria-hidden="true">
-              <span class="timeline__year">2012</span>
-              <div class="timeline__dot"></div>
-            </div>
-            <div class="timeline__content">
-              <h3 class="timeline__event-title">Expanding Our Product Portfolio</h3>
-              <p class="timeline__event-desc">
-                We launched Commercial Truck Insurance and Business Insurance lines,
-                responding to the growing needs of New York's entrepreneurs and fleet operators.
-                Client base grows to over 500 families and businesses.
-              </p>
-            </div>
+            <div class="timeline__marker" aria-hidden="true"><span class="timeline__year">2012</span><div class="timeline__dot"></div></div>
+            <div class="timeline__content"><h3 class="timeline__event-title">Expanding Our Product Portfolio</h3><p class="timeline__event-desc">We launched Commercial Truck Insurance and Business Insurance lines, responding to the growing needs of New York's entrepreneurs and fleet operators.</p></div>
           </div>
-
           <div class="timeline__item" data-aos="fade-up" data-aos-delay="200" role="listitem">
-            <div class="timeline__marker" aria-hidden="true">
-              <span class="timeline__year">2016</span>
-              <div class="timeline__dot"></div>
-            </div>
-            <div class="timeline__content">
-              <h3 class="timeline__event-title">Bilingual Service Launch</h3>
-              <p class="timeline__event-desc">
-                Recognizing the diverse makeup of our community, we officially launched
-                full bilingual (English & Spanish) client services — opening our doors
-                wider to the Latino community across Queens and Brooklyn.
-              </p>
-            </div>
+            <div class="timeline__marker" aria-hidden="true"><span class="timeline__year">2016</span><div class="timeline__dot"></div></div>
+            <div class="timeline__content"><h3 class="timeline__event-title">Bilingual Service Launch</h3><p class="timeline__event-desc">We officially launched full bilingual (English & Spanish) client services — opening our doors wider to the Latino community across Queens and Brooklyn.</p></div>
           </div>
-
           <div class="timeline__item" data-aos="fade-up" data-aos-delay="300" role="listitem">
-            <div class="timeline__marker" aria-hidden="true">
-              <span class="timeline__year">2019</span>
-              <div class="timeline__dot"></div>
-            </div>
-            <div class="timeline__content">
-              <h3 class="timeline__event-title">1,000+ Active Clients Milestone</h3>
-              <p class="timeline__event-desc">
-                A landmark year — we celebrated protecting over 1,000 active clients
-                and expanded our office space in Long Island City to accommodate
-                our growing team of 12 licensed insurance professionals.
-              </p>
-            </div>
+            <div class="timeline__marker" aria-hidden="true"><span class="timeline__year">2019</span><div class="timeline__dot"></div></div>
+            <div class="timeline__content"><h3 class="timeline__event-title">1,000+ Active Clients Milestone</h3><p class="timeline__event-desc">A landmark year — we celebrated protecting over 1,000 active clients and expanded our office space in Long Island City to accommodate our growing team of 12 licensed professionals.</p></div>
           </div>
-
           <div class="timeline__item" data-aos="fade-up" data-aos-delay="400" role="listitem">
-            <div class="timeline__marker" aria-hidden="true">
-              <span class="timeline__year">2022</span>
-              <div class="timeline__dot"></div>
-            </div>
-            <div class="timeline__content">
-              <h3 class="timeline__event-title">Digital Transformation</h3>
-              <p class="timeline__event-desc">
-                We invested in digital tools to streamline quoting, policy management,
-                and claims support — making insurance faster and more accessible
-                for all our clients, wherever they are.
-              </p>
-            </div>
+            <div class="timeline__marker" aria-hidden="true"><span class="timeline__year">2022</span><div class="timeline__dot"></div></div>
+            <div class="timeline__content"><h3 class="timeline__event-title">Digital Transformation</h3><p class="timeline__event-desc">We invested in digital tools to streamline quoting, policy management, and claims support — making insurance faster and more accessible for all our clients.</p></div>
           </div>
-
           <div class="timeline__item timeline__item--current" data-aos="fade-up" data-aos-delay="500" role="listitem">
-            <div class="timeline__marker" aria-hidden="true">
-              <span class="timeline__year">Today</span>
-              <div class="timeline__dot timeline__dot--current"></div>
-            </div>
-            <div class="timeline__content">
-              <h3 class="timeline__event-title">5,000+ Clients Strong & Growing</h3>
-              <p class="timeline__event-desc">
-                Today, Ventus Insurance Agency proudly serves over 5,000 clients across
-                New York with a dedicated team of expert agents, a full suite of 5 insurance
-                products, and a 98% client satisfaction rate. We're just getting started.
-              </p>
-            </div>
+            <div class="timeline__marker" aria-hidden="true"><span class="timeline__year">Today</span><div class="timeline__dot timeline__dot--current"></div></div>
+            <div class="timeline__content"><h3 class="timeline__event-title">5,000+ Clients Strong & Growing</h3><p class="timeline__event-desc">Today, Ventus Insurance Agency proudly serves over 5,000 clients across New York with a dedicated team, a full suite of 5 insurance products, and a 98% client satisfaction rate.</p></div>
           </div>
-
         </div>
       </div>
     </section>
 
 
-    <!-- ============================================================
-         MEET THE TEAM
-    ============================================================ -->
+    <!-- TEAM -->
     <section class="team-section section section--alt" id="our-team" aria-labelledby="team-title">
       <div class="container">
-
         <div class="section__header" data-aos="fade-up">
           <span class="section__tag">The People Behind Ventus</span>
           <h2 class="section__title" id="team-title">Meet Our Expert Team</h2>
-          <p class="section__desc">
-            Experienced, licensed professionals who are passionate about protecting you.
-            When you work with Ventus, you work with real people who genuinely care.
-          </p>
+          <p class="section__desc">Experienced, licensed professionals who are passionate about protecting you. When you work with Ventus, you work with real people who genuinely care.</p>
         </div>
-
         <div class="team__grid">
-
-          <!-- Team Member 1 -->
           <article class="team-card" data-aos="fade-up" data-aos-delay="0">
             <div class="team-card__img-wrap">
-              <img src="assets/images/team-1.webp"
-                   alt="Portrait of Maria Rodriguez, Agency Director"
-                   width="280" height="320"
-                   loading="lazy" />
-              <div class="team-card__overlay">
-                <div class="team-card__social">
-                  <a href="#" aria-label="LinkedIn profile of Maria Rodriguez"><i class="ri-linkedin-fill"></i></a>
-                  <a href="/cdn-cgi/l/email-protection#89e4e8fbe0e8c9ffece7fdfcfaa4e0e7fafcfbe8e7eaeca7eae6e4" aria-label="Email Maria Rodriguez"><i class="ri-mail-line"></i></a>
-                </div>
-              </div>
+              <img src="assets/images/team-1.webp" alt="Portrait of Maria Rodriguez, Agency Director" width="280" height="320" loading="lazy" />
+              <div class="team-card__overlay"><div class="team-card__social"><a href="#" aria-label="LinkedIn profile of Maria Rodriguez"><i class="ri-linkedin-fill"></i></a><a href="mailto:maria@ventus-insurance.com" aria-label="Email Maria Rodriguez"><i class="ri-mail-line"></i></a></div></div>
             </div>
             <div class="team-card__body">
               <h3 class="team-card__name">Maria Rodriguez</h3>
               <span class="team-card__role">Agency Director & Founder</span>
-              <p class="team-card__bio">
-                With 20+ years in the insurance industry, Maria founded Ventus with a vision
-                to create an agency built on trust and genuine client service.
-              </p>
-              <div class="team-card__creds">
-                <span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span>
-                <span><i class="ri-translate-2"></i> English · Spanish</span>
-              </div>
+              <p class="team-card__bio">With 20+ years in the insurance industry, Maria founded Ventus with a vision to create an agency built on trust and genuine client service.</p>
+              <div class="team-card__creds"><span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span><span><i class="ri-translate-2"></i> English · Spanish</span></div>
             </div>
           </article>
-
-          <!-- Team Member 2 -->
           <article class="team-card" data-aos="fade-up" data-aos-delay="150">
             <div class="team-card__img-wrap">
-              <img src="assets/images/team-2.webp"
-                   alt="Portrait of James Carter, Senior Insurance Agent"
-                   width="280" height="320"
-                   loading="lazy" />
-              <div class="team-card__overlay">
-                <div class="team-card__social">
-                  <a href="#" aria-label="LinkedIn profile of James Carter"><i class="ri-linkedin-fill"></i></a>
-                  <a href="/cdn-cgi/l/email-protection#dfb5beb2baac9fa9bab1abaaacf2b6b1acaaadbeb1bcbaf1bcb0b2" aria-label="Email James Carter"><i class="ri-mail-line"></i></a>
-                </div>
-              </div>
+              <img src="assets/images/team-2.webp" alt="Portrait of James Carter, Senior Insurance Agent" width="280" height="320" loading="lazy" />
+              <div class="team-card__overlay"><div class="team-card__social"><a href="#" aria-label="LinkedIn profile of James Carter"><i class="ri-linkedin-fill"></i></a><a href="mailto:james@ventus-insurance.com" aria-label="Email James Carter"><i class="ri-mail-line"></i></a></div></div>
             </div>
             <div class="team-card__body">
               <h3 class="team-card__name">James Carter</h3>
               <span class="team-card__role">Senior Agent — Commercial Lines</span>
-              <p class="team-card__bio">
-                James specializes in business and truck insurance, helping New York's
-                entrepreneurs and fleet operators find the right commercial coverage.
-              </p>
-              <div class="team-card__creds">
-                <span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span>
-                <span><i class="ri-building-line"></i> Commercial Specialist</span>
-              </div>
+              <p class="team-card__bio">James specializes in business and truck insurance, helping New York's entrepreneurs and fleet operators find the right commercial coverage.</p>
+              <div class="team-card__creds"><span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span><span><i class="ri-building-line"></i> Commercial Specialist</span></div>
             </div>
           </article>
-
-          <!-- Team Member 3 -->
           <article class="team-card" data-aos="fade-up" data-aos-delay="300">
             <div class="team-card__img-wrap">
-              <img src="assets/images/team-3.webp"
-                   alt="Portrait of Sofia Mendez, Personal Lines Agent"
-                   width="280" height="320"
-                   loading="lazy" />
-              <div class="team-card__overlay">
-                <div class="team-card__social">
-                  <a href="#" aria-label="LinkedIn profile of Sofia Mendez"><i class="ri-linkedin-fill"></i></a>
-                  <a href="/cdn-cgi/l/email-protection#ef9c8089868eaf998a819b9a9cc286819c9a9d8e818c8ac18c8082" aria-label="Email Sofia Mendez"><i class="ri-mail-line"></i></a>
-                </div>
-              </div>
+              <img src="assets/images/team-3.webp" alt="Portrait of Sofia Mendez, Personal Lines Agent" width="280" height="320" loading="lazy" />
+              <div class="team-card__overlay"><div class="team-card__social"><a href="#" aria-label="LinkedIn profile of Sofia Mendez"><i class="ri-linkedin-fill"></i></a><a href="mailto:sofia@ventus-insurance.com" aria-label="Email Sofia Mendez"><i class="ri-mail-line"></i></a></div></div>
             </div>
             <div class="team-card__body">
               <h3 class="team-card__name">Sofia Mendez</h3>
               <span class="team-card__role">Personal Lines Agent</span>
-              <p class="team-card__bio">
-                Sofia brings warmth and expertise to every client interaction, specializing
-                in home, auto, and life insurance for individuals and families across NY.
-              </p>
-              <div class="team-card__creds">
-                <span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span>
-                <span><i class="ri-translate-2"></i> English · Spanish</span>
-              </div>
+              <p class="team-card__bio">Sofia brings warmth and expertise to every client interaction, specializing in home, auto, and life insurance for individuals and families across NY.</p>
+              <div class="team-card__creds"><span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span><span><i class="ri-translate-2"></i> English · Spanish</span></div>
             </div>
           </article>
-
-          <!-- Team Member 4 -->
           <article class="team-card" data-aos="fade-up" data-aos-delay="450">
             <div class="team-card__img-wrap">
-              <img src="assets/images/team-4.webp"
-                   alt="Portrait of David Kim, Claims Support Specialist"
-                   width="280" height="320"
-                   loading="lazy" />
-              <div class="team-card__overlay">
-                <div class="team-card__social">
-                  <a href="#" aria-label="LinkedIn profile of David Kim"><i class="ri-linkedin-fill"></i></a>
-                  <a href="/cdn-cgi/l/email-protection#492d283f202d093f2c273d3c3a6420273a3c3b28272a2c672a2624" aria-label="Email David Kim"><i class="ri-mail-line"></i></a>
-                </div>
-              </div>
+              <img src="assets/images/team-4.webp" alt="Portrait of David Kim, Claims Support Specialist" width="280" height="320" loading="lazy" />
+              <div class="team-card__overlay"><div class="team-card__social"><a href="#" aria-label="LinkedIn profile of David Kim"><i class="ri-linkedin-fill"></i></a><a href="mailto:david@ventus-insurance.com" aria-label="Email David Kim"><i class="ri-mail-line"></i></a></div></div>
             </div>
             <div class="team-card__body">
               <h3 class="team-card__name">David Kim</h3>
               <span class="team-card__role">Claims Support Specialist</span>
-              <p class="team-card__bio">
-                David guides clients through every step of the claims process, ensuring
-                fast, fair, and stress-free resolution when they need it most.
-              </p>
-              <div class="team-card__creds">
-                <span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span>
-                <span><i class="ri-customer-service-2-line"></i> Claims Expert</span>
-              </div>
+              <p class="team-card__bio">David guides clients through every step of the claims process, ensuring fast, fair, and stress-free resolution when they need it most.</p>
+              <div class="team-card__creds"><span><i class="ri-shield-check-line"></i> Licensed Agent — NY</span><span><i class="ri-customer-service-2-line"></i> Claims Expert</span></div>
             </div>
           </article>
-
         </div>
-
       </div>
     </section>
 
 
-    <!-- ============================================================
-         TRUST INDICATORS — CARRIERS & CERTIFICATIONS
-    ============================================================ -->
+    <!-- CARRIERS & TRUST -->
     <section class="trust-section section" id="our-partners" aria-labelledby="trust-title">
       <div class="container">
-
         <div class="section__header" data-aos="fade-up">
           <span class="section__tag">Trusted Partners</span>
           <h2 class="section__title" id="trust-title">We Work With the Best Carriers</h2>
-          <p class="section__desc">
-            As an independent agency, we're free to shop across dozens of top-rated insurance
-            carriers to find you the most competitive coverage available.
-          </p>
+          <p class="section__desc">As an independent agency, we're free to shop across dozens of top-rated insurance carriers to find you the most competitive coverage available.</p>
         </div>
-
-        <!-- Carrier Logos Marquee -->
         <div class="carriers__marquee-wrapper" aria-label="Insurance carrier partners" data-aos="fade-up">
           <div class="carriers__marquee" aria-hidden="true">
             <div class="carriers__track">
-              <!-- Duplicated for seamless loop -->
               <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-1.webp" alt="Progressive Insurance" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-2.webp" alt="Allstate Insurance" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-3.webp" alt="State Farm Insurance" width="120" height="48" loading="lazy" /></span>
@@ -669,92 +431,43 @@
               <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-10.webp" alt="Travelers Insurance" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-11.webp" alt="Liberty Mutual Insurance" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-12.webp" alt="Travelers Insurance" width="120" height="48" loading="lazy" /></span>
-              
-              <!-- Duplicate set for loop -->
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-1.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-2.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-3.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-4.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-5.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-6.webp" alt="" width="120" height="48" loading="lazy" /></span>
-               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-7.webp" alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-7.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-8.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-9.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-10.webp" alt="" width="120" height="48" loading="lazy" /></span>
               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-11.webp" alt="" width="120" height="48" loading="lazy" /></span>
-               <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-12.webp" alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-12.webp" alt="" width="120" height="48" loading="lazy" /></span>
             </div>
           </div>
         </div>
-
-        <!-- Trust Badges -->
         <div class="trust__badges" data-aos="fade-up">
-          <div class="trust-badge">
-            <div class="trust-badge__icon" aria-hidden="true"><i class="ri-shield-check-line"></i></div>
-            <div class="trust-badge__text">
-              <strong>NY DFS Licensed</strong>
-              <span>State of New York</span>
-            </div>
-          </div>
-          <div class="trust-badge">
-            <div class="trust-badge__icon" aria-hidden="true"><i class="ri-award-line"></i></div>
-            <div class="trust-badge__text">
-              <strong>A+ Rated Agency</strong>
-              <span>Client Reviews</span>
-            </div>
-          </div>
-          <div class="trust-badge">
-            <div class="trust-badge__icon" aria-hidden="true"><i class="ri-group-line"></i></div>
-            <div class="trust-badge__text">
-              <strong>Independent Agent</strong>
-              <span>No Carrier Bias</span>
-            </div>
-          </div>
-          <div class="trust-badge">
-            <div class="trust-badge__icon" aria-hidden="true"><i class="ri-translate-2"></i></div>
-            <div class="trust-badge__text">
-              <strong>Bilingual Team</strong>
-              <span>English & Spanish</span>
-            </div>
-          </div>
-          <div class="trust-badge">
-            <div class="trust-badge__icon" aria-hidden="true"><i class="ri-secure-payment-line"></i></div>
-            <div class="trust-badge__text">
-              <strong>Secure & Confidential</strong>
-              <span>Your Data is Safe</span>
-            </div>
-          </div>
+          <div class="trust-badge"><div class="trust-badge__icon" aria-hidden="true"><i class="ri-shield-check-line"></i></div><div class="trust-badge__text"><strong>NY DFS Licensed</strong><span>State of New York</span></div></div>
+          <div class="trust-badge"><div class="trust-badge__icon" aria-hidden="true"><i class="ri-award-line"></i></div><div class="trust-badge__text"><strong>A+ Rated Agency</strong><span>Client Reviews</span></div></div>
+          <div class="trust-badge"><div class="trust-badge__icon" aria-hidden="true"><i class="ri-group-line"></i></div><div class="trust-badge__text"><strong>Independent Agent</strong><span>No Carrier Bias</span></div></div>
+          <div class="trust-badge"><div class="trust-badge__icon" aria-hidden="true"><i class="ri-translate-2"></i></div><div class="trust-badge__text"><strong>Bilingual Team</strong><span>English & Spanish</span></div></div>
+          <div class="trust-badge"><div class="trust-badge__icon" aria-hidden="true"><i class="ri-secure-payment-line"></i></div><div class="trust-badge__text"><strong>Secure & Confidential</strong><span>Your Data is Safe</span></div></div>
         </div>
-
       </div>
     </section>
 
 
-    <!-- ============================================================
-         CTA — CONTACT / GET A QUOTE
-    ============================================================ -->
+    <!-- CTA -->
     <section class="cta-section" id="about-cta" aria-labelledby="about-cta-title">
       <div class="cta__bg-overlay" aria-hidden="true"></div>
       <div class="container cta__content" data-aos="fade-up">
         <div class="cta__text">
-          <h2 class="cta__title" id="about-cta-title">
-            Ready to Experience the Ventus Difference?
-          </h2>
-          <p class="cta__desc">
-            Join thousands of New Yorkers who trust Ventus Insurance Agency
-            to protect their homes, vehicles, businesses, and families.
-            Let's find the right coverage for you today — no obligation, no pressure.
-          </p>
+          <h2 class="cta__title" id="about-cta-title">Ready to Experience the Ventus Difference?</h2>
+          <p class="cta__desc">Join thousands of New Yorkers who trust Ventus Insurance Agency to protect their homes, vehicles, businesses, and families. Let's find the right coverage for you today — no obligation, no pressure.</p>
         </div>
         <div class="cta__actions">
-          <a href="contact.html" class="btn btn--gold btn--lg">
-            <i class="ri-file-text-line"></i>
-            Get a Free Quote
-          </a>
-          <a href="tel:+19177228266" class="btn btn--white-outline btn--lg">
-            <i class="ri-phone-line"></i>
-            (917) 722-8266
-          </a>
+          <a href="contact.html" class="btn btn--gold btn--lg"><i class="ri-file-text-line"></i> Get a Free Quote</a>
+          <a href="tel:+19177228266" class="btn btn--white-outline btn--lg"><i class="ri-phone-line"></i> (917) 722-8266</a>
         </div>
       </div>
     </section>
@@ -762,33 +475,20 @@
   </main>
 
 
-  <!-- ============================================================
-       FOOTER (identical across all pages)
-  ============================================================ -->
   <footer class="footer" role="contentinfo">
     <div class="footer__main">
       <div class="container footer__grid">
-
         <div class="footer__col footer__col--brand">
-          <a href="index.html" aria-label="Ventus Insurance Agency">
-            <img src="assets/images/logo-ventus-white.webp" alt="Ventus Insurance Agency" width="180" height="60" loading="lazy" />
-          </a>
-          <p class="footer__tagline">
-            Protecting what matters most — with integrity, expertise, and a commitment
-            to every client we serve across New York.
-          </p>
+          <a href="index.html" aria-label="Ventus Insurance Agency"><img src="assets/images/logo-ventus-white.webp" alt="Ventus Insurance Agency" width="180" height="60" loading="lazy" /></a>
+          <p class="footer__tagline">Protecting what matters most — with integrity, expertise, and a commitment to every client we serve across New York.</p>
           <div class="footer__social" aria-label="Social media links">
             <a href="#" aria-label="Facebook" class="social__link"><i class="ri-facebook-fill"></i></a>
             <a href="#" aria-label="Instagram" class="social__link"><i class="ri-instagram-line"></i></a>
             <a href="#" aria-label="LinkedIn" class="social__link"><i class="ri-linkedin-fill"></i></a>
             <a href="#" aria-label="Twitter / X" class="social__link"><i class="ri-twitter-x-line"></i></a>
           </div>
-          <div class="footer__license">
-            <i class="ri-shield-check-line" aria-hidden="true"></i>
-            <span>Licensed Insurance Agency – State of New York</span>
-          </div>
+          <div class="footer__license"><i class="ri-shield-check-line" aria-hidden="true"></i><span>Licensed Insurance Agency – State of New York</span></div>
         </div>
-
         <nav class="footer__col" aria-label="Quick links">
           <h4 class="footer__col-title">Quick Links</h4>
           <ul role="list">
@@ -799,7 +499,6 @@
             <li><a href="contact.html"><i class="ri-arrow-right-s-line"></i> Contact</a></li>
           </ul>
         </nav>
-
         <nav class="footer__col" aria-label="Insurance products">
           <h4 class="footer__col-title">Our Products</h4>
           <ul role="list">
@@ -810,26 +509,21 @@
             <li><a href="products/life-insurance.html"><i class="ri-heart-pulse-line"></i> Life Insurance</a></li>
           </ul>
         </nav>
-
         <div class="footer__col">
           <h4 class="footer__col-title">Contact Us</h4>
           <address class="footer__address">
             <p><i class="ri-map-pin-2-line" aria-hidden="true"></i> 4-29 27th Avenue Suite 3R,<br />Long Island City, NY 11102</p>
             <p><i class="ri-phone-line" aria-hidden="true"></i> <a href="tel:+19177228266">(917) 722-8266</a></p>
             <p><i class="ri-printer-line" aria-hidden="true"></i> <a href="tel:+15182453863">(518) 245-3863</a></p>
-            <p><i class="ri-mail-line" aria-hidden="true"></i> <a href="/cdn-cgi/l/email-protection#492a26273d282a3d093f2c273d3c3a6420273a3c3b28272a2c672a2624"><span class="__cf_email__" data-cfemail="6a0905041e0b091e2a1c0f041e1f19470304191f180b04090f44090507">contact@ventus-insurance.com&#160;</span></a></p>
+            <p><i class="ri-mail-line" aria-hidden="true"></i> <a href="mailto:contact@ventus-insurance.com">contact@ventus-insurance.com</a></p>
             <p><i class="ri-time-line" aria-hidden="true"></i> Mon – Fri: 09:00 AM – 6:00 PM</p>
           </address>
         </div>
-
       </div>
     </div>
-
     <div class="footer__bottom">
       <div class="container footer__bottom-inner">
-        <p class="footer__copy">
-          &copy; <span id="current-year"></span> Ventus Insurance Agency. All rights reserved.
-        </p>
+        <p class="footer__copy">&copy; <span id="current-year"></span> Ventus Insurance Agency. All rights reserved.</p>
         <nav class="footer__legal" aria-label="Legal links">
           <a href="privacy.html">Privacy Policy</a>
           <span aria-hidden="true">|</span>
@@ -841,14 +535,11 @@
     </div>
   </footer>
 
-  <!-- Back to Top -->
   <button class="back-to-top" id="back-to-top" aria-label="Back to top" title="Back to top">
     <i class="ri-arrow-up-line"></i>
   </button>
 
-  <!-- Shared JS -->
   <script src="js/index.js" defer></script>
-  <!-- About-specific JS -->
   <script src="js/about.js" defer></script>
 </body>
 </html>
