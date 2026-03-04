@@ -27,6 +27,11 @@
 
   <!-- ============================================================
        HEADER / NAVIGATION
+       NOTA: Los href del dropdown usan "#section-id" (ancla pura)
+       porque esta página ES products.html.
+       products.js intercepta esos clics con capture:true y
+       stopImmediatePropagation(), evitando que index.js los
+       bloquee o redirija a rutas inexistentes.
   ============================================================ -->
   <header class="header" id="header">
     <div class="header__topbar">
@@ -63,43 +68,62 @@
         <ul class="navbar__menu" role="list" id="nav-menu">
           <li><a href="index.html" class="nav__link">Home</a></li>
           <li><a href="about.html" class="nav__link">About Us</a></li>
+
           <li class="nav__dropdown" aria-haspopup="true">
             <a href="products.html" class="nav__link nav__link--active nav__link--dropdown" aria-current="page">
               Our Products <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
             </a>
+            <!-- Los href="#id" son anclas puras: products.js los captura con
+                 stopImmediatePropagation para que index.js no los intercepte -->
             <ul class="dropdown__menu" role="list" aria-label="Products submenu">
               <li>
                 <a href="#home-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-home-2-line"></i></span>
-                  <span class="dropdown__text"><strong>Home Insurance</strong><small>Protect your property</small></span>
+                  <span class="dropdown__text">
+                    <strong>Home Insurance</strong>
+                    <small>Protect your property</small>
+                  </span>
                 </a>
               </li>
               <li>
                 <a href="#auto-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-car-line"></i></span>
-                  <span class="dropdown__text"><strong>Auto Insurance</strong><small>Drive with confidence</small></span>
+                  <span class="dropdown__text">
+                    <strong>Auto Insurance</strong>
+                    <small>Drive with confidence</small>
+                  </span>
                 </a>
               </li>
               <li>
                 <a href="#business-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-building-line"></i></span>
-                  <span class="dropdown__text"><strong>Business Insurance</strong><small>Safeguard your company</small></span>
+                  <span class="dropdown__text">
+                    <strong>Business Insurance</strong>
+                    <small>Safeguard your company</small>
+                  </span>
                 </a>
               </li>
               <li>
                 <a href="#truck-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-truck-line"></i></span>
-                  <span class="dropdown__text"><strong>Truck Insurance</strong><small>Coverage for your fleet</small></span>
+                  <span class="dropdown__text">
+                    <strong>Truck Insurance</strong>
+                    <small>Coverage for your fleet</small>
+                  </span>
                 </a>
               </li>
               <li>
                 <a href="#life-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-heart-pulse-line"></i></span>
-                  <span class="dropdown__text"><strong>Personal Life Insurance</strong><small>Secure your family's future</small></span>
+                  <span class="dropdown__text">
+                    <strong>Personal Life Insurance</strong>
+                    <small>Secure your family's future</small>
+                  </span>
                 </a>
               </li>
             </ul>
           </li>
+
           <li><a href="services.html" class="nav__link">Our Services</a></li>
           <li><a href="blog.html" class="nav__link">Blog</a></li>
           <li><a href="contact.html" class="nav__link">Contact</a></li>
@@ -133,6 +157,8 @@
               <button class="mobile-nav__accordion-btn" aria-expanded="true">
                 Our Products <i class="ri-arrow-down-s-line"></i>
               </button>
+              <!-- href="#id" → products.js intercepta en capture phase,
+                   cierra el drawer y hace smooth scroll -->
               <ul class="mobile-nav__sub is-open" aria-hidden="false">
                 <li><a href="#home-insurance"><i class="ri-home-2-line"></i> Home Insurance</a></li>
                 <li><a href="#auto-insurance"><i class="ri-car-line"></i> Auto Insurance</a></li>
@@ -166,7 +192,19 @@
          PAGE HERO
     ============================================================ -->
     <section class="page-hero prod-hero" aria-labelledby="prod-hero-title">
+
+      <!-- Capa 1: Gradiente base oscuro -->
       <div class="prod-hero__bg" aria-hidden="true"></div>
+
+      <!-- Capa 2: Foto de fondo completa
+           → Pon tu imagen en: assets/images/products/hero-bg.webp
+           → Puede ser una imagen de ciudad/familia/oficina NY -->
+      <div class="prod-hero__bg-photo" aria-hidden="true"></div>
+
+      <!-- Capa 3: Overlay semitransparente (legibilidad del texto) -->
+      <div class="prod-hero__bg-overlay" aria-hidden="true"></div>
+
+      <!-- Capa 4: Grid decorativo -->
       <div class="prod-hero__grid-overlay" aria-hidden="true"></div>
 
       <div class="container prod-hero__content">
@@ -178,35 +216,60 @@
           </ol>
         </nav>
 
-        <div class="prod-hero__text">
-          <span class="section__tag section__tag--light" data-aos="fade-up">Complete Coverage</span>
-          <h1 class="prod-hero__title" id="prod-hero-title" data-aos="fade-up" data-aos-delay="100">
-            Insurance Built<br />
-            <span class="prod-hero__title--accent">Around Your Life</span>
-          </h1>
-          <p class="prod-hero__desc" data-aos="fade-up" data-aos-delay="200">
-            Five comprehensive insurance products designed to protect every aspect
-            of what you've worked hard to build — from your home and car to your
-            business, fleet, and family's future.
-          </p>
+        <!-- Texto izquierda + imagen derecha -->
+        <div class="prod-hero__inner">
+
+          <div class="prod-hero__text" data-aos="fade-up">
+            <span class="section__tag section__tag--light">Complete Coverage</span>
+            <h1 class="prod-hero__title" id="prod-hero-title" data-aos="fade-up" data-aos-delay="100">
+              Insurance Built<br />
+              <span class="prod-hero__title--accent">Around Your Life</span>
+            </h1>
+            <p class="prod-hero__desc" data-aos="fade-up" data-aos-delay="200">
+              Five comprehensive insurance products designed to protect every aspect
+              of what you've worked hard to build — from your home and car to your
+              business, fleet, and family's future.
+            </p>
+          </div>
+
+          <!-- Imagen lateral derecha (se conserva) -->
+          <div class="prod-hero__image" data-aos="fade-left" data-aos-delay="150">
+            <div class="prod-hero__image-wrap">
+              <img
+                src="assets/images/hero-products.webp"
+                alt="Family protected by Ventus Insurance"
+                width="560" height="420"
+                loading="eager"
+              />
+              <div class="prod-hero__badge">
+                <i class="ri-shield-check-fill"></i>
+                <span>Trusted Coverage<br /><strong>Since 2010</strong></span>
+              </div>
+              <div class="prod-hero__stat">
+                <strong>5,000+</strong>
+                <span>Clients Protected</span>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         <!-- Product Quick Nav Pills -->
         <nav class="prod-nav-pills" aria-label="Jump to product section" data-aos="fade-up" data-aos-delay="300">
           <a href="#home-insurance" class="prod-pill prod-pill--active">
-            <i class="ri-home-2-line"></i> Home
+            <i class="ri-home-2-line"></i> <span>Home</span>
           </a>
           <a href="#auto-insurance" class="prod-pill">
-            <i class="ri-car-line"></i> Auto
+            <i class="ri-car-line"></i> <span>Auto</span>
           </a>
           <a href="#business-insurance" class="prod-pill">
-            <i class="ri-building-line"></i> Business
+            <i class="ri-building-line"></i> <span>Business</span>
           </a>
           <a href="#truck-insurance" class="prod-pill">
-            <i class="ri-truck-line"></i> Truck
+            <i class="ri-truck-line"></i> <span>Truck</span>
           </a>
           <a href="#life-insurance" class="prod-pill">
-            <i class="ri-heart-pulse-line"></i> Life
+            <i class="ri-heart-pulse-line"></i> <span>Life</span>
           </a>
         </nav>
       </div>
@@ -240,7 +303,6 @@
               family are fully protected — no matter what happens.
             </p>
 
-            <!-- Coverage Tabs -->
             <div class="coverage__tabs" role="tablist" aria-label="Home insurance coverage options">
               <button class="coverage__tab coverage__tab--active" role="tab" aria-selected="true" aria-controls="home-standard" data-tab="home-standard">Standard</button>
               <button class="coverage__tab" role="tab" aria-selected="false" aria-controls="home-enhanced" data-tab="home-enhanced">Enhanced</button>
@@ -358,9 +420,7 @@
                    alt="Modern car on a New York road representing auto insurance"
                    width="580" height="440" loading="lazy" />
             </div>
-            <div class="product-detail__icon-badge">
-              <i class="ri-car-line"></i>
-            </div>
+            <div class="product-detail__icon-badge"><i class="ri-car-line"></i></div>
           </div>
 
         </div>
@@ -384,7 +444,6 @@
             <div class="product-detail__icon-badge product-detail__icon-badge--gold">
               <i class="ri-building-line"></i>
             </div>
-            <!-- Featured tag -->
             <div class="product-detail__featured-tag" aria-label="Most popular product">
               <i class="ri-star-line"></i> Most Popular
             </div>
@@ -514,9 +573,7 @@
                    alt="Commercial truck on highway representing truck insurance"
                    width="580" height="440" loading="lazy" />
             </div>
-            <div class="product-detail__icon-badge">
-              <i class="ri-truck-line"></i>
-            </div>
+            <div class="product-detail__icon-badge"><i class="ri-truck-line"></i></div>
           </div>
 
         </div>
@@ -537,9 +594,7 @@
                    alt="Happy family together representing personal life insurance"
                    width="580" height="440" loading="lazy" />
             </div>
-            <div class="product-detail__icon-badge">
-              <i class="ri-heart-pulse-line"></i>
-            </div>
+            <div class="product-detail__icon-badge"><i class="ri-heart-pulse-line"></i></div>
           </div>
 
           <div class="product-detail__content" data-aos="fade-left">
@@ -601,7 +656,7 @@
 
 
     <!-- ============================================================
-         WHY CHOOSE VENTUS (Comparison Table)
+         WHY CHOOSE VENTUS
     ============================================================ -->
     <section class="compare-section section section--alt" id="why-ventus" aria-labelledby="compare-title">
       <div class="container">
@@ -686,7 +741,6 @@
 
         <div class="faq__grid" data-aos="fade-up">
           <div class="faq__col">
-
             <div class="faq__item">
               <button class="faq__question" aria-expanded="false">
                 How do I know which insurance product I need?
@@ -716,11 +770,9 @@
                 <p>In many cases, same-day or next-day coverage is available, especially for auto and home insurance. Commercial and specialty products may require a few business days for underwriting. Our team moves fast to get you protected as quickly as possible.</p>
               </div>
             </div>
-
           </div>
 
           <div class="faq__col">
-
             <div class="faq__item">
               <button class="faq__question" aria-expanded="false">
                 Do you serve clients outside New York?
@@ -750,10 +802,8 @@
                 <p>Yes — and often better. Because we work with multiple carriers, we shop the market for you and find pricing that online direct insurers simply can't match. Plus, you get the added value of personalized service and a real person in your corner at no extra cost.</p>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     </section>
 
@@ -765,9 +815,7 @@
       <div class="cta__bg-overlay" aria-hidden="true"></div>
       <div class="container cta__content" data-aos="fade-up">
         <div class="cta__text">
-          <h2 class="cta__title" id="products-cta-title">
-            Not Sure Where to Start?
-          </h2>
+          <h2 class="cta__title" id="products-cta-title">Not Sure Where to Start?</h2>
           <p class="cta__desc">
             Our agents are here to help you find the right coverage at the best price.
             Get a free, no-obligation quote today — it takes just a few minutes.
