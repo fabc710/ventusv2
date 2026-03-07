@@ -1,13 +1,14 @@
 /* ================================================================
    VENTUS INSURANCE AGENCY — About Us Stylesheet
    File: css/about.css
+   Version: 2.1 — Hero 3-stat fix, marquee single-row, responsive polish
    Description: Styles exclusive to about.html
    Note: Inherits all design tokens from css/index.css
 ================================================================ */
 
 /* ----------------------------------------------------------------
    TABLE OF CONTENTS
-   1.  Page Hero (Banner) — CON IMAGEN REAL
+   1.  Page Hero (Banner)
    2.  Our Story Section
    3.  Mission, Vision & Values (MVV)
    4.  Timeline — Our Journey
@@ -16,19 +17,12 @@
    7.  Responsive — Tablet (max 1024px)
    8.  Responsive — Mobile (max 768px)
    9.  Responsive — Small Mobile (max 480px)
+   10. Reduced Motion
 ---------------------------------------------------------------- */
 
 
 /* ================================================================
-   1. PAGE HERO (BANNER) — CON IMAGEN REAL DE FONDO
-   CAMBIO v2.0: se reemplazó el fondo de gradiente CSS puro
-   por una imagen real (.page-hero__bg-img) con overlay multicapa.
-
-   INSTRUCCIONES:
-   - Coloca tu imagen en: assets/images/about-hero.webp
-   - Tamaño recomendado: 1920×640px (o superior)
-   - Formato preferido: .webp (fallback .jpg si es necesario)
-   - Si la imagen falla, el fallback es el color navy del sitio.
+   1. PAGE HERO (BANNER)
 ================================================================ */
 .page-hero {
   position: relative;
@@ -36,40 +30,31 @@
   display: flex;
   align-items: flex-end;
   overflow: hidden;
-  /* Color de fallback mientras carga la imagen */
-  background-color: #0d1830;
+  background-color: #0d1830; /* fallback while image loads */
 }
 
-/* ── Contenedor de imagen + overlay ── */
+/* ── Background image + overlay container ── */
 .page-hero__bg {
   position: absolute;
   inset: 0;
   z-index: 0;
 }
 
-/* ── Imagen de fondo real ── */
 .page-hero__bg-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* Foco en la parte superior: más útil para interiores de oficina o equipos */
   object-position: center 30%;
   display: block;
 }
 
-/* ── Overlay multicapa para garantizar legibilidad del texto ──
-   Tres gradientes apilados:
-   1. Izquierda → derecha: protege el texto del lado izquierdo
-   2. Abajo → arriba: protege el stats bar en la base
-   3. Color base semitransparente: oscurece toda la imagen uniformemente
-   Resultado: contraste WCAG AA sobre cualquier imagen       */
+/* Multi-layer overlay for legibility on any photo */
 .page-hero__bg-overlay {
   position: absolute;
   inset: 0;
   background:
-    /* Capa 1: lateral izquierda para el texto */
     linear-gradient(
       to right,
       rgba(8, 16, 40, 0.90) 0%,
@@ -77,18 +62,16 @@
       rgba(8, 16, 40, 0.45) 70%,
       rgba(8, 16, 40, 0.15) 100%
     ),
-    /* Capa 2: inferior para el stats bar */
     linear-gradient(
       to top,
       rgba(5, 10, 25, 0.88) 0%,
       rgba(5, 10, 25, 0.55) 22%,
       transparent 50%
     ),
-    /* Capa 3: oscurecimiento base uniforme */
     rgba(8, 16, 40, 0.30);
 }
 
-/* ── Formas decorativas geométricas (encima del overlay) ── */
+/* ── Decorative geometric shapes ── */
 .page-hero__shape {
   position: absolute;
   border-radius: 50%;
@@ -129,7 +112,7 @@
   50%       { transform: translateY(-20px) rotate(15deg); }
 }
 
-/* ── Contenido: z-index encima del bg y del overlay ── */
+/* ── Hero content ── */
 .page-hero__content {
   position: relative;
   z-index: 2;
@@ -183,7 +166,7 @@
   letter-spacing: 0.05em;
 }
 
-/* Texto principal */
+/* Main text block */
 .page-hero__text {
   max-width: 740px;
   margin-bottom: var(--space-12);
@@ -197,7 +180,6 @@
   letter-spacing: -0.025em;
   margin-bottom: var(--space-5);
   margin-top: var(--space-4);
-  /* Sombra de texto ayuda en imágenes claras */
   text-shadow: 0 2px 16px rgba(5, 10, 25, 0.50);
 }
 
@@ -216,10 +198,15 @@
   text-shadow: 0 1px 8px rgba(5, 10, 25, 0.40);
 }
 
-/* Stats bar — base del hero, se conecta con la sección siguiente */
+/*
+ * ── STATS BAR (3 items) ──
+ * FIX: Removed 4th stat "5 Insurance Products".
+ * Now evenly distributes 3 stats across the bar.
+ * Uses flex with equal flex:1 columns.
+ */
 .page-hero__stats {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -230,6 +217,8 @@
   gap: 0;
   overflow: hidden;
   margin-bottom: -1px;
+  /* Constrain max width for cleaner look with 3 items */
+  max-width: 680px;
 }
 
 .ph-stat {
@@ -239,7 +228,7 @@
   align-items: center;
   text-align: center;
   gap: 4px;
-  padding-inline: var(--space-4);
+  padding-inline: var(--space-5);
 }
 
 .ph-stat strong {
@@ -262,15 +251,15 @@
 
 .ph-stat__divider {
   width: 1px;
-  height: 48px;
   background: rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
+  align-self: stretch;
+  margin-block: var(--space-2);
 }
 
 
 /* ================================================================
    2. OUR STORY SECTION
-   (Sin cambios respecto a la versión original)
 ================================================================ */
 .story-section { background: var(--color-bg); }
 
@@ -414,8 +403,18 @@
   transform: scale(1.1) rotate(-4deg);
 }
 
-.story__highlight-item > div strong { display: block; font-size: var(--fs-base); font-weight: var(--fw-bold); color: var(--color-navy-darkest); margin-bottom: 3px; }
-.story__highlight-item > div p      { font-size: var(--fs-sm); color: var(--color-text-light); line-height: var(--lh-snug); }
+.story__highlight-item > div strong {
+  display: block;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  margin-bottom: 3px;
+}
+.story__highlight-item > div p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: var(--lh-snug);
+}
 
 
 /* ================================================================
@@ -459,11 +458,15 @@
   box-shadow: var(--shadow-lg);
 }
 
-.mvv-card--featured::after { background: radial-gradient(circle at 100% 100%, rgba(197, 171, 98, 0.12) 0%, transparent 70%); }
+.mvv-card--featured::after          { background: radial-gradient(circle at 100% 100%, rgba(197, 171, 98, 0.12) 0%, transparent 70%); }
 .mvv-card--featured .mvv-card__label { color: rgba(255, 255, 255, 0.55); }
 .mvv-card--featured .mvv-card__title { color: var(--color-white); }
 .mvv-card--featured .mvv-card__desc  { color: rgba(255, 255, 255, 0.72); }
-.mvv-card--featured .mvv-card__icon-wrap { background: rgba(197, 171, 98, 0.18); border-color: rgba(197, 171, 98, 0.35); color: var(--color-gold-light); }
+.mvv-card--featured .mvv-card__icon-wrap {
+  background: rgba(197, 171, 98, 0.18);
+  border-color: rgba(197, 171, 98, 0.35);
+  color: var(--color-gold-light);
+}
 
 .mvv-card__icon-wrap {
   display: inline-flex;
@@ -518,8 +521,20 @@
 }
 
 .mvv-card__values-list { display: flex; flex-direction: column; gap: var(--space-3); flex: 1; }
-.mvv-card__values-list li { display: flex; align-items: flex-start; gap: var(--space-3); font-size: var(--fs-sm); color: var(--color-text-light); line-height: var(--lh-snug); }
-.mvv-card__values-list li i { color: var(--color-gold-dark); font-size: var(--fs-md); flex-shrink: 0; margin-top: 2px; }
+.mvv-card__values-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: var(--lh-snug);
+}
+.mvv-card__values-list li i {
+  color: var(--color-gold-dark);
+  font-size: var(--fs-md);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
 .mvv-card__values-list li strong { font-weight: var(--fw-bold); color: var(--color-navy-darkest); }
 
 
@@ -735,15 +750,27 @@
 
 .team-card__bio { font-size: var(--fs-sm); color: var(--color-text-light); line-height: var(--lh-loose); flex: 1; margin-bottom: var(--space-5); }
 .team-card__creds { display: flex; flex-direction: column; gap: var(--space-2); }
-.team-card__creds span { display: inline-flex; align-items: center; gap: var(--space-2); font-family: var(--font-secondary); font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--color-text-light); }
+.team-card__creds span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-light);
+}
 .team-card__creds i { color: var(--color-gold-dark); font-size: var(--fs-md); }
 
 
 /* ================================================================
    6. TRUST / CARRIERS SECTION
+   FIX: Marquee is a true single-row, infinite scroll right-to-left.
+   The track contains the 12 items + 12 duplicates so the loop is
+   seamless. The animation translates exactly -50% (= one full set).
 ================================================================ */
 .trust-section { background: var(--color-bg); }
 
+/* ── Outer wrapper: clips the overflow ── */
 .carriers__marquee-wrapper {
   position: relative;
   overflow: hidden;
@@ -751,6 +778,7 @@
   margin-bottom: var(--space-12);
 }
 
+/* Fade-out edges (purely decorative) */
 .carriers__marquee-wrapper::before,
 .carriers__marquee-wrapper::after {
   content: '';
@@ -760,57 +788,93 @@
   z-index: 2;
   pointer-events: none;
 }
+.carriers__marquee-wrapper::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg) 0%, transparent 100%);
+}
+.carriers__marquee-wrapper::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg) 0%, transparent 100%);
+}
 
-.carriers__marquee-wrapper::before { left: 0; background: linear-gradient(to right, var(--color-bg) 0%, transparent 100%); }
-.carriers__marquee-wrapper::after  { right: 0; background: linear-gradient(to left, var(--color-bg) 0%, transparent 100%); }
+/* ── Marquee container: clips and hides scrollbar ── */
+.carriers__marquee {
+  overflow: hidden;
+  width: 100%;
+}
 
-.carriers__marquee { overflow: hidden; }
-
+/*
+ * ── Track: single row, no wrap, animates right-to-left ──
+ *
+ * HOW THE SEAMLESS LOOP WORKS:
+ * The track contains 12 original items + 12 duplicates (total 24).
+ * The animation translates from 0 to -50% of the total track width.
+ * At -50% the visual position is identical to 0%, so the loop
+ * is perfectly seamless with no jump.
+ *
+ * width: max-content ensures the row never wraps.
+ */
 .carriers__track {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;       /* CRITICAL: single row always */
   align-items: center;
-  gap: var(--space-10);
-  width: max-content;
-  animation: marqueeScroll 28s linear infinite;
+  gap: var(--space-5);
+  width: max-content;      /* natural width of all items in one line */
+  animation: marqueeScroll 32s linear infinite;
+  will-change: transform;
 }
 
-.carriers__track:hover { animation-play-state: paused; }
-
-@keyframes marqueeScroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+/* Pause on hover for desktop users */
+.carriers__marquee-wrapper:hover .carriers__track {
+  animation-play-state: paused;
 }
 
+/*
+ * @keyframes marqueeScroll was removed.
+ * The scroll animation is now driven entirely by js/about.js
+ * using requestAnimationFrame for guaranteed right-to-left movement.
+ * The CSS animation property on .carriers__track is overridden by JS.
+ */
+
+/* ── Individual logo cards ── */
 .carrier__logo-item {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;            /* never shrink — single row */
   padding: var(--space-3) var(--space-5);
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-xs);
-  flex-shrink: 0;
   transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
 }
 
-.carrier__logo-item:hover { box-shadow: var(--shadow-md); border-color: rgba(197, 171, 98, 0.40); }
+.carrier__logo-item:hover {
+  box-shadow: var(--shadow-md);
+  border-color: rgba(197, 171, 98, 0.40);
+}
 
 .carrier__logo-item img {
   height: 36px;
   width: auto;
   object-fit: contain;
-  filter: grayscale(60%) opacity(0.7);
+  display: block;
+  filter: grayscale(60%) opacity(0.70);
   transition: filter var(--transition-normal);
+  /* Prevent images from affecting row height */
+  flex-shrink: 0;
 }
 
 .carrier__logo-item:hover img { filter: grayscale(0%) opacity(1); }
 
+/* ── Trust badges row ── */
 .trust__badges {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--space-6);
+  gap: var(--space-4);
   flex-wrap: wrap;
   padding-top: var(--space-8);
   border-top: 1px solid var(--color-border);
@@ -820,15 +884,20 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-6);
+  padding: var(--space-4) var(--space-5);
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-xs);
   transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
+  white-space: nowrap;
 }
 
-.trust-badge:hover { transform: translateY(-3px); box-shadow: var(--shadow-md); border-color: rgba(197, 171, 98, 0.40); }
+.trust-badge:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(197, 171, 98, 0.40);
+}
 
 .trust-badge__icon {
   display: flex;
@@ -843,9 +912,23 @@
   transition: background var(--transition-normal), color var(--transition-normal);
 }
 
-.trust-badge:hover .trust-badge__icon { background: var(--gradient-gold); color: var(--color-white); }
-.trust-badge__text strong { display: block; font-size: var(--fs-sm); font-weight: var(--fw-bold); color: var(--color-navy-darkest); line-height: 1.3; }
-.trust-badge__text span   { font-family: var(--font-secondary); font-size: var(--fs-xs); color: var(--color-text-light); }
+.trust-badge:hover .trust-badge__icon {
+  background: var(--gradient-gold);
+  color: var(--color-white);
+}
+
+.trust-badge__text strong {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  line-height: 1.3;
+}
+.trust-badge__text span {
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  color: var(--color-text-light);
+}
 
 
 /* ================================================================
@@ -853,11 +936,9 @@
 ================================================================ */
 @media (max-width: 1024px) {
 
-  /* Hero imagen: reposiciona foco en tablet */
   .page-hero { min-height: 480px; }
   .page-hero__bg-img { object-position: 60% 30%; }
-
-  .page-hero__stats { gap: 0; padding: var(--space-5) var(--space-6); }
+  .page-hero__stats { max-width: 100%; padding: var(--space-5) var(--space-6); }
 
   .story__grid { grid-template-columns: 1fr; gap: var(--space-12); }
   .story__visual { max-width: 600px; margin-inline: auto; }
@@ -870,6 +951,9 @@
   .team__grid { grid-template-columns: repeat(2, 1fr); }
 
   .trust__badges { gap: var(--space-4); }
+
+  .carriers__marquee-wrapper::before,
+  .carriers__marquee-wrapper::after { width: 80px; }
 }
 
 
@@ -878,13 +962,10 @@
 ================================================================ */
 @media (max-width: 768px) {
 
-  /* Hero — overlay más oscuro en móvil para legibilidad total */
   .page-hero { min-height: 460px; }
-
-  /* En móvil centramos la imagen */
   .page-hero__bg-img { object-position: center center; }
 
-  /* Overlay más agresivo: el texto siempre legible sin importar la foto */
+  /* Darker overlay on mobile for any photo */
   .page-hero__bg-overlay {
     background:
       linear-gradient(
@@ -905,18 +986,32 @@
   .page-hero__desc  { font-size: var(--fs-base); }
   .page-hero__text  { margin-bottom: var(--space-8); }
 
-  /* Stats: apilados verticalmente en móvil */
+  /* Stats bar: vertical stack on small screens */
   .page-hero__stats {
     flex-direction: column;
     align-items: stretch;
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     padding: var(--space-5);
     gap: var(--space-4);
+    max-width: 100%;
   }
 
-  .ph-stat { flex-direction: row; align-items: center; justify-content: flex-start; gap: var(--space-4); }
+  .ph-stat {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--space-4);
+    padding-inline: 0;
+  }
+
   .ph-stat strong { font-size: var(--fs-xl); }
-  .ph-stat__divider { width: 100%; height: 1px; }
+
+  .ph-stat__divider {
+    width: 100%;
+    height: 1px;
+    margin-block: 0;
+    align-self: auto;
+  }
 
   .story__img-secondary { display: none; }
   .story__img-main { aspect-ratio: 16/9; }
@@ -929,13 +1024,16 @@
   .timeline__dot--current { right: calc(-1 * var(--space-6) - 7px); }
   .timeline__content { padding: var(--space-5); }
 
-  .team__grid { grid-template-columns: repeat(2, 1fr); }
+  .team__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
 
-  .trust__badges { flex-direction: column; align-items: stretch; }
-  .trust-badge { width: 100%; }
+  .trust__badges { flex-direction: column; align-items: stretch; gap: var(--space-3); }
+  .trust-badge { width: 100%; white-space: normal; }
 
   .carriers__marquee-wrapper::before,
-  .carriers__marquee-wrapper::after { width: 60px; }
+  .carriers__marquee-wrapper::after { width: 48px; }
+
+  /* Slightly faster scroll on mobile */
+  .carriers__track { animation-duration: 24s; }
 }
 
 
@@ -945,10 +1043,7 @@
 @media (max-width: 480px) {
 
   .page-hero { min-height: 420px; }
-
-  /* En pantallas muy pequeñas: foco en la parte superior de la imagen */
   .page-hero__bg-img { object-position: center top; }
-
   .page-hero__title { font-size: 1.75rem; }
   .page-hero__stats { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
 
@@ -956,16 +1051,24 @@
 
   .mvv-card { padding: var(--space-8) var(--space-6); }
 
-  .timeline__item { grid-template-columns: 60px 1fr; gap: var(--space-3); }
+  .timeline__item { grid-template-columns: 58px 1fr; gap: var(--space-3); }
   .timeline__year { font-size: var(--fs-xs); }
 
   .team__grid { grid-template-columns: 1fr; max-width: 340px; margin-inline: auto; }
+
+  /* Even smaller edge fades on very small screens */
+  .carriers__marquee-wrapper::before,
+  .carriers__marquee-wrapper::after { width: 32px; }
 }
 
 
 /* ================================================================
-   PREFERS REDUCED MOTION — accesibilidad
+   10. PREFERS REDUCED MOTION — Accessibility
 ================================================================ */
 @media (prefers-reduced-motion: reduce) {
+  /* Stop decorative shape animations */
   .page-hero__shape { animation: none !important; }
+
+  /* Marquee: JS detects prefers-reduced-motion and shows static grid instead */
+  .carriers__track { animation: none !important; }
 }

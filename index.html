@@ -52,15 +52,16 @@
         <ul class="navbar__menu" role="list" id="nav-menu">
           <li><a href="index.html" class="nav__link nav__link--active" aria-current="page">Home</a></li>
           <li><a href="about.html" class="nav__link">About Us</a></li>
+          <!-- FIX: dropdown toggle via JS click (touch-friendly), links to products.html#section -->
           <li class="nav__dropdown" aria-haspopup="true">
             <a href="products.html" class="nav__link nav__link--dropdown">
               Our Products <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
             </a>
             <ul class="dropdown__menu" role="list" aria-label="Products submenu">
               <li><a href="products.html#home-insurance" class="dropdown__item"><span class="dropdown__icon"><i class="ri-home-2-line"></i></span><span class="dropdown__text"><strong>Home Insurance</strong><small>Protect your property</small></span></a></li>
+              <li><a href="products.html#truck-insurance" class="dropdown__item"><span class="dropdown__icon"><i class="ri-truck-line"></i></span><span class="dropdown__text"><strong>Truck Insurance</strong><small>Coverage for your fleet</small></span></a></li>
               <li><a href="products.html#auto-insurance" class="dropdown__item"><span class="dropdown__icon"><i class="ri-car-line"></i></span><span class="dropdown__text"><strong>Auto Insurance</strong><small>Drive with confidence</small></span></a></li>
               <li><a href="products.html#business-insurance" class="dropdown__item"><span class="dropdown__icon"><i class="ri-building-line"></i></span><span class="dropdown__text"><strong>Business Insurance</strong><small>Safeguard your company</small></span></a></li>
-              <li><a href="products.html#truck-insurance" class="dropdown__item"><span class="dropdown__icon"><i class="ri-truck-line"></i></span><span class="dropdown__text"><strong>Truck Insurance</strong><small>Coverage for your fleet</small></span></a></li>
               <li><a href="products.html#life-insurance" class="dropdown__item"><span class="dropdown__icon"><i class="ri-heart-pulse-line"></i></span><span class="dropdown__text"><strong>Personal Life Insurance</strong><small>Secure your family's future</small></span></a></li>
             </ul>
           </li>
@@ -93,9 +94,9 @@
               <button class="mobile-nav__accordion-btn" aria-expanded="false">Our Products <i class="ri-arrow-down-s-line"></i></button>
               <ul class="mobile-nav__sub" aria-hidden="true">
                 <li><a href="products.html#home-insurance"><i class="ri-home-2-line"></i> Home Insurance</a></li>
+                <li><a href="products.html#truck-insurance"><i class="ri-truck-line"></i> Truck Insurance</a></li>
                 <li><a href="products.html#auto-insurance"><i class="ri-car-line"></i> Auto Insurance</a></li>
                 <li><a href="products.html#business-insurance"><i class="ri-building-line"></i> Business Insurance</a></li>
-                <li><a href="products.html#truck-insurance"><i class="ri-truck-line"></i> Truck Insurance</a></li>
                 <li><a href="products.html#life-insurance"><i class="ri-heart-pulse-line"></i> Personal Life Insurance</a></li>
               </ul>
             </li>
@@ -116,8 +117,6 @@
 
   <!-- ================================================================
        HERO SECTION - 5-Slide Image Carousel (one per product)
-       Layout: text + CTA on left, image shows through on right
-       Mobile: full-width image centered, darker overlay for legibility
   ================================================================ -->
   <section class="hero" id="hero" aria-label="Hero section" aria-roledescription="carousel">
 
@@ -180,8 +179,6 @@
     <!-- FOREGROUND CONTENT -->
     <div class="container hero__content">
 
-      <!-- Per-slide text blocks: badge + h1 + subtitle -->
-      <!-- JS toggles .is-active on these to match the active background slide -->
       <div class="hero__text-block" aria-live="polite" aria-atomic="true">
 
         <!-- Slide 1: Home Insurance -->
@@ -266,7 +263,7 @@
 
       </div><!-- /hero__text-block -->
 
-      <!-- CTA Buttons (shared across all slides) -->
+      <!-- CTA Buttons -->
       <div class="hero__actions">
         <a href="contact.html" class="btn btn--gold btn--lg">
           <i class="ri-file-text-line" aria-hidden="true"></i> Get a Free Quote
@@ -293,14 +290,9 @@
           <span class="stat__label">Client Satisfaction</span>
         </div>
         <div class="stat__divider" aria-hidden="true"></div>
-        <div class="stat__item">
-          <span class="stat__number" data-target="5">0</span><span class="stat__symbol"></span>
-          <span class="stat__label">Insurance Products</span>
-        </div>
       </div>
 
     </div><!-- /hero__content -->
-
 
     <!-- LEFT / RIGHT ARROWS -->
     <button class="hero__arrow hero__arrow--prev" id="hero-prev" aria-label="Previous slide">
@@ -309,8 +301,6 @@
     <button class="hero__arrow hero__arrow--next" id="hero-next" aria-label="Next slide">
       <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
     </button>
-
-
 
     <!-- DOTS + PAUSE -->
     <div class="hero__controls" role="tablist" aria-label="Slide navigation">
@@ -339,6 +329,7 @@
 
 
   <!-- PRODUCTS SECTION -->
+  <!-- FIX: Truck Insurance movido a 2da posición -->
   <section class="products-section section" id="products" aria-labelledby="products-title">
     <div class="container">
       <div class="section__header" data-aos="fade-up">
@@ -348,6 +339,7 @@
       </div>
       <div class="products__grid">
 
+        <!-- 1. Home Insurance -->
         <article class="product-card" data-aos="fade-up" data-aos-delay="0">
           <div class="product-card__icon-wrap"><i class="ri-home-2-line product-card__icon" aria-hidden="true"></i></div>
           <div class="product-card__body">
@@ -358,11 +350,27 @@
               <li><i class="ri-check-line" aria-hidden="true"></i> Personal property protection</li>
               <li><i class="ri-check-line" aria-hidden="true"></i> Liability coverage</li>
             </ul>
-            <a href="products/home-insurance.html" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <a href="products.html#home-insurance" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
           </div>
         </article>
 
+        <!-- 2. Truck Insurance (moved to 2nd) -->
         <article class="product-card" data-aos="fade-up" data-aos-delay="100">
+          <div class="product-card__icon-wrap"><i class="ri-truck-line product-card__icon" aria-hidden="true"></i></div>
+          <div class="product-card__body">
+            <h3 class="product-card__title">Truck Insurance</h3>
+            <p class="product-card__desc">Specialized coverage for commercial trucks, fleets, and owner-operators. Keep your cargo moving and your business protected on every route.</p>
+            <ul class="product-card__features" aria-label="Truck insurance features">
+              <li><i class="ri-check-line" aria-hidden="true"></i> Commercial truck liability</li>
+              <li><i class="ri-check-line" aria-hidden="true"></i> Cargo &amp; freight coverage</li>
+              <li><i class="ri-check-line" aria-hidden="true"></i> Fleet management options</li>
+            </ul>
+            <a href="products.html#truck-insurance" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+          </div>
+        </article>
+
+        <!-- 3. Auto Insurance -->
+        <article class="product-card" data-aos="fade-up" data-aos-delay="200">
           <div class="product-card__icon-wrap"><i class="ri-car-line product-card__icon" aria-hidden="true"></i></div>
           <div class="product-card__body">
             <h3 class="product-card__title">Auto Insurance</h3>
@@ -372,11 +380,12 @@
               <li><i class="ri-check-line" aria-hidden="true"></i> Uninsured motorist coverage</li>
               <li><i class="ri-check-line" aria-hidden="true"></i> Roadside assistance</li>
             </ul>
-            <a href="products/auto-insurance.html" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <a href="products.html#auto-insurance" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
           </div>
         </article>
 
-        <article class="product-card product-card--featured" data-aos="fade-up" data-aos-delay="200">
+        <!-- 4. Business Insurance (featured) -->
+        <article class="product-card product-card--featured" data-aos="fade-up" data-aos-delay="300">
           <div class="product-card__badge">Most Popular</div>
           <div class="product-card__icon-wrap"><i class="ri-building-line product-card__icon" aria-hidden="true"></i></div>
           <div class="product-card__body">
@@ -387,24 +396,11 @@
               <li><i class="ri-check-line" aria-hidden="true"></i> Commercial property</li>
               <li><i class="ri-check-line" aria-hidden="true"></i> Workers' compensation</li>
             </ul>
-            <a href="products/business-insurance.html" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <a href="products.html#business-insurance" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
           </div>
         </article>
 
-        <article class="product-card" data-aos="fade-up" data-aos-delay="300">
-          <div class="product-card__icon-wrap"><i class="ri-truck-line product-card__icon" aria-hidden="true"></i></div>
-          <div class="product-card__body">
-            <h3 class="product-card__title">Truck Insurance</h3>
-            <p class="product-card__desc">Specialized coverage for commercial trucks, fleets, and owner-operators. Keep your cargo moving and your business protected on every route.</p>
-            <ul class="product-card__features" aria-label="Truck insurance features">
-              <li><i class="ri-check-line" aria-hidden="true"></i> Commercial truck liability</li>
-              <li><i class="ri-check-line" aria-hidden="true"></i> Cargo &amp; freight coverage</li>
-              <li><i class="ri-check-line" aria-hidden="true"></i> Fleet management options</li>
-            </ul>
-            <a href="products/truck-insurance.html" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
-          </div>
-        </article>
-
+        <!-- 5. Personal Life Insurance -->
         <article class="product-card" data-aos="fade-up" data-aos-delay="400">
           <div class="product-card__icon-wrap"><i class="ri-heart-pulse-line product-card__icon" aria-hidden="true"></i></div>
           <div class="product-card__body">
@@ -415,7 +411,7 @@
               <li><i class="ri-check-line" aria-hidden="true"></i> Flexible premium options</li>
               <li><i class="ri-check-line" aria-hidden="true"></i> Family income protection</li>
             </ul>
-            <a href="products/life-insurance.html" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
+            <a href="products.html#life-insurance" class="product-card__link">Learn More <i class="ri-arrow-right-line" aria-hidden="true"></i></a>
           </div>
         </article>
 
@@ -668,14 +664,15 @@
             <li><a href="contact.html"><i class="ri-arrow-right-s-line"></i> Contact</a></li>
           </ul>
         </nav>
+        <!-- FIX: Footer product links now use products.html#section-id -->
         <nav class="footer__col" aria-label="Insurance products">
           <h4 class="footer__col-title">Our Products</h4>
           <ul role="list">
-            <li><a href="products/home-insurance.html"><i class="ri-home-2-line"></i> Home Insurance</a></li>
-            <li><a href="products/auto-insurance.html"><i class="ri-car-line"></i> Auto Insurance</a></li>
-            <li><a href="products/business-insurance.html"><i class="ri-building-line"></i> Business Insurance</a></li>
-            <li><a href="products/truck-insurance.html"><i class="ri-truck-line"></i> Truck Insurance</a></li>
-            <li><a href="products/life-insurance.html"><i class="ri-heart-pulse-line"></i> Life Insurance</a></li>
+            <li><a href="products.html#home-insurance"><i class="ri-home-2-line"></i> Home Insurance</a></li>
+            <li><a href="products.html#truck-insurance"><i class="ri-truck-line"></i> Truck Insurance</a></li>
+            <li><a href="products.html#auto-insurance"><i class="ri-car-line"></i> Auto Insurance</a></li>
+            <li><a href="products.html#business-insurance"><i class="ri-building-line"></i> Business Insurance</a></li>
+            <li><a href="products.html#life-insurance"><i class="ri-heart-pulse-line"></i> Life Insurance</a></li>
           </ul>
         </nav>
         <div class="footer__col">

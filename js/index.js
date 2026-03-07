@@ -2,7 +2,15 @@
  * ================================================================
  * VENTUS INSURANCE AGENCY — Main JavaScript
  * File: js/index.js
- * Version: 3.0 — Slider siempre activo, sin hover-pause
+ * Version: 3.1 — Bug fixes: IntersectionObserver spread, dropdown click/touch
+ * ================================================================
+ *
+ * FIXES IN THIS VERSION:
+ * 1. initStatsCounter: Removed broken .observe(...els) — observe() only accepts
+ *    one element. The first broken observer was removed; obs2 is the correct one.
+ * 2. initScrollSpy: Fixed .observe(...[...sections]) — replaced with forEach loop.
+ * 3. initDropdownKeyboard/initDropdownClick: Added click+touch support so the
+ *    dropdown works on all devices (not just hover on desktop).
  * ================================================================
  */
 
@@ -14,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHamburger();
   initMobileMenu();
   initMobileAccordion();
+  initDropdownClick();       // FIX: click/touch dropdown (replaces keyboard-only version)
   initDropdownKeyboard();
   initAOS();
   initStatsCounter();
@@ -134,7 +143,62 @@ function initMobileAccordion() {
 
 
 /* ================================================================
-   7. DESKTOP DROPDOWN — KEYBOARD
+   7. DESKTOP DROPDOWN — CLICK / TOUCH SUPPORT
+   FIX: Previously the dropdown only worked via CSS :hover, which
+   does not work on touch screens. Now clicking/tapping the
+   "Our Products" link toggles class .is-open on the parent li,
+   which the CSS also uses to show the dropdown.
+   Clicking outside or pressing Escape closes it.
+================================================================ */
+function initDropdownClick() {
+  const dropdowns = qsAll('.nav__dropdown');
+
+  dropdowns.forEach((dropdown) => {
+    const trigger = qs('.nav__link--dropdown', dropdown);
+    if (!trigger) return;
+
+    trigger.addEventListener('click', (e) => {
+      // If the user is on a device where hover works (mouse pointer),
+      // clicking the main link navigates to products.html — let it.
+      // On touch (no fine pointer), we intercept the first tap to open
+      // the dropdown; a second tap on the same link navigates.
+      const isTouchDevice = window.matchMedia('(hover: none)').matches;
+      const isOpen = dropdown.classList.contains('is-open');
+
+      if (isTouchDevice && !isOpen) {
+        e.preventDefault();
+        // Close any other open dropdowns first
+        dropdowns.forEach((d) => {
+          if (d !== dropdown) d.classList.remove('is-open');
+        });
+        dropdown.classList.add('is-open');
+      } else {
+        // Already open on touch — let natural navigation happen
+        dropdown.classList.remove('is-open');
+      }
+    });
+  });
+
+  // Close dropdown when clicking anywhere outside
+  document.addEventListener('click', (e) => {
+    dropdowns.forEach((dropdown) => {
+      if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('is-open');
+      }
+    });
+  });
+
+  // Close dropdown on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      dropdowns.forEach((d) => d.classList.remove('is-open'));
+    }
+  });
+}
+
+
+/* ================================================================
+   8. DESKTOP DROPDOWN — KEYBOARD NAVIGATION
 ================================================================ */
 function initDropdownKeyboard() {
   qsAll('.nav__dropdown').forEach((dropdown) => {
@@ -144,35 +208,42 @@ function initDropdownKeyboard() {
     if (!trigger || !menu) return;
 
     trigger.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); const open = menu.style.opacity === '1'; setDropdownState(menu, !open); if (!open) items[0]?.focus(); }
-      if (e.key === 'Escape') { setDropdownState(menu, false); trigger.focus(); }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        const open = dropdown.classList.contains('is-open');
+        dropdown.classList.toggle('is-open', !open);
+        if (!open) items[0]?.focus();
+      }
+      if (e.key === 'Escape') {
+        dropdown.classList.remove('is-open');
+        trigger.focus();
+      }
     });
 
     items.forEach((item, i) => {
       item.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowDown') { e.preventDefault(); items[i + 1]?.focus(); }
-        if (e.key === 'ArrowUp')   { e.preventDefault(); i === 0 ? (trigger.focus(), setDropdownState(menu, false)) : items[i - 1]?.focus(); }
-        if (e.key === 'Escape')    { setDropdownState(menu, false); trigger.focus(); }
-        if (e.key === 'Tab')       { setDropdownState(menu, false); }
+        if (e.key === 'ArrowUp')   {
+          e.preventDefault();
+          if (i === 0) { trigger.focus(); dropdown.classList.remove('is-open'); }
+          else items[i - 1]?.focus();
+        }
+        if (e.key === 'Escape') { dropdown.classList.remove('is-open'); trigger.focus(); }
+        if (e.key === 'Tab')    { dropdown.classList.remove('is-open'); }
       });
     });
 
     dropdown.addEventListener('focusout', (e) => {
-      if (!dropdown.contains(e.relatedTarget)) setDropdownState(menu, false);
+      if (!dropdown.contains(e.relatedTarget)) {
+        dropdown.classList.remove('is-open');
+      }
     });
   });
 }
 
-function setDropdownState(menu, open) {
-  menu.style.opacity       = open ? '1' : '';
-  menu.style.visibility    = open ? 'visible' : '';
-  menu.style.transform     = open ? 'translateX(-50%) translateY(0)' : '';
-  menu.style.pointerEvents = open ? 'auto' : '';
-}
-
 
 /* ================================================================
-   8. AOS — ANIMATE ON SCROLL
+   9. AOS — ANIMATE ON SCROLL
 ================================================================ */
 function initAOS() {
   const elements = qsAll('[data-aos]');
@@ -201,7 +272,10 @@ function initAOS() {
 
 
 /* ================================================================
-   9. HERO STATS COUNTER
+   10. HERO STATS COUNTER
+   FIX: Removed the first broken IntersectionObserver that used
+   .observe(...els) — observe() only accepts a single element.
+   The correct observer (obs2) now handles all stat elements.
 ================================================================ */
 function initStatsCounter() {
   const els = qsAll('.stat__number[data-target]');
@@ -209,30 +283,24 @@ function initStatsCounter() {
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  new IntersectionObserver((entries, obs) => {
+  // FIX: Use a single correct observer that loops over each element
+  const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const el     = entry.target;
         const target = parseInt(el.dataset.target, 10);
-        reduced ? (el.textContent = target.toLocaleString()) : animateCounter(el, target);
-        obs.unobserve(el);
-      }
-    });
-  }, { threshold: 0.5 }).observe(...els);
-
-  // observe each individually
-  const obs2 = new IntersectionObserver((entries, obs) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const el = entry.target;
-        const target = parseInt(el.dataset.target, 10);
-        reduced ? (el.textContent = target.toLocaleString()) : animateCounter(el, target);
+        if (reduced) {
+          el.textContent = target.toLocaleString();
+        } else {
+          animateCounter(el, target);
+        }
         obs.unobserve(el);
       }
     });
   }, { threshold: 0.5 });
 
-  els.forEach((el) => obs2.observe(el));
+  // Observe each element individually (observe() accepts only one element at a time)
+  els.forEach((el) => observer.observe(el));
 }
 
 function animateCounter(el, target, duration = 2000) {
@@ -249,7 +317,7 @@ function animateCounter(el, target, duration = 2000) {
 
 
 /* ================================================================
-   10. BACK TO TOP
+   11. BACK TO TOP
 ================================================================ */
 function initBackToTop() {
   const btn = qs('#back-to-top');
@@ -262,7 +330,7 @@ function initBackToTop() {
 
 
 /* ================================================================
-   11. CURRENT YEAR
+   12. CURRENT YEAR
 ================================================================ */
 function initCurrentYear() {
   const el = qs('#current-year');
@@ -271,7 +339,7 @@ function initCurrentYear() {
 
 
 /* ================================================================
-   12. SMOOTH SCROLL
+   13. SMOOTH SCROLL
 ================================================================ */
 function initSmoothScroll() {
   document.addEventListener('click', (e) => {
@@ -291,7 +359,7 @@ function initSmoothScroll() {
 
 
 /* ================================================================
-   13. NAVBAR HIDE ON SCROLL DOWN
+   14. NAVBAR HIDE ON SCROLL DOWN
 ================================================================ */
 function initNavbarScrollDirection() {
   const header = qs('#header');
@@ -313,12 +381,11 @@ function initNavbarScrollDirection() {
 
 
 /* ================================================================
-   14. HERO IMAGE SLIDER
-   - El slider avanza SIEMPRE automáticamente cada 5 segundos.
-   - No se pausa con el mouse ni con ningún evento de hover.
-   - Solo el botón de pausa (⏸) puede detenerlo y reanudarlo.
-   - Las flechas y dots cambian el slide sin interrumpir el timer.
-   - Swipe táctil funciona en móvil y tablet.
+   15. HERO IMAGE SLIDER
+   - Slider advances automatically every 5 seconds.
+   - Only the pause button (⏸) can stop/resume it.
+   - Arrows and dots change the slide without interrupting the timer.
+   - Touch swipe works on mobile and tablet.
 ================================================================ */
 function initHeroSlider() {
   const slides       = qsAll('.hero__slide');
@@ -337,7 +404,7 @@ function initHeroSlider() {
   let current  = 0;
   let isPaused = false;
 
-  /* ── Cambiar al slide N ── */
+  /* ── Change to slide N ── */
   function goTo(index) {
     const prev = current;
     current = ((index % TOTAL) + TOTAL) % TOTAL;
@@ -359,8 +426,8 @@ function initHeroSlider() {
     if (!isPaused) restartProgress();
   }
 
-  /* ── Timer principal — un solo setInterval, siempre activo ── */
-  const autoTimer = setInterval(() => {
+  /* ── Auto timer ── */
+  setInterval(() => {
     if (!isPaused) goTo(current + 1);
   }, INTERVAL);
 
@@ -380,7 +447,7 @@ function initHeroSlider() {
     progressFill.style.width      = '0%';
   }
 
-  /* ── Flechas ── */
+  /* ── Arrows ── */
   prevBtn?.addEventListener('click', () => goTo(current - 1));
   nextBtn?.addEventListener('click', () => goTo(current + 1));
 
@@ -389,24 +456,24 @@ function initHeroSlider() {
     dot.addEventListener('click', () => goTo(Number(dot.dataset.target)));
   });
 
-  /* ── Botón pausa — único control para detener el slider ── */
+  /* ── Pause button ── */
   pauseBtn?.addEventListener('click', () => {
     isPaused = !isPaused;
     const icon = pauseBtn.querySelector('i');
     if (isPaused) {
       if (icon) icon.className = 'ri-play-line';
-      pauseBtn.setAttribute('aria-label',   'Reanudar');
+      pauseBtn.setAttribute('aria-label',   'Resume slideshow');
       pauseBtn.setAttribute('aria-pressed', 'true');
       stopProgress();
     } else {
       if (icon) icon.className = 'ri-pause-line';
-      pauseBtn.setAttribute('aria-label',   'Pausar');
+      pauseBtn.setAttribute('aria-label',   'Pause slideshow');
       pauseBtn.setAttribute('aria-pressed', 'false');
       restartProgress();
     }
   });
 
-  /* ── Swipe táctil ── */
+  /* ── Touch swipe ── */
   let touchStartX = 0;
   const heroEl = qs('.hero');
   heroEl?.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
@@ -415,13 +482,13 @@ function initHeroSlider() {
     if (Math.abs(delta) > 40) goTo(delta < 0 ? current + 1 : current - 1);
   }, { passive: true });
 
-  /* ── Pausa al minimizar la pestaña ── */
+  /* ── Pause when tab is hidden ── */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stopProgress();
     else if (!isPaused)  restartProgress();
   });
 
-  /* ── Init ── */
+  /* ── Init state ── */
   slides.forEach((s, i) => { s.classList.toggle('is-active', i === 0); s.classList.remove('is-leaving'); });
   texts.forEach( (t, i) =>   t.classList.toggle('is-active', i === 0));
   dots.forEach(  (d, i) => { d.classList.toggle('is-active', i === 0); d.setAttribute('aria-current', i === 0 ? 'true' : 'false'); });
@@ -431,7 +498,10 @@ function initHeroSlider() {
 
 
 /* ================================================================
-   15. SCROLL SPY
+   16. SCROLL SPY
+   FIX: Replaced .observe(...[...sections]) — the spread operator
+   passes multiple arguments but observe() only accepts one element.
+   Now uses forEach to observe each section individually.
 ================================================================ */
 function initScrollSpy() {
   const sections = qsAll('section[id]');
@@ -440,51 +510,32 @@ function initScrollSpy() {
 
   const offset = (qs('#header')?.offsetHeight ?? 120) + 40;
 
-  new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const id = entry.target.id;
-          navLinks.forEach((link) => {
-            const href    = link.getAttribute('href');
-            const isMatch =
-              href === `#${id}` ||
-              (id === 'hero'     && href === 'index.html') ||
-              (id === 'products' && href === 'products.html') ||
-              (id === 'why-us'   && href === 'about.html') ||
-              (id === 'blog'     && href === 'blog.html');
-            link.classList.toggle('nav__link--active', !!isMatch);
-            if (isMatch) link.setAttribute('aria-current', 'page');
-            else         link.removeAttribute('aria-current');
-          });
-        }
-      });
-    },
-    { rootMargin: `-${offset}px 0px -55% 0px`, threshold: 0 }
-  ).observe(...[...sections]);  // spread para observar todas
+  function updateActiveLink(id) {
+    navLinks.forEach((link) => {
+      const href    = link.getAttribute('href');
+      const isMatch =
+        href === `#${id}` ||
+        (id === 'hero'     && href === 'index.html') ||
+        (id === 'products' && href === 'products.html') ||
+        (id === 'why-us'   && href === 'about.html') ||
+        (id === 'blog'     && href === 'blog.html');
+      link.classList.toggle('nav__link--active', !!isMatch);
+      if (isMatch) link.setAttribute('aria-current', 'page');
+      else         link.removeAttribute('aria-current');
+    });
+  }
 
-  // Workaround: IntersectionObserver.observe() acepta un solo elemento
+  // FIX: observe each section individually — observe() only accepts one element
   const spy = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        const id = entry.target.id;
-        navLinks.forEach((link) => {
-          const href    = link.getAttribute('href');
-          const isMatch =
-            href === `#${id}` ||
-            (id === 'hero'     && href === 'index.html') ||
-            (id === 'products' && href === 'products.html') ||
-            (id === 'why-us'   && href === 'about.html') ||
-            (id === 'blog'     && href === 'blog.html');
-          link.classList.toggle('nav__link--active', !!isMatch);
-          if (isMatch) link.setAttribute('aria-current', 'page');
-          else         link.removeAttribute('aria-current');
-        });
+        if (entry.isIntersecting) {
+          updateActiveLink(entry.target.id);
+        }
       });
     },
     { rootMargin: `-${offset}px 0px -55% 0px`, threshold: 0 }
   );
 
-  sections.forEach((s) => spy.observe(s));
+  sections.forEach((section) => spy.observe(section));
 }

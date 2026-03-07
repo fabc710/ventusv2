@@ -1,7 +1,7 @@
 /* ================================================================
    VENTUS INSURANCE AGENCY — Main Stylesheet
    Author: Ventus Web Team
-   Version: 2.2 — Hero resize fix + slider fix
+   Version: 2.3 — Dropdown click/touch fix + general corrections
    Description: Full design system for index.html
 ================================================================ */
 
@@ -67,14 +67,14 @@
   --color-border:        #E2E8F0;
 
   /* --- Gradients --- */
---gradient-hero: linear-gradient(
-  to top,
-  rgba(6, 12, 28, 0.96) 0%,
-  rgba(12, 24, 56, 0.85) 35%,
-  rgba(18, 33, 71, 0.70) 60%,
-  rgba(18, 33, 71, 0.40) 80%,
-  rgba(6, 12, 28, 0.10) 100%
-);
+  --gradient-hero: linear-gradient(
+    to top,
+    rgba(6, 12, 28, 0.96) 0%,
+    rgba(12, 24, 56, 0.85) 35%,
+    rgba(18, 33, 71, 0.70) 60%,
+    rgba(18, 33, 71, 0.40) 80%,
+    rgba(6, 12, 28, 0.10) 100%
+  );
 
   --gradient-navy: linear-gradient(135deg, var(--color-navy-darkest) 0%, var(--color-navy-mid) 100%);
   --gradient-gold: linear-gradient(135deg, var(--color-gold-dark) 0%, var(--color-gold) 100%);
@@ -603,12 +603,35 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   font-size: 1rem;
   transition: transform var(--transition-fast);
 }
-.nav__dropdown:hover > .nav__link--dropdown i {
+/* Arrow rotation on hover OR when dropdown is open via click */
+.nav__dropdown:hover > .nav__link--dropdown i,
+.nav__dropdown.is-open > .nav__link--dropdown i {
   transform: rotate(180deg);
 }
 
 /* Dropdown */
 .nav__dropdown { position: relative; }
+
+/*
+ * HOVER BRIDGE FIX: Invisible pseudo-element that covers the 12px gap
+ * between the nav link and the dropdown menu. Without this, moving the
+ * mouse across the gap loses the :hover state and closes the menu before
+ * the user can click an item.
+ */
+.nav__dropdown::before {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: -16px;
+  right: -16px;
+  height: 20px; /* must be >= the gap (12px) + a small buffer */
+  background: transparent;
+  z-index: calc(var(--z-dropdown) - 1);
+  display: none; /* only active on desktop via media query below */
+}
+@media (min-width: 1025px) {
+  .nav__dropdown::before { display: block; }
+}
 
 .dropdown__menu {
   position: absolute;
@@ -650,7 +673,10 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   border-bottom-color: var(--color-white);
   z-index: 2;
 }
-.nav__dropdown:hover > .dropdown__menu {
+
+/* FIX: dropdown abre en hover (desktop) O cuando tiene clase .is-open (click/touch) */
+.nav__dropdown:hover > .dropdown__menu,
+.nav__dropdown.is-open > .dropdown__menu {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
@@ -913,9 +939,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 
 /* ================================================================
    12. HERO SECTION — IMAGE SLIDER
-   FIX v2.2: Tamaños de texto reducidos para hero compacto (65vh / 650px).
-   Espaciados ajustados para que badge → título → subtítulo →
-   botones → stats quepan sin desbordarse ni verse apretados.
 ================================================================ */
 .hero {
   position: relative;
@@ -945,9 +968,8 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 }
 
 .hero__slide.is-active  { opacity: 1; z-index: 1; }
-.hero__slide.is-leaving { opacity: 0; z-index: 2; } /* z-index 2 para que fade-out sea suave */
+.hero__slide.is-leaving { opacity: 0; z-index: 2; }
 
-/* Ken-Burns zoom en slide activo */
 .hero__slide-img {
   position: absolute;
   inset: 0;
@@ -966,7 +988,7 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   background: var(--gradient-hero);
 }
 
-/* ── HERO CONTENT — ajustado para hero compacto ── */
+/* ── HERO CONTENT ── */
 .hero__content {
   position: relative;
   z-index: 3;
@@ -985,7 +1007,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   animation: slideTextIn 0.60s ease both;
 }
 
-/* Badge — tamaño reducido */
 .hero__badge {
   display: inline-flex;
   align-items: center;
@@ -1004,7 +1025,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 }
 .hero__badge i { color: var(--color-gold); font-size: var(--fs-sm); }
 
-/* Título — reducido de clamp(2.5rem, 5.5vw, 4.5rem) → clamp(1.6rem, 3vw, 2.6rem) */
 .hero__title {
   font-size: clamp(1.6rem, 3vw, 2.6rem);
   font-weight: var(--fw-black);
@@ -1021,7 +1041,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   background-clip: text;
 }
 
-/* Subtítulo — reducido */
 .hero__subtitle {
   font-size: clamp(0.85rem, 1.3vw, 1rem);
   color: rgba(255,255,255,0.82);
@@ -1030,7 +1049,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   margin-bottom: var(--space-4);
 }
 
-/* Botones CTA */
 .hero__actions {
   display: flex;
   align-items: center;
@@ -1039,7 +1057,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   margin-bottom: var(--space-4);
 }
 
-/* Hero Stats — más compacto */
 .hero__stats {
   display: flex;
   align-items: center;
@@ -1062,7 +1079,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   padding-inline: var(--space-3);
 }
 
-/* Número — reducido de clamp(2xl, 3vw, 4xl) → clamp(xl, 2.2vw, 2xl) */
 .stat__number {
   font-size: clamp(1.25rem, 2.2vw, 1.75rem);
   font-weight: var(--fw-black);
@@ -1206,7 +1222,7 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   color: var(--color-white);
 }
 
-/* ── PROGRESS BAR (único — en HTML, no se duplica por JS) ── */
+/* ── PROGRESS BAR ── */
 .hero__progress {
   position: absolute;
   bottom: 0; left: 0;
@@ -1920,7 +1936,7 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 
   /* ── Hero mobile ── */
   .hero {
-    height: 100svh;        /* pantalla completa en móvil */
+    height: 100svh;
     min-height: 580px;
     max-height: 780px;
   }
@@ -1931,10 +1947,8 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
     max-width: 100%;
   }
 
-  /* Imagen centrada en cara */
   .hero__slide-img { object-position: 68% center; }
 
-  /* Overlay más oscuro para legibilidad en móvil */
   .hero__slide-overlay {
     background: linear-gradient(
       to bottom,
@@ -1944,14 +1958,12 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
     );
   }
 
-  /* Título ligeramente más grande en móvil (pantalla completa) */
   .hero__title { font-size: clamp(1.75rem, 7vw, 2.4rem); }
   .hero__subtitle { font-size: 0.9rem; }
 
   .hero__actions { flex-direction: column; width: 100%; }
   .hero__actions .btn { width: 100%; justify-content: center; }
 
-  /* Stats horizontal compacto */
   .hero__stats { gap: 0; padding: var(--space-3) var(--space-3); }
   .stat__item  { min-width: 70px; padding-inline: var(--space-2); }
   .stat__divider { height: 32px; }
@@ -1959,15 +1971,12 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 
   .hero__scroll { display: none; }
 
-  /* Flechas más pequeñas */
   .hero__arrow { width: 40px; height: 40px; font-size: 1.4rem; }
   .hero__arrow--prev { left: 8px; }
   .hero__arrow--next { right: 8px; }
 
-  /* Dots más arriba para no quedar sobre barra de navegación del browser */
   .hero__controls { bottom: var(--space-10); }
 
-  /* Secciones */
   .products__grid      { grid-template-columns: 1fr; }
   .testimonials__slider{ grid-template-columns: 1fr; }
   .blog__grid          { grid-template-columns: 1fr; }
@@ -1986,7 +1995,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 
   .back-to-top { bottom: var(--space-5); right: var(--space-5); width: 44px; height: 44px; }
 
-  /* Floating buttons */
   .floating-buttons { bottom: 5rem; right: 1rem; gap: 10px; }
   .float-btn { width: 46px; height: 46px; font-size: 1.3rem; }
   .float-btn::before { display: none; }
@@ -1998,11 +2006,9 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 ================================================================ */
 @media (max-width: 480px) {
 
-  /* Hero en pantalla muy pequeña */
   .hero { min-height: 560px; }
   .hero__slide-img { object-position: center center; }
 
-  /* Stats apiladas verticalmente */
   .hero__stats { flex-direction: column; align-items: stretch; }
   .stat__item  { padding-inline: var(--space-2); padding-block: var(--space-2); flex-direction: row; justify-content: center; align-items: baseline; gap: 4px; }
   .stat__label { margin-top: 0; font-size: 0.65rem; }

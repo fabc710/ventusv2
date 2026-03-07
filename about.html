@@ -55,37 +55,38 @@
         <ul class="navbar__menu" role="list" id="nav-menu">
           <li><a href="index.html" class="nav__link">Home</a></li>
           <li><a href="about.html" class="nav__link nav__link--active" aria-current="page">About Us</a></li>
+          <!-- FIX: all product links → products.html#section-id -->
           <li class="nav__dropdown" aria-haspopup="true">
             <a href="products.html" class="nav__link nav__link--dropdown">
               Our Products <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
             </a>
             <ul class="dropdown__menu" role="list" aria-label="Products submenu">
               <li>
-                <a href="products/home-insurance.html" class="dropdown__item">
+                <a href="products.html#home-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-home-2-line"></i></span>
                   <span class="dropdown__text"><strong>Home Insurance</strong><small>Protect your property</small></span>
                 </a>
               </li>
               <li>
-                <a href="products/auto-insurance.html" class="dropdown__item">
-                  <span class="dropdown__icon"><i class="ri-car-line"></i></span>
-                  <span class="dropdown__text"><strong>Auto Insurance</strong><small>Drive with confidence</small></span>
-                </a>
-              </li>
-              <li>
-                <a href="products/business-insurance.html" class="dropdown__item">
-                  <span class="dropdown__icon"><i class="ri-building-line"></i></span>
-                  <span class="dropdown__text"><strong>Business Insurance</strong><small>Safeguard your company</small></span>
-                </a>
-              </li>
-              <li>
-                <a href="products/truck-insurance.html" class="dropdown__item">
+                <a href="products.html#truck-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-truck-line"></i></span>
                   <span class="dropdown__text"><strong>Truck Insurance</strong><small>Coverage for your fleet</small></span>
                 </a>
               </li>
               <li>
-                <a href="products/life-insurance.html" class="dropdown__item">
+                <a href="products.html#auto-insurance" class="dropdown__item">
+                  <span class="dropdown__icon"><i class="ri-car-line"></i></span>
+                  <span class="dropdown__text"><strong>Auto Insurance</strong><small>Drive with confidence</small></span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html#business-insurance" class="dropdown__item">
+                  <span class="dropdown__icon"><i class="ri-building-line"></i></span>
+                  <span class="dropdown__text"><strong>Business Insurance</strong><small>Safeguard your company</small></span>
+                </a>
+              </li>
+              <li>
+                <a href="products.html#life-insurance" class="dropdown__item">
                   <span class="dropdown__icon"><i class="ri-heart-pulse-line"></i></span>
                   <span class="dropdown__text"><strong>Personal Life Insurance</strong><small>Secure your family's future</small></span>
                 </a>
@@ -118,16 +119,17 @@
           <ul role="list">
             <li><a href="index.html" class="mobile-nav__link">Home</a></li>
             <li><a href="about.html" class="mobile-nav__link mobile-nav__link--active">About Us</a></li>
+            <!-- FIX: mobile menu product links → products.html#section-id -->
             <li class="mobile-nav__accordion">
               <button class="mobile-nav__accordion-btn" aria-expanded="false">
                 Our Products <i class="ri-arrow-down-s-line"></i>
               </button>
               <ul class="mobile-nav__sub" aria-hidden="true">
-                <li><a href="products/home-insurance.html"><i class="ri-home-2-line"></i> Home Insurance</a></li>
-                <li><a href="products/auto-insurance.html"><i class="ri-car-line"></i> Auto Insurance</a></li>
-                <li><a href="products/business-insurance.html"><i class="ri-building-line"></i> Business Insurance</a></li>
-                <li><a href="products/truck-insurance.html"><i class="ri-truck-line"></i> Truck Insurance</a></li>
-                <li><a href="products/life-insurance.html"><i class="ri-heart-pulse-line"></i> Personal Life Insurance</a></li>
+                <li><a href="products.html#home-insurance"><i class="ri-home-2-line"></i> Home Insurance</a></li>
+                <li><a href="products.html#truck-insurance"><i class="ri-truck-line"></i> Truck Insurance</a></li>
+                <li><a href="products.html#auto-insurance"><i class="ri-car-line"></i> Auto Insurance</a></li>
+                <li><a href="products.html#business-insurance"><i class="ri-building-line"></i> Business Insurance</a></li>
+                <li><a href="products.html#life-insurance"><i class="ri-heart-pulse-line"></i> Personal Life Insurance</a></li>
               </ul>
             </li>
             <li><a href="services.html" class="mobile-nav__link">Our Services</a></li>
@@ -151,16 +153,9 @@
 
   <main id="main-content">
 
-    <!-- ============================================================
-         PAGE HERO — ABOUT US
-         CAMBIO: .page-hero__bg ahora contiene una imagen real
-         más un overlay para mantener legibilidad del texto.
-         Reemplaza: assets/images/about-hero.webp
-         con tu propia foto (recomendado: 1920×640px o similar).
-    ============================================================ -->
+    <!-- PAGE HERO -->
     <section class="page-hero" aria-labelledby="page-hero-title">
 
-      <!-- Fondo: imagen + overlay en capas -->
       <div class="page-hero__bg" aria-hidden="true">
         <img
           class="page-hero__bg-img"
@@ -174,7 +169,6 @@
         <div class="page-hero__bg-overlay"></div>
       </div>
 
-      <!-- Formas decorativas -->
       <div class="page-hero__shape page-hero__shape--1" aria-hidden="true"></div>
       <div class="page-hero__shape page-hero__shape--2" aria-hidden="true"></div>
       <div class="page-hero__shape page-hero__shape--3" aria-hidden="true"></div>
@@ -200,6 +194,7 @@
           </p>
         </div>
 
+        <!-- FIX: Removed "5 Insurance Products" stat — now 3 stats only -->
         <div class="page-hero__stats" data-aos="fade-up" data-aos-delay="350">
           <div class="ph-stat">
             <strong>15+</strong>
@@ -209,11 +204,6 @@
           <div class="ph-stat">
             <strong>5,000+</strong>
             <span>Happy Clients</span>
-          </div>
-          <div class="ph-stat__divider" aria-hidden="true"></div>
-          <div class="ph-stat">
-            <strong>5</strong>
-            <span>Insurance Products</span>
           </div>
           <div class="ph-stat__divider" aria-hidden="true"></div>
           <div class="ph-stat">
@@ -416,36 +406,45 @@
           <h2 class="section__title" id="trust-title">We Work With the Best Carriers</h2>
           <p class="section__desc">As an independent agency, we're free to shop across dozens of top-rated insurance carriers to find you the most competitive coverage available.</p>
         </div>
+
+        <!--
+          MARQUEE: Single-row infinite scroll, right to left.
+          The .carriers__track is duplicated so the loop is seamless.
+          JS handles reduced-motion / touch fallback.
+        -->
         <div class="carriers__marquee-wrapper" aria-label="Insurance carrier partners" data-aos="fade-up">
-          <div class="carriers__marquee" aria-hidden="true">
-            <div class="carriers__track">
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-1.webp" alt="Progressive Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-2.webp" alt="Allstate Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-3.webp" alt="State Farm Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-4.webp" alt="Nationwide Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-5.webp" alt="Liberty Mutual Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-6.webp" alt="Travelers Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-7.webp" alt="Liberty Mutual Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-8.webp" alt="Travelers Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-9.webp" alt="Liberty Mutual Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-10.webp" alt="Travelers Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-11.webp" alt="Liberty Mutual Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-12.webp" alt="Travelers Insurance" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-1.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-2.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-3.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-4.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-5.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-6.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-7.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-8.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-9.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-10.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-11.webp" alt="" width="120" height="48" loading="lazy" /></span>
-              <span class="carrier__logo-item" aria-hidden="true"><img src="assets/images/carriers/carrier-12.webp" alt="" width="120" height="48" loading="lazy" /></span>
+          <div class="carriers__marquee">
+            <!-- Original set -->
+            <div class="carriers__track" aria-hidden="true">
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-1.webp"  alt="Progressive Insurance"     width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-2.webp"  alt="Allstate Insurance"        width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-3.webp"  alt="State Farm Insurance"      width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-4.webp"  alt="Nationwide Insurance"      width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-5.webp"  alt="Liberty Mutual Insurance"  width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-6.webp"  alt="Travelers Insurance"       width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-7.webp"  alt="Chubb Insurance"           width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-8.webp"  alt="Hartford Insurance"        width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-9.webp"  alt="Farmers Insurance"         width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-10.webp" alt="USAA Insurance"            width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-11.webp" alt="MetLife Insurance"         width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-12.webp" alt="Zurich Insurance"          width="120" height="48" loading="lazy" /></span>
+              <!-- Duplicate set for seamless infinite loop -->
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-1.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-2.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-3.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-4.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-5.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-6.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-7.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-8.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-9.webp"  alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-10.webp" alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-11.webp" alt="" width="120" height="48" loading="lazy" /></span>
+              <span class="carrier__logo-item"><img src="assets/images/carriers/carrier-12.webp" alt="" width="120" height="48" loading="lazy" /></span>
             </div>
           </div>
         </div>
+
         <div class="trust__badges" data-aos="fade-up">
           <div class="trust-badge"><div class="trust-badge__icon" aria-hidden="true"><i class="ri-shield-check-line"></i></div><div class="trust-badge__text"><strong>NY DFS Licensed</strong><span>State of New York</span></div></div>
           <div class="trust-badge"><div class="trust-badge__icon" aria-hidden="true"><i class="ri-award-line"></i></div><div class="trust-badge__text"><strong>A+ Rated Agency</strong><span>Client Reviews</span></div></div>
@@ -499,14 +498,15 @@
             <li><a href="contact.html"><i class="ri-arrow-right-s-line"></i> Contact</a></li>
           </ul>
         </nav>
+        <!-- FIX: Footer product links → products.html#section-id -->
         <nav class="footer__col" aria-label="Insurance products">
           <h4 class="footer__col-title">Our Products</h4>
           <ul role="list">
-            <li><a href="products/home-insurance.html"><i class="ri-home-2-line"></i> Home Insurance</a></li>
-            <li><a href="products/auto-insurance.html"><i class="ri-car-line"></i> Auto Insurance</a></li>
-            <li><a href="products/business-insurance.html"><i class="ri-building-line"></i> Business Insurance</a></li>
-            <li><a href="products/truck-insurance.html"><i class="ri-truck-line"></i> Truck Insurance</a></li>
-            <li><a href="products/life-insurance.html"><i class="ri-heart-pulse-line"></i> Life Insurance</a></li>
+            <li><a href="products.html#home-insurance"><i class="ri-home-2-line"></i> Home Insurance</a></li>
+            <li><a href="products.html#truck-insurance"><i class="ri-truck-line"></i> Truck Insurance</a></li>
+            <li><a href="products.html#auto-insurance"><i class="ri-car-line"></i> Auto Insurance</a></li>
+            <li><a href="products.html#business-insurance"><i class="ri-building-line"></i> Business Insurance</a></li>
+            <li><a href="products.html#life-insurance"><i class="ri-heart-pulse-line"></i> Life Insurance</a></li>
           </ul>
         </nav>
         <div class="footer__col">
