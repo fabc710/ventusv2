@@ -2,18 +2,37 @@
  * ================================================================
  * VENTUS INSURANCE AGENCY — About Us JavaScript
  * File: js/about.js
- * Version: 2.1 — Marquee single-row fix, reduced motion/touch fallback
- * ================================================================
+ * Version: 3.0 — Bug fixes applied
+ *
+ * FIXES IN THIS VERSION:
+ * 1. initTeamCardTilt: (hover:none) → isTouchDevice() usando
+ *    (hover:none),(pointer:coarse) — confiable en híbridos.
+ * 2. initHeroParallax: misma corrección de detección touch.
+ * 3. initStoryImageParallax: misma corrección de detección touch.
+ * 4. initMarqueeControl: misma corrección de detección touch.
+ * 5. initMVVStagger + initTrustBadgeEntrance: eliminado inline
+ *    opacity:0 al DOMContentLoaded (FOIC). Ahora usan clases CSS
+ *    --hidden para el estado inicial, igual que services.js Fix 4.
+ *    Requiere en CSS:
+ *      .mvv-card--hidden    { opacity:0; transform:translateY(28px); }
+ *      .trust-badge--hidden { opacity:0; transform:translateY(20px); }
+ *      .mvv-card    { transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25,0.8,0.25,1); }
+ *      .trust-badge { transition: opacity 0.5s ease, transform 0.5s ease; }
+ * 6. initTimelineHighlight: el bloque else ahora limpia también
+ *    dot.style.transition, year.style.transition y
+ *    content.style.transition — evita que el inline style bloquee
+ *    hovers del CSS después de salir del viewport.
  *
  * TABLE OF CONTENTS
  * 1.  DOMContentLoaded Init
- * 2.  Timeline — Scroll Reveal with Progress Highlight
- * 3.  Team Cards — Tilt Effect on Hover
- * 4.  Marquee — Single-Row Control (reduced motion / touch)
- * 5.  MVV Cards — Entrance Stagger
- * 6.  Trust Badges — Entrance Animation
- * 7.  Page Hero Shapes — Parallax on Mouse Move
- * 8.  Story Section — Image Parallax on Scroll
+ * 2.  Utility Helpers
+ * 3.  Timeline — Scroll Reveal with Progress Highlight
+ * 4.  Team Cards — Tilt Effect on Hover
+ * 5.  Marquee — Single-Row Control (reduced motion / touch)
+ * 6.  MVV Cards — Entrance Stagger
+ * 7.  Trust Badges — Entrance Animation
+ * 8.  Page Hero Shapes — Parallax on Mouse Move
+ * 9.  Story Section — Image Parallax on Scroll
  * ================================================================
  *
  * NOTE: All shared functionality (navbar scroll, hamburger, mobile
@@ -36,13 +55,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* ================================================================
-   2. TIMELINE — Active Highlight on Scroll
+   2. UTILITY HELPERS
+================================================================ */
+
+/**
+ * Devuelve true si el dispositivo es principalmente touch.
+ * (hover:none),(pointer:coarse) cubre híbridos correctamente:
+ * laptops con pantalla táctil, tablets con teclado, etc.
+ */
+function isTouchDevice() {
+  return window.matchMedia('(hover: none), (pointer: coarse)').matches;
+}
+
+/**
+ * Devuelve true si el usuario prefiere movimiento reducido.
+ */
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+
+/* ================================================================
+   3. TIMELINE — Active Highlight on Scroll
+   FIX 6: El bloque else ahora limpia TODAS las inline transitions
+   (dot, year, content) para no bloquear futuros hovers del CSS.
 ================================================================ */
 function initTimelineHighlight() {
   const items = document.querySelectorAll('.timeline__item');
   if (!items.length) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const reduced = prefersReducedMotion();
 
   const observer = new IntersectionObserver(
     (entries) => {
@@ -54,35 +96,47 @@ function initTimelineHighlight() {
         if (entry.isIntersecting) {
           entry.target.classList.add('timeline__item--visible');
 
-          if (!prefersReduced && dot) {
-            dot.style.transform  = 'scale(1.4)';
+          if (!reduced && dot) {
             dot.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
-            setTimeout(() => { dot.style.transform = 'scale(1)'; }, 400);
+            dot.style.transform  = 'scale(1.4)';
+            setTimeout(() => {
+              dot.style.transform = 'scale(1)';
+            }, 400);
           }
 
           if (year) {
-            year.style.color      = 'var(--color-gold-dark)';
-            year.style.fontWeight = '900';
-            year.style.transition = 'color 0.3s ease, font-weight 0.3s ease';
+            year.style.transition  = 'color 0.3s ease, font-weight 0.3s ease';
+            year.style.color       = 'var(--color-gold-dark)';
+            year.style.fontWeight  = '900';
           }
 
           if (content) {
-            content.style.borderColor = 'rgba(197,171,98,0.45)';
             content.style.transition  = 'border-color 0.4s ease, box-shadow 0.4s ease';
+            content.style.borderColor = 'rgba(197,171,98,0.45)';
             content.style.boxShadow   = '0 8px 32px rgba(18,33,71,0.12)';
           }
 
         } else {
           entry.target.classList.remove('timeline__item--visible');
+          const isCurrent = entry.target.classList.contains('timeline__item--current');
 
-          if (year && !entry.target.classList.contains('timeline__item--current')) {
-            year.style.color      = '';
-            year.style.fontWeight = '';
+          // FIX 6: limpiar TODOS los inline styles (incluido transition)
+          // para no interferir con los hovers/estados del CSS
+          if (dot) {
+            dot.style.transform  = '';
+            dot.style.transition = '';
           }
 
-          if (content && !entry.target.classList.contains('timeline__item--current')) {
+          if (year && !isCurrent) {
+            year.style.color       = '';
+            year.style.fontWeight  = '';
+            year.style.transition  = ''; // FIX 6
+          }
+
+          if (content && !isCurrent) {
             content.style.borderColor = '';
             content.style.boxShadow   = '';
+            content.style.transition  = ''; // FIX 6
           }
         }
       });
@@ -95,15 +149,16 @@ function initTimelineHighlight() {
 
 
 /* ================================================================
-   3. TEAM CARDS — Subtle 3D Tilt on Mouse Move
+   4. TEAM CARDS — Subtle 3D Tilt on Mouse Move
+   FIX 1: Reemplazado (hover:none) por isTouchDevice() que usa
+   (hover:none),(pointer:coarse) — más confiable en híbridos.
 ================================================================ */
 function initTeamCardTilt() {
   const cards = document.querySelectorAll('.team-card');
   if (!cards.length) return;
 
-  const isTouch        = window.matchMedia('(hover: none)').matches;
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isTouch || prefersReduced) return;
+  // FIX 1: detección touch confiable
+  if (isTouchDevice() || prefersReducedMotion()) return;
 
   cards.forEach((card) => {
     card.addEventListener('mousemove', handleTilt);
@@ -130,36 +185,40 @@ function initTeamCardTilt() {
     const card = e.currentTarget;
     card.style.transform  = 'perspective(800px) rotateX(0deg) rotateY(0deg) translateY(0)';
     card.style.transition = 'transform 0.5s cubic-bezier(0.34,1.56,0.64,1)';
-    setTimeout(() => { card.style.willChange = ''; }, 500);
+    setTimeout(() => {
+      card.style.willChange = '';
+    }, 500);
   }
 }
 
 
 /* ================================================================
-   4. MARQUEE — JS-driven right-to-left infinite scroll
-   Uses requestAnimationFrame for guaranteed smooth movement.
-   Direction: items enter from the RIGHT, exit to the LEFT.
+   5. MARQUEE — JS-driven right-to-left infinite scroll
+   FIX 4: Reemplazado (hover:none) por isTouchDevice() que usa
+   (hover:none),(pointer:coarse) — más confiable en híbridos.
 
    HOW IT WORKS:
-   - CSS animation on .carriers__track is disabled by JS.
-   - JS measures the half-width of the track (= one full set of logos).
-   - Each frame subtracts `speed` px from currentX (moves left).
-   - When |currentX| reaches halfWidth we reset to 0 — seamless loop
-     because the second half of the track is an exact duplicate.
+   - CSS animation en .carriers__track es desactivada por JS.
+   - JS mide halfWidth = scrollWidth / 2 (un set completo de logos).
+   - Cada frame resta `speed` px a currentX (mueve a la izquierda).
+   - Al llegar a halfWidth se resetea a 0 — loop seamless porque la
+     segunda mitad del track es un duplicado exacto.
 
    FALLBACK (touch / reduced-motion):
-   - Animation stopped, duplicates removed, grid layout shown.
+   - Animación detenida, duplicados eliminados, grid estático.
 ================================================================ */
 function initMarqueeControl() {
   const track   = document.querySelector('.carriers__track');
   const wrapper = document.querySelector('.carriers__marquee-wrapper');
   if (!track || !wrapper) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isTouch        = window.matchMedia('(hover: none)').matches;
+  const reduced = prefersReducedMotion();
+
+  // FIX 4: detección touch confiable
+  const isTouch = isTouchDevice();
 
   /* ── Static grid fallback (touch / reduced-motion) ── */
-  if (prefersReduced || isTouch) {
+  if (reduced || isTouch) {
     track.style.animation      = 'none';
     track.style.flexWrap       = 'wrap';
     track.style.justifyContent = 'center';
@@ -167,12 +226,12 @@ function initMarqueeControl() {
     track.style.width          = '100%';
     track.style.transform      = 'none';
 
-    // Remove duplicate items (second half)
+    // Eliminar items duplicados (segunda mitad)
     const allItems = Array.from(track.querySelectorAll('.carrier__logo-item'));
     const half     = Math.ceil(allItems.length / 2);
     allItems.slice(half).forEach((item) => item.remove());
 
-    // Full colour in static view
+    // Color completo en vista estática
     track.querySelectorAll('.carrier__logo-item img').forEach((img) => {
       img.style.filter = 'none';
     });
@@ -181,29 +240,25 @@ function initMarqueeControl() {
 
   /* ── Animated version: JS-driven RAF scroll ── */
 
-  // Kill the CSS @keyframes animation — JS takes over completely
-  track.style.animation = 'none';
+  // Desactivar CSS @keyframes — JS toma el control
+  track.style.animation  = 'none';
   track.style.willChange = 'transform';
 
-  // Speed in px/frame (at 60 fps: 0.6 ≈ 36 px/s — adjust to taste)
+  // Velocidad en px/frame (a 60 fps: 0.6 ≈ 36 px/s)
   const SPEED = 0.6;
-  let currentX = 0;
-  let paused   = false;
-  let rafId    = null;
+  let currentX  = 0;
+  let paused    = false;
+  let rafId     = null;
   let halfWidth = 0;
 
-  // Measure after first paint so layout is complete
+  // Medir después del primer paint para que el layout esté completo
   requestAnimationFrame(() => {
-    // scrollWidth = total width of all 24 cards + gaps
-    // halfWidth   = exactly one set of 12 logos (the seamless reset point)
     halfWidth = track.scrollWidth / 2;
 
     function tick() {
       if (!paused) {
-        currentX -= SPEED;                        // ← move LEFT (right→left)
-        if (Math.abs(currentX) >= halfWidth) {
-          currentX = 0;                           // seamless reset
-        }
+        currentX -= SPEED;
+        if (Math.abs(currentX) >= halfWidth) currentX = 0;
         track.style.transform = `translateX(${currentX}px)`;
       }
       rafId = requestAnimationFrame(tick);
@@ -212,117 +267,157 @@ function initMarqueeControl() {
     rafId = requestAnimationFrame(tick);
   });
 
-  /* ── Pause on wrapper hover ── */
+  /* ── Pause al hover sobre el wrapper ── */
   wrapper.addEventListener('mouseenter', () => { paused = true;  });
   wrapper.addEventListener('mouseleave', () => { paused = false; });
 
-  /* ── Pause on keyboard focus (accessibility) ── */
+  /* ── Pause con foco de teclado (accesibilidad) ── */
   track.querySelectorAll('a, [tabindex]').forEach((link) => {
     link.addEventListener('focus', () => { paused = true;  });
     link.addEventListener('blur',  () => { paused = false; });
   });
 
-  /* ── Stop RAF when page is hidden (performance) ── */
+  /* ── Stop RAF cuando la página está oculta (performance) ── */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       cancelAnimationFrame(rafId);
     } else {
-      rafId = requestAnimationFrame(function tick() {
+      function resumeTick() {
         if (!paused) {
           currentX -= SPEED;
           if (Math.abs(currentX) >= halfWidth) currentX = 0;
           track.style.transform = `translateX(${currentX}px)`;
         }
-        rafId = requestAnimationFrame(tick);
-      });
+        rafId = requestAnimationFrame(resumeTick);
+      }
+      rafId = requestAnimationFrame(resumeTick);
     }
   });
 }
 
 
 /* ================================================================
-   5. MVV CARDS — Entrance Stagger Animation
+   6. MVV CARDS — Entrance Stagger Animation
+   FIX 5: Eliminado inline opacity:0 al DOMContentLoaded (FOIC).
+   Ahora usa clase CSS .mvv-card--hidden para el estado inicial.
+
+   REQUIERE en tu CSS (about.css o index.css):
+   ─────────────────────────────────────────────
+   .mvv-card--hidden {
+     opacity: 0;
+     transform: translateY(28px);
+   }
+   .mvv-card {
+     transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.25,0.8,0.25,1);
+   }
+   ─────────────────────────────────────────────
 ================================================================ */
 function initMVVStagger() {
   const cards = document.querySelectorAll('.mvv-card');
   if (!cards.length) return;
+  if (prefersReducedMotion()) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+  const mvvGrid = document.querySelector('.mvv__grid');
+  if (!mvvGrid) return;
 
+  // FIX 5: clase CSS en lugar de inline opacity:0
   cards.forEach((card, i) => {
-    card.style.opacity    = '0';
-    card.style.transform  = 'translateY(28px)';
-    card.style.transition = `opacity 0.6s ease ${i * 0.15}s, transform 0.6s cubic-bezier(0.25,0.8,0.25,1) ${i * 0.15}s`;
+    card.classList.add('mvv-card--hidden');
+    card.style.transitionDelay = `${i * 0.15}s`;
   });
 
   const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          cards.forEach((card) => {
-            card.style.opacity   = '1';
-            card.style.transform = 'translateY(0)';
-          });
-          observer.disconnect();
-        }
+    ([entry]) => {
+      if (!entry.isIntersecting) return;
+
+      cards.forEach((card) => {
+        card.classList.remove('mvv-card--hidden');
       });
+
+      // Limpiar transition-delay inline después de la animación
+      const maxDelay = (cards.length - 1) * 150 + 600 + 50;
+      setTimeout(() => {
+        cards.forEach((card) => {
+          card.style.transitionDelay = '';
+        });
+      }, maxDelay);
+
+      observer.disconnect();
     },
     { threshold: 0.20 }
   );
 
-  const mvvGrid = document.querySelector('.mvv__grid');
-  if (mvvGrid) observer.observe(mvvGrid);
+  observer.observe(mvvGrid);
 }
 
 
 /* ================================================================
-   6. TRUST BADGES — Entrance Animation
+   7. TRUST BADGES — Entrance Animation
+   FIX 5: Misma corrección que MVV Cards — clase CSS en lugar de
+   inline opacity:0 para evitar FOIC.
+
+   REQUIERE en tu CSS:
+   ─────────────────────────────────────────────
+   .trust-badge--hidden {
+     opacity: 0;
+     transform: translateY(20px);
+   }
+   .trust-badge {
+     transition: opacity 0.5s ease, transform 0.5s ease;
+   }
+   ─────────────────────────────────────────────
 ================================================================ */
 function initTrustBadgeEntrance() {
   const badges = document.querySelectorAll('.trust-badge');
   if (!badges.length) return;
+  if (prefersReducedMotion()) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+  const badgesWrapper = document.querySelector('.trust__badges');
+  if (!badgesWrapper) return;
 
+  // FIX 5: clase CSS en lugar de inline opacity:0
   badges.forEach((badge, i) => {
-    badge.style.opacity    = '0';
-    badge.style.transform  = 'translateY(20px)';
-    badge.style.transition = `opacity 0.5s ease ${i * 0.10}s, transform 0.5s ease ${i * 0.10}s`;
+    badge.classList.add('trust-badge--hidden');
+    badge.style.transitionDelay = `${i * 0.10}s`;
   });
 
   const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          badges.forEach((badge) => {
-            badge.style.opacity   = '1';
-            badge.style.transform = 'translateY(0)';
-          });
-          observer.disconnect();
-        }
+    ([entry]) => {
+      if (!entry.isIntersecting) return;
+
+      badges.forEach((badge) => {
+        badge.classList.remove('trust-badge--hidden');
       });
+
+      // Limpiar transition-delay inline después de la animación
+      const maxDelay = (badges.length - 1) * 100 + 500 + 50;
+      setTimeout(() => {
+        badges.forEach((badge) => {
+          badge.style.transitionDelay = '';
+        });
+      }, maxDelay);
+
+      observer.disconnect();
     },
     { threshold: 0.25 }
   );
 
-  const badgesWrapper = document.querySelector('.trust__badges');
-  if (badgesWrapper) observer.observe(badgesWrapper);
+  observer.observe(badgesWrapper);
 }
 
 
 /* ================================================================
-   7. PAGE HERO SHAPES — Parallax on Mouse Move
+   8. PAGE HERO SHAPES — Parallax on Mouse Move
+   FIX 2: Reemplazado (hover:none) por isTouchDevice() que usa
+   (hover:none),(pointer:coarse) — más confiable en híbridos.
 ================================================================ */
 function initHeroParallax() {
   const hero   = document.querySelector('.page-hero');
   const shapes = document.querySelectorAll('.page-hero__shape');
   if (!hero || !shapes.length) return;
 
-  const isTouch        = window.matchMedia('(hover: none)').matches;
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (isTouch || prefersReduced) return;
+  // FIX 2: detección touch confiable
+  if (isTouchDevice() || prefersReducedMotion()) return;
 
   const depths = [0.018, 0.012, 0.025];
 
@@ -335,7 +430,7 @@ function initHeroParallax() {
 
     shapes.forEach((shape, i) => {
       const depth = depths[i] ?? 0.015;
-      shape.style.transform = `translate(${offsetX * depth}px, ${offsetY * depth}px)`;
+      shape.style.transform  = `translate(${offsetX * depth}px, ${offsetY * depth}px)`;
       shape.style.transition = 'transform 0.4s ease-out';
     });
   });
@@ -350,20 +445,21 @@ function initHeroParallax() {
 
 
 /* ================================================================
-   8. STORY SECTION — Image Subtle Parallax on Scroll
+   9. STORY SECTION — Image Subtle Parallax on Scroll
+   FIX 3: Reemplazado (hover:none) por isTouchDevice() que usa
+   (hover:none),(pointer:coarse) — más confiable en híbridos.
 ================================================================ */
 function initStoryImageParallax() {
   const imgMain = document.querySelector('.story__img-main img');
   if (!imgMain) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isTouch        = window.matchMedia('(hover: none)').matches;
-  if (prefersReduced || isTouch) return;
+  // FIX 3: detección touch confiable
+  if (prefersReducedMotion() || isTouchDevice()) return;
 
   let ticking = false;
 
   function updateParallax() {
-    const section    = imgMain.closest('.story-section');
+    const section = imgMain.closest('.story-section');
     if (!section) return;
 
     const rect       = section.getBoundingClientRect();
@@ -374,7 +470,7 @@ function initStoryImageParallax() {
       return;
     }
 
-    const progress = 1 - (rect.bottom / (viewHeight + rect.height));
+    const progress = 1 - rect.bottom / (viewHeight + rect.height);
     const shift    = (progress - 0.5) * 30;
 
     imgMain.style.transform  = `translateY(${shift}px) scale(1.04)`;
@@ -382,12 +478,16 @@ function initStoryImageParallax() {
     ticking = false;
   }
 
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(updateParallax);
-      ticking = true;
-    }
-  }, { passive: true });
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
 
   updateParallax();
 }

@@ -143,52 +143,68 @@ function initMobileAccordion() {
 
 
 /* ================================================================
-   7. DESKTOP DROPDOWN — CLICK / TOUCH SUPPORT
-   FIX: Previously the dropdown only worked via CSS :hover, which
-   does not work on touch screens. Now clicking/tapping the
-   "Our Products" link toggles class .is-open on the parent li,
-   which the CSS also uses to show the dropdown.
-   Clicking outside or pressing Escape closes it.
+   7. DESKTOP DROPDOWN — CLICK / TOUCH SUPPORT  (v2 — fixed)
+   
+   FIXES:
+   - Usa (pointer: fine) en lugar de (hover: none) — más confiable
+   - Separa claramente comportamiento mouse vs touch
+   - mouseleave limpia is-open si quedó pegado en desktop
+   - Lógica simplificada sin el else que corría en todos los devices
 ================================================================ */
 function initDropdownClick() {
   const dropdowns = qsAll('.nav__dropdown');
+
+  // pointer:fine = mouse/trackpad real  |  pointer:coarse = touch/dedo
+  // Esta detección es más confiable que hover:none en dispositivos híbridos
+  const isTouchPrimary = () =>
+    window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
   dropdowns.forEach((dropdown) => {
     const trigger = qs('.nav__link--dropdown', dropdown);
     if (!trigger) return;
 
+    // ── CLICK / TAP HANDLER ──
     trigger.addEventListener('click', (e) => {
-      // If the user is on a device where hover works (mouse pointer),
-      // clicking the main link navigates to products.html — let it.
-      // On touch (no fine pointer), we intercept the first tap to open
-      // the dropdown; a second tap on the same link navigates.
-      const isTouchDevice = window.matchMedia('(hover: none)').matches;
+      if (!isTouchPrimary()) {
+        // Desktop con mouse: el CSS :hover ya muestra el dropdown.
+        // El click navega a products.html directamente.
+        // Solo limpiamos is-open por si quedó de un estado anterior (teclado).
+        dropdown.classList.remove('is-open');
+        return; // Dejar navegar
+      }
+
+      // Touch: primer tap abre, segundo tap navega
       const isOpen = dropdown.classList.contains('is-open');
 
-      if (isTouchDevice && !isOpen) {
+      // Cerrar otros dropdowns abiertos
+      dropdowns.forEach((d) => { if (d !== dropdown) d.classList.remove('is-open'); });
+
+      if (!isOpen) {
+        // Primer tap: prevenir navegación y abrir dropdown
         e.preventDefault();
-        // Close any other open dropdowns first
-        dropdowns.forEach((d) => {
-          if (d !== dropdown) d.classList.remove('is-open');
-        });
         dropdown.classList.add('is-open');
-      } else {
-        // Already open on touch — let natural navigation happen
+      }
+      // isOpen === true: segundo tap → dejar navegar a products.html
+    });
+
+    // ── FIX: Limpiar is-open cuando el mouse sale (evita "dropdown pegado") ──
+    // Sólo aplica en desktop (no touch). El CSS :hover ya cierra visualmente,
+    // pero is-open podría quedar seteado desde teclado o edge cases.
+    dropdown.addEventListener('mouseleave', () => {
+      if (!isTouchPrimary()) {
         dropdown.classList.remove('is-open');
       }
     });
   });
 
-  // Close dropdown when clicking anywhere outside
+  // ── Cerrar al hacer click fuera del dropdown ──
   document.addEventListener('click', (e) => {
-    dropdowns.forEach((dropdown) => {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove('is-open');
-      }
-    });
+    if (!e.target.closest('.nav__dropdown')) {
+      dropdowns.forEach((d) => d.classList.remove('is-open'));
+    }
   });
 
-  // Close dropdown on Escape key
+  // ── Cerrar con tecla Escape ──
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       dropdowns.forEach((d) => d.classList.remove('is-open'));

@@ -2,15 +2,32 @@
  * ================================================================
  * VENTUS INSURANCE AGENCY — Products Page JavaScript
  * File: js/products.js
+ * Version: 2.0 — Bug fixes applied
+ *
+ * FIXES IN THIS VERSION:
+ * 1. initProductScrollSpy: El primer bloque tenía `.observe` como
+ *    acceso de propiedad (no llamada). El observer se creaba pero
+ *    nunca observaba nada (código muerto). Refactorizado a UN
+ *    solo IntersectionObserver que observa todas las secciones
+ *    con sections.forEach → observer.observe(section).
+ * 2. initProductParallax: (hover:none) reemplazado por la
+ *    detección confiable isTouchDevice() → (hover:none),(pointer:coarse).
+ * 3. initAnchorNavigation: Los selectores .prod-nav-pills .prod-pill
+ *    y .prod-pill[href^="#"] se solapaban, registrando el handler
+ *    dos veces en los mismos pills (doble scroll). Unificado con
+ *    Set para eliminar duplicados.
+ * 4. initStickyProductNav: El IntersectionObserver se guardaba en
+ *    variable para poder desconectarlo; mejorado manejo de estado.
  *
  * TABLE OF CONTENTS
  * 1.  DOMContentLoaded Init
- * 2.  Coverage Tabs
- * 3.  FAQ Accordion
- * 4.  Sticky Product Nav
- * 5.  Product Scroll Spy
- * 6.  Product Parallax
- * 7.  Anchor Navigation — Fix definitivo (mobile + desktop)
+ * 2.  Utility Helpers
+ * 3.  Coverage Tabs
+ * 4.  FAQ Accordion
+ * 5.  Sticky Product Nav
+ * 6.  Product Scroll Spy
+ * 7.  Product Parallax
+ * 8.  Anchor Navigation — Fix definitivo (mobile + desktop)
  * ================================================================
  */
 
@@ -27,7 +44,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* ================================================================
-   2. COVERAGE TABS
+   2. UTILITY HELPERS
+================================================================ */
+
+/**
+ * Devuelve true si el dispositivo es principalmente touch.
+ * (hover:none),(pointer:coarse) cubre híbridos correctamente.
+ */
+function isTouchDevice() {
+  return window.matchMedia('(hover: none), (pointer: coarse)').matches;
+}
+
+/**
+ * Devuelve true si el usuario prefiere movimiento reducido.
+ */
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+
+/* ================================================================
+   3. COVERAGE TABS
 ================================================================ */
 function initCoverageTabs() {
   const tabGroups = document.querySelectorAll('.coverage__tabs');
@@ -56,9 +93,11 @@ function initCoverageTabs() {
           e.preventDefault();
           newIndex = (index - 1 + tabs.length) % tabs.length;
         } else if (e.key === 'Home') {
-          e.preventDefault(); newIndex = 0;
+          e.preventDefault();
+          newIndex = 0;
         } else if (e.key === 'End') {
-          e.preventDefault(); newIndex = tabs.length - 1;
+          e.preventDefault();
+          newIndex = tabs.length - 1;
         }
         if (newIndex !== index) {
           activateTab(tabs, panels, newIndex);
@@ -79,13 +118,17 @@ function activateTab(tabs, panels, activeIndex) {
   panels.forEach((panel, i) => {
     const isActive = i === activeIndex;
     panel.classList.toggle('is-active', isActive);
-    isActive ? panel.removeAttribute('hidden') : panel.setAttribute('hidden', '');
+    if (isActive) {
+      panel.removeAttribute('hidden');
+    } else {
+      panel.setAttribute('hidden', '');
+    }
   });
 }
 
 
 /* ================================================================
-   3. FAQ ACCORDION
+   4. FAQ ACCORDION
 ================================================================ */
 function initFaqAccordion() {
   const faqItems = document.querySelectorAll('.faq__item');
@@ -99,23 +142,27 @@ function initFaqAccordion() {
     question.addEventListener('click', () => {
       const isOpen = question.getAttribute('aria-expanded') === 'true';
 
+      // Cerrar todos los demás
       faqItems.forEach((other) => {
+        if (other === item) return;
         const oQ = other.querySelector('.faq__question');
         const oA = other.querySelector('.faq__answer');
-        if (oQ && oA && other !== item) {
-          oQ.setAttribute('aria-expanded', 'false');
-          oA.setAttribute('hidden', '');
-        }
+        if (oQ) oQ.setAttribute('aria-expanded', 'false');
+        if (oA) oA.setAttribute('hidden', '');
       });
 
       question.setAttribute('aria-expanded', String(!isOpen));
+
       if (!isOpen) {
         answer.removeAttribute('hidden');
+        // Scroll suave si el item queda oculto detrás del header
         setTimeout(() => {
           const rect   = item.getBoundingClientRect();
           const header = document.querySelector('#header');
           const offset = header ? header.offsetHeight + 16 : 140;
-          if (rect.top < offset) window.scrollBy({ top: rect.top - offset, behavior: 'smooth' });
+          if (rect.top < offset) {
+            window.scrollBy({ top: rect.top - offset, behavior: 'smooth' });
+          }
         }, 50);
       } else {
         answer.setAttribute('hidden', '');
@@ -123,14 +170,19 @@ function initFaqAccordion() {
     });
 
     question.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); question.click(); }
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        question.click();
+      }
     });
   });
 }
 
 
 /* ================================================================
-   4. STICKY PRODUCT NAV
+   5. STICKY PRODUCT NAV
+   FIX 4: IntersectionObserver guardado en variable para poder
+   desconectarlo si fuera necesario. Mejorado manejo de aria-hidden.
 ================================================================ */
 function initStickyProductNav() {
   const hero    = document.querySelector('.prod-hero');
@@ -145,27 +197,46 @@ function initStickyProductNav() {
 
   const stickyPills = sticky.querySelectorAll('.prod-pill');
 
-  // Registrar los mismos handlers en los pills duplicados del sticky
+  // Registrar handlers en los pills duplicados del sticky
   stickyPills.forEach((pill) => {
     pill.addEventListener('click', handleAnchorClick, { capture: true });
   });
 
-  new IntersectionObserver(([entry]) => {
-    sticky.classList.toggle('is-visible', !entry.isIntersecting);
-    sticky.setAttribute('aria-hidden', String(entry.isIntersecting));
-  }, { threshold: 0.1 }).observe(hero);
+  // FIX 4: Observer guardado en variable
+  const heroObserver = new IntersectionObserver(
+    ([entry]) => {
+      const isVisible = !entry.isIntersecting;
+      sticky.classList.toggle('is-visible', isVisible);
+      sticky.setAttribute('aria-hidden', String(!isVisible));
+    },
+    { threshold: 0.1 }
+  );
+  heroObserver.observe(hero);
 
+  // Sincronizar estado activo con el scroll spy
   window.addEventListener('productScrollSpy', (e) => {
     const activeId = e.detail?.activeId;
+    if (!activeId) return;
     stickyPills.forEach((pill) => {
-      pill.classList.toggle('prod-pill--active', pill.getAttribute('href') === `#${activeId}`);
+      pill.classList.toggle(
+        'prod-pill--active',
+        pill.getAttribute('href') === `#${activeId}`
+      );
     });
   });
 }
 
 
 /* ================================================================
-   5. PRODUCT SCROLL SPY
+   6. PRODUCT SCROLL SPY
+   FIX 1 (CRÍTICO): El código original tenía:
+     new IntersectionObserver(...).observe;   ← acceso de propiedad
+   Esto creaba el observer pero NUNCA lo conectaba a ningún elemento.
+   Era código muerto. Luego el sections.forEach creaba N observers
+   separados en un bloque independiente.
+
+   Solución: UN solo IntersectionObserver reutilizable que observa
+   todas las secciones con sections.forEach → observer.observe(section).
 ================================================================ */
 function initProductScrollSpy() {
   const sections  = document.querySelectorAll('.product-detail[id]');
@@ -175,43 +246,47 @@ function initProductScrollSpy() {
   const header = document.querySelector('#header');
   const offset = (header?.offsetHeight ?? 120) + 60;
 
-  new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const activeId = entry.target.id;
-        origPills.forEach((pill) => {
-          pill.classList.toggle('prod-pill--active', pill.getAttribute('href') === `#${activeId}`);
-        });
-        window.dispatchEvent(new CustomEvent('productScrollSpy', { detail: { activeId } }));
-      }
+  function setActivePill(activeId) {
+    origPills.forEach((pill) => {
+      pill.classList.toggle(
+        'prod-pill--active',
+        pill.getAttribute('href') === `#${activeId}`
+      );
     });
-  }, { rootMargin: `-${offset}px 0px -50% 0px`, threshold: 0 }).observe;
+    // Notificar al sticky nav
+    window.dispatchEvent(
+      new CustomEvent('productScrollSpy', { detail: { activeId } })
+    );
+  }
 
-  sections.forEach((section) => {
-    new IntersectionObserver((entries) => {
+  // FIX 1: UN observer que cubre todas las secciones
+  const scrollSpyObserver = new IntersectionObserver(
+    (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const activeId = entry.target.id;
-          origPills.forEach((pill) => {
-            pill.classList.toggle('prod-pill--active', pill.getAttribute('href') === `#${activeId}`);
-          });
-          window.dispatchEvent(new CustomEvent('productScrollSpy', { detail: { activeId } }));
+          setActivePill(entry.target.id);
         }
       });
-    }, { rootMargin: `-${offset}px 0px -50% 0px`, threshold: 0 }).observe(section);
-  });
+    },
+    { rootMargin: `-${offset}px 0px -50% 0px`, threshold: 0 }
+  );
+
+  // Observar cada sección individualmente (observe() acepta 1 elemento)
+  sections.forEach((section) => scrollSpyObserver.observe(section));
 }
 
 
 /* ================================================================
-   6. PRODUCT PARALLAX
+   7. PRODUCT PARALLAX
+   FIX 2: Reemplazado (hover:none) por isTouchDevice() que usa
+   (hover:none),(pointer:coarse) — más confiable en híbridos.
 ================================================================ */
 function initProductParallax() {
   const images = document.querySelectorAll('.product-detail__img-wrap img');
   if (!images.length) return;
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  if (window.matchMedia('(hover: none)').matches) return;
+  // FIX 2: detección touch confiable
+  if (prefersReducedMotion() || isTouchDevice()) return;
 
   let ticking = false;
 
@@ -221,8 +296,9 @@ function initProductParallax() {
       const wrap = img.closest('.product-detail__img-wrap');
       if (!wrap) return;
       const rect = wrap.getBoundingClientRect();
+      // Saltar si el elemento no está en el viewport
       if (rect.bottom < 0 || rect.top > viewH) return;
-      const progress = 1 - (rect.bottom / (viewH + rect.height));
+      const progress = 1 - rect.bottom / (viewH + rect.height);
       const shift    = (progress - 0.5) * 24;
       img.style.transform  = `translateY(${shift}px) scale(1.04)`;
       img.style.transition = 'transform 0.12s linear';
@@ -230,38 +306,45 @@ function initProductParallax() {
     ticking = false;
   }
 
-  window.addEventListener('scroll', () => {
-    if (!ticking) { requestAnimationFrame(updateParallax); ticking = true; }
-  }, { passive: true });
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!ticking) {
+        requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
 
   updateParallax();
 }
 
 
 /* ================================================================
-   7. ANCHOR NAVIGATION — Fix definitivo
+   8. ANCHOR NAVIGATION — Fix definitivo (mobile + desktop)
    ─────────────────────────────────────────────────────────────
    PROBLEMA RAÍZ:
    index.js tiene listeners en el dropdown y en el mobile drawer
    que llaman a preventDefault() / stopPropagation() bloqueando
    la navegación a anclas. Esto hace que:
      - Desktop: al hacer clic en un producto del dropdown, no pasa nada
-     - Mobile: el browser intenta navegar a una ruta inexistente
-               como /products/home-insurance.html
+     - Mobile: el browser intenta navegar a una ruta incorrecta
 
    SOLUCIÓN:
-   1. Registramos nuestros handlers con { capture: true } — esto
-      los ejecuta en la FASE DE CAPTURA, antes de que los
-      listeners de index.js (que están en bubble phase) los vean.
-   2. Usamos e.stopImmediatePropagation() para que NINGÚN otro
-      handler (ni en capture ni en bubble) procese el evento.
-   3. Cerramos el menú móvil manualmente.
-   4. Hacemos el scroll suave con el offset del header.
-   5. Actualizamos la URL con history.pushState.
+   1. { capture: true } → ejecuta ANTES que los listeners de index.js
+   2. e.stopImmediatePropagation() cancela todos los demás handlers
+   3. Cerramos el menú móvil manualmente
+   4. Scroll suave con offset del header
+   5. URL actualizada con history.pushState
+
+   FIX 3: Los selectores ya no se solapan — se usa un Set para
+   deduplicar los elementos antes de registrar el handler,
+   evitando la doble ejecución (doble scroll).
 ================================================================ */
 
 /**
- * Calcula el ID del destino a partir del href del enlace.
+ * Extrae el ID del ancla de un href.
  * Soporta: "#home-insurance", "products.html#auto-insurance"
  */
 function getTargetId(href) {
@@ -272,27 +355,28 @@ function getTargetId(href) {
 }
 
 /**
- * Scroll suave a la sección indicada por ID,
- * compensando la altura del header sticky.
+ * Scroll suave a la sección, compensando el header sticky.
  */
 function scrollToSection(targetId) {
   const target = document.getElementById(targetId);
   if (!target) return;
 
-  const header   = document.querySelector('#header');
-  const headerH  = header ? header.offsetHeight : 0;
-  const gap      = 24; // px de respiro visual extra
-  const top      = target.getBoundingClientRect().top + window.pageYOffset - headerH - gap;
+  const header  = document.querySelector('#header');
+  const headerH = header ? header.offsetHeight : 0;
+  const gap     = 24;
+  const top     = target.getBoundingClientRect().top + window.pageYOffset - headerH - gap;
 
   window.scrollTo({ top, behavior: 'smooth' });
 
-  // Actualizar URL sin recargar
-  try { history.pushState(null, '', `#${targetId}`); } catch (_) { /* noop */ }
+  try {
+    history.pushState(null, '', `#${targetId}`);
+  } catch (_) {
+    // noop — algunos browsers bloquean pushState en file://
+  }
 }
 
 /**
- * Cierra el drawer móvil sea cual sea la implementación de index.js.
- * Cubre las clases más comunes del proyecto.
+ * Cierra el drawer móvil con compatibilidad amplia.
  */
 function closeMobileMenu() {
   const mobileMenu   = document.getElementById('mobile-menu');
@@ -311,70 +395,65 @@ function closeMobileMenu() {
   if (overlay) {
     overlay.classList.remove('is-visible', 'is-active', 'open');
   }
+
   body.classList.remove('menu-open', 'no-scroll', 'overflow-hidden', 'modal-open');
-  body.style.overflow    = '';
+  body.style.overflow     = '';
   body.style.paddingRight = '';
 }
 
 /**
- * Handler central para todos los enlaces de producto.
- * Se registra en fase CAPTURE para ejecutarse antes que index.js.
+ * Handler central — se registra en fase CAPTURE.
  */
 function handleAnchorClick(e) {
   const link     = e.currentTarget;
   const href     = link.getAttribute('href');
   const targetId = getTargetId(href);
 
-  // Si no hay ancla válida, dejamos el comportamiento por defecto
   if (!targetId) return;
 
-  // Verificamos que el elemento destino existe en ESTA página
   const targetEl = document.getElementById(targetId);
   if (!targetEl) {
-    // No existe en esta página → dejar que el browser navegue
-    // (esto ocurrirá al venir de index.html con products.html#section)
+    // No existe en esta página → dejar navegar al browser
     return;
   }
 
-  // Cancelar TODOS los demás handlers (incluido index.js)
   e.preventDefault();
   e.stopImmediatePropagation();
 
-  // Cerrar menú móvil si está abierto
   closeMobileMenu();
 
-  // En móvil, dar tiempo al drawer para cerrarse antes del scroll
   const isMobile = window.matchMedia('(max-width: 1024px)').matches;
   setTimeout(() => scrollToSection(targetId), isMobile ? 350 : 0);
 }
 
 /**
- * Registra el handler en todos los enlaces de producto de la página.
+ * Registra el handler en todos los enlaces de producto,
+ * usando Set para evitar registros duplicados (FIX 3).
  */
 function initAnchorNavigation() {
-  // Todos los selectores posibles de enlaces de producto
+  // Selectores sin solapamiento:
+  // .prod-nav-pills .prod-pill cubre los pills del nav.
+  // No se repite .prod-pill[href^="#"] para evitar doble registro.
   const selectors = [
     '.dropdown__item[href^="#"]',
     '.dropdown__item[href*="products.html#"]',
     '.mobile-nav__sub a[href^="#"]',
     '.mobile-nav__sub a[href*="products.html#"]',
     '.prod-nav-pills .prod-pill',
-    '.prod-pill[href^="#"]',
   ].join(', ');
 
-  const links = document.querySelectorAll(selectors);
+  // FIX 3: Usar Set para deduplicar elementos que coincidan
+  // con más de un selector, evitando doble registro del handler
+  const linkSet = new Set(document.querySelectorAll(selectors));
 
-  links.forEach((link) => {
-    // { capture: true } → ejecuta ANTES que cualquier listener de bubble phase
+  linkSet.forEach((link) => {
     link.addEventListener('click', handleAnchorClick, { capture: true });
   });
 
   // ── Hash inicial en la URL ───────────────────────────────
-  // Si la página se carga con #section en la URL (ej: products.html#auto-insurance)
-  // hacemos el scroll correcto después de que el DOM pinte.
+  // Si se llega a products.html#auto-insurance, hacer scroll correcto
   const initialHash = window.location.hash?.substring(1);
   if (initialHash && document.getElementById(initialHash)) {
-    // doble rAF para esperar el layout completo
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setTimeout(() => scrollToSection(initialHash), 100);

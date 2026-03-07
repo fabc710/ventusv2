@@ -2,16 +2,41 @@
  * ================================================================
  * VENTUS INSURANCE AGENCY — Contact Page JavaScript
  * File: js/contact.js
- * Description: Interactions exclusive to contact.html
+ * Version: 2.0 — Bug fixes applied
+ *
+ * FIXES IN THIS VERSION:
+ * 1. initFloatingButtons: Un solo requestAnimationFrame (rAF) no
+ *    garantiza que el browser haya pintado el estado inicial antes
+ *    de ejecutar el callback — la transición saltaba sin animar.
+ *    Corregido con doble rAF (patrón estándar) para asegurar que
+ *    el estado opacity:0 / translateX(80px) se pinte primero.
+ * 2. initFloatingButtons + initInfoPanelEntrance: Eliminado inline
+ *    opacity:0 al DOMContentLoaded (FOIC). Ahora usan clases CSS
+ *    --hidden para el estado inicial, igual que los otros archivos.
+ *    Requiere en CSS:
+ *      .float-btn--hidden  { opacity:0; transform:translateX(80px); }
+ *      .cinfo-item--hidden { opacity:0; transform:translateX(-16px); }
+ *    Nota: initFloatingButtons también puede conflictuar con el
+ *    @keyframes floatBtnsIn del index.css — si ya existe esa
+ *    animación en el CSS, esta función no es necesaria.
+ * 3. initFloatingButtons: Conflicto potencial con @keyframes
+ *    floatBtnsIn definido en index.css sobre .floating-buttons.
+ *    Se agrega guard para no duplicar la animación si ya corre el CSS.
+ * 4. initConsentAnimation: custom.style.transition se seteaba inline
+ *    en cada change event pero nunca se limpiaba, dejando la
+ *    transición inline activa permanentemente y bloqueando futuros
+ *    estados CSS del elemento. Ahora se limpia con setTimeout tras
+ *    la animación.
  *
  * TABLE OF CONTENTS
  * 1.  DOMContentLoaded Init
- * 2.  Form Submission (fetch → send_mail.php — original logic)
- * 3.  Real-time Field Validation
- * 4.  Phone Number Auto-Formatting
- * 5.  SMS Consent Checkbox Animation
- * 6.  Floating Buttons — Show/Hide on Scroll
- * 7.  Info Panel Items — Hover Entrance
+ * 2.  Utility Helpers
+ * 3.  Form Submission (fetch → send_mail.php)
+ * 4.  Real-time Field Validation
+ * 5.  Phone Number Auto-Formatting
+ * 6.  SMS Consent Checkbox Animation
+ * 7.  Floating Buttons — Entrance Animation
+ * 8.  Info Panel Items — Hover Entrance
  * ================================================================
  */
 
@@ -28,13 +53,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 /* ================================================================
-   2. FORM SUBMISSION
-   Exact same logic as the original contact.html:
-   - Prevents default submit
-   - Reads smsConsentCheckbox → sets "Yes" or "No" in FormData
-   - Fetches POST to send_mail.php
-   - Checks for "success" text in response
-   - Shows success or error message in #formMessage
+   2. UTILITY HELPERS
+================================================================ */
+
+/**
+ * Devuelve true si el usuario prefiere movimiento reducido.
+ */
+function prefersReducedMotion() {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+
+/* ================================================================
+   3. FORM SUBMISSION
+   Lógica original preservada:
+   - Previene el submit por defecto
+   - Lee smsConsentCheckbox → "Yes" o "No" en FormData
+   - Fetch POST a send_mail.php
+   - Verifica "success" en la respuesta
+   - Muestra mensaje de éxito o error en #formMessage
 ================================================================ */
 function initContactForm() {
   const form       = document.getElementById('contactForm');
@@ -48,16 +85,15 @@ function initContactForm() {
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    // Run client-side validation first
+    // Validación del lado del cliente primero
     if (!validateAllFields()) return;
 
     const formData = new FormData(form);
 
-    // ✅ Capture SMS checkbox state — same as original (Yes / No)
+    // Captura del estado del checkbox SMS (mismo que el original)
     const smsCheckbox = document.getElementById('smsConsentCheckbox');
     formData.set('sms_consent', smsCheckbox.checked ? 'Yes' : 'No');
 
-    // Show loading state
     setLoadingState(true);
     showMessage('loading', '<i class="ri-loader-4-line cform__spinner"></i> Sending your message…');
 
@@ -69,7 +105,6 @@ function initContactForm() {
 
       const result = await response.text();
 
-      // ✅ Original success check: result.trim() === "success"
       if (result.trim() === 'success') {
         showMessage(
           'success',
@@ -77,7 +112,6 @@ function initContactForm() {
         );
         form.reset();
         clearAllValidationStates();
-        // Scroll message into view
         messageBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       } else {
         showMessage(
@@ -86,7 +120,7 @@ function initContactForm() {
         );
       }
 
-    } catch (error) {
+    } catch (_) {
       showMessage(
         'error',
         '<i class="ri-wifi-off-line"></i> Connection error. Please check your connection and try again.'
@@ -96,56 +130,37 @@ function initContactForm() {
     }
   });
 
-  /**
-   * Toggle the button loading state.
-   * @param {boolean} isLoading
-   */
   function setLoadingState(isLoading) {
     submitBtn.disabled = isLoading;
-    if (submitText)    submitText.hidden    = isLoading;
+    if (submitText)    submitText.hidden    =  isLoading;
     if (submitLoading) submitLoading.hidden = !isLoading;
   }
 
-  /**
-   * Show a status message in #formMessage.
-   * @param {'success'|'error'|'loading'} type
-   * @param {string} html  — HTML string for message content
-   */
   function showMessage(type, html) {
     messageBox.removeAttribute('hidden');
     messageBox.innerHTML = `<div class="cform__message-${type}">${html}</div>`;
-
-    // Auto-hide loading messages when done
-    if (type !== 'loading') {
-      // Keep success/error visible — do not auto-dismiss
-    }
   }
 }
 
 
 /* ================================================================
-   3. REAL-TIME FIELD VALIDATION
-   Validates fields on blur and shows inline error messages.
-   Clears errors as user types.
+   4. REAL-TIME FIELD VALIDATION
+   Valida campos en blur y muestra errores inline.
+   Limpia errores mientras el usuario escribe.
 ================================================================ */
 function initFieldValidation() {
   const nameInput    = document.getElementById('name');
   const emailInput   = document.getElementById('email');
   const messageInput = document.getElementById('message');
 
-  // Validate on blur
-  nameInput?.addEventListener('blur', () => validateName(nameInput));
-  emailInput?.addEventListener('blur', () => validateEmail(emailInput));
+  nameInput?.addEventListener('blur',    () => validateName(nameInput));
+  emailInput?.addEventListener('blur',   () => validateEmail(emailInput));
   messageInput?.addEventListener('blur', () => validateMessage(messageInput));
 
-  // Clear errors as user types
   [nameInput, emailInput, messageInput].forEach((input) => {
     input?.addEventListener('input', () => {
       input.classList.remove('is-invalid');
-      // Only add valid class when input has content
-      if (input.value.trim()) {
-        clearError(input.id + '-error');
-      }
+      if (input.value.trim()) clearError(input.id + '-error');
     });
   });
 }
@@ -156,12 +171,10 @@ function validateAllFields() {
   const messageInput = document.getElementById('message');
 
   let isValid = true;
-
-  if (!validateName(nameInput))    isValid = false;
-  if (!validateEmail(emailInput))  isValid = false;
+  if (!validateName(nameInput))       isValid = false;
+  if (!validateEmail(emailInput))     isValid = false;
   if (!validateMessage(messageInput)) isValid = false;
 
-  // Scroll to first error
   if (!isValid) {
     const firstError = document.querySelector('.cform__input.is-invalid');
     firstError?.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -174,7 +187,6 @@ function validateAllFields() {
 function validateName(input) {
   if (!input) return true;
   const val = input.value.trim();
-
   if (!val || val.length < 2) {
     setFieldError(input, 'name-error', 'Please enter your full name (at least 2 characters).');
     return false;
@@ -187,7 +199,6 @@ function validateEmail(input) {
   if (!input) return true;
   const val   = input.value.trim();
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   if (!val || !regex.test(val)) {
     setFieldError(input, 'email-error', 'Please enter a valid email address.');
     return false;
@@ -199,7 +210,6 @@ function validateEmail(input) {
 function validateMessage(input) {
   if (!input) return true;
   const val = input.value.trim();
-
   if (!val || val.length < 10) {
     setFieldError(input, 'message-error', 'Please enter a message (at least 10 characters).');
     return false;
@@ -212,12 +222,8 @@ function setFieldError(input, errorId, message) {
   input.classList.add('is-invalid');
   input.classList.remove('is-valid');
   input.setAttribute('aria-invalid', 'true');
-
   const errorEl = document.getElementById(errorId);
-  if (errorEl) {
-    errorEl.textContent = message;
-    errorEl.removeAttribute('hidden');
-  }
+  if (errorEl) { errorEl.textContent = message; errorEl.removeAttribute('hidden'); }
 }
 
 function setFieldValid(input, errorId) {
@@ -229,10 +235,7 @@ function setFieldValid(input, errorId) {
 
 function clearError(errorId) {
   const errorEl = document.getElementById(errorId);
-  if (errorEl) {
-    errorEl.textContent = '';
-    errorEl.setAttribute('hidden', '');
-  }
+  if (errorEl) { errorEl.textContent = ''; errorEl.setAttribute('hidden', ''); }
 }
 
 function clearAllValidationStates() {
@@ -248,16 +251,16 @@ function clearAllValidationStates() {
 
 
 /* ================================================================
-   4. PHONE NUMBER AUTO-FORMATTING
-   Formats US phone numbers as (XXX) XXX-XXXX while typing.
-   Strips non-numeric characters automatically.
+   5. PHONE NUMBER AUTO-FORMATTING
+   Formatea números de teléfono US como (XXX) XXX-XXXX al escribir.
+   Sin cambios — la lógica original es correcta.
 ================================================================ */
 function initPhoneFormatter() {
   const phoneInput = document.getElementById('phone');
   if (!phoneInput) return;
 
   phoneInput.addEventListener('input', (e) => {
-    let raw     = e.target.value.replace(/\D/g, ''); // strip non-digits
+    const raw = e.target.value.replace(/\D/g, '');
     let formatted = '';
 
     if (raw.length === 0) {
@@ -273,102 +276,164 @@ function initPhoneFormatter() {
     e.target.value = formatted;
   });
 
-  // Allow only digits and formatting keys
   phoneInput.addEventListener('keydown', (e) => {
     const allowedKeys = [
       'Backspace', 'Delete', 'Tab', 'Escape', 'Enter',
       'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End',
     ];
     if (allowedKeys.includes(e.key)) return;
-    if (e.ctrlKey || e.metaKey) return; // allow copy/paste
+    if (e.ctrlKey || e.metaKey) return;
     if (!/^\d$/.test(e.key)) e.preventDefault();
   });
 }
 
 
 /* ================================================================
-   5. SMS CONSENT CHECKBOX ANIMATION
-   Adds a subtle scale animation to the custom checkbox
-   when the user checks/unchecks it.
+   6. SMS CONSENT CHECKBOX ANIMATION
+   FIX 4: custom.style.transition se seteaba inline en cada evento
+   change y nunca se limpiaba — dejaba la transición inline activa
+   permanentemente, bloqueando transiciones CSS del elemento.
+   Ahora se limpia con setTimeout tras finalizar la animación.
 ================================================================ */
 function initConsentAnimation() {
   const checkbox = document.getElementById('smsConsentCheckbox');
   const custom   = document.querySelector('.cform__consent-custom');
   if (!checkbox || !custom) return;
-
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+  if (prefersReducedMotion()) return;
 
   checkbox.addEventListener('change', () => {
+    // FIX 4: setear transition antes de la animación
     custom.style.transition = 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease';
     custom.style.transform  = 'scale(1.25)';
+
     setTimeout(() => {
       custom.style.transform = 'scale(1)';
+
+      // FIX 4: limpiar inline transition después de la animación
+      // para que los estados CSS futuros no queden bloqueados
+      setTimeout(() => {
+        custom.style.transition = '';
+        custom.style.transform  = '';
+      }, 200);
     }, 200);
   });
 }
 
 
 /* ================================================================
-   6. FLOATING BUTTONS — Subtle Entrance on Load
-   The floating payment and WhatsApp buttons slide in from the
-   right side 1.5s after page load.
+   7. FLOATING BUTTONS — Entrance Animation
+   FIX 1 + 2 + 3:
+   - FOIC eliminado: se usa clase CSS .float-btn--hidden en lugar
+     de inline opacity:0.
+   - Doble rAF para garantizar que el estado inicial se pinte ANTES
+     de aplicar la clase visible (un solo rAF no es suficiente).
+   - Guard para no duplicar animación si index.css ya corre
+     @keyframes floatBtnsIn sobre .floating-buttons.
+
+   REQUIERE en tu CSS (contact.css o index.css):
+   ─────────────────────────────────────────────
+   .float-btn--hidden {
+     opacity: 0;
+     transform: translateX(80px);
+   }
+   .float-btn {
+     transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
+   }
+   ─────────────────────────────────────────────
+   NOTA: Si index.css ya tiene @keyframes floatBtnsIn aplicado a
+   .floating-buttons con la animación de entrada, esta función
+   puede omitirse o la clase --hidden puede no agregarse.
 ================================================================ */
 function initFloatingButtons() {
   const buttons = document.querySelectorAll('.float-btn');
   if (!buttons.length) return;
+  if (prefersReducedMotion()) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
+  // FIX 3: Guard — si el contenedor ya tiene animación CSS activa
+  // (floatBtnsIn desde index.css), no aplicar JS adicional
+  const container = document.querySelector('.floating-buttons');
+  if (container) {
+    const computedAnim = getComputedStyle(container).animationName;
+    if (computedAnim && computedAnim !== 'none') {
+      // La animación CSS ya maneja la entrada — no hacer nada
+      return;
+    }
+  }
 
-  // Start hidden off-screen to the right
+  // FIX 2: clase CSS en lugar de inline opacity:0 (evita FOIC)
   buttons.forEach((btn, i) => {
-    btn.style.opacity   = '0';
-    btn.style.transform = 'translateX(80px)';
-    btn.style.transition = `opacity 0.5s ease ${1.2 + i * 0.15}s, transform 0.5s cubic-bezier(0.34,1.56,0.64,1) ${1.2 + i * 0.15}s`;
+    btn.classList.add('float-btn--hidden');
+    btn.style.transitionDelay = `${1.2 + i * 0.15}s`;
   });
 
-  // Trigger entrance after short delay
+  // FIX 1: Doble rAF — garantiza que el estado inicial (--hidden)
+  // se pinte ANTES de aplicar la clase de entrada.
+  // Un solo rAF puede ejecutarse antes del primer paint, haciendo
+  // que el browser omita la transición y salte al estado final.
   requestAnimationFrame(() => {
-    buttons.forEach((btn) => {
-      btn.style.opacity   = '1';
-      btn.style.transform = 'translateX(0)';
+    requestAnimationFrame(() => {
+      buttons.forEach((btn) => {
+        btn.classList.remove('float-btn--hidden');
+      });
+
+      // Limpiar transition-delay inline tras la animación
+      const maxDelay = (1.2 + (buttons.length - 1) * 0.15) * 1000 + 500 + 50;
+      setTimeout(() => {
+        buttons.forEach((btn) => {
+          btn.style.transitionDelay = '';
+        });
+      }, maxDelay);
     });
   });
 }
 
 
 /* ================================================================
-   7. INFO PANEL — Hover Entrance for Items
-   Contact info items reveal with a staggered entrance when
-   the info panel first enters the viewport.
+   8. INFO PANEL ITEMS — Staggered Entrance
+   FIX 2: Eliminado inline opacity:0 al DOMContentLoaded (FOIC).
+   Ahora usa clase CSS .cinfo-item--hidden para el estado inicial.
+
+   REQUIERE en tu CSS:
+   ─────────────────────────────────────────────
+   .cinfo-item--hidden {
+     opacity: 0;
+     transform: translateX(-16px);
+   }
+   .cinfo-item {
+     transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.25,0.8,0.25,1);
+   }
+   ─────────────────────────────────────────────
 ================================================================ */
 function initInfoPanelEntrance() {
   const items = document.querySelectorAll('.cinfo-item');
   if (!items.length) return;
-
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (prefersReduced) return;
-
-  // Set initial hidden state
-  items.forEach((item, i) => {
-    item.style.opacity   = '0';
-    item.style.transform = 'translateX(-16px)';
-    item.style.transition =
-      `opacity 0.45s ease ${i * 0.07}s,` +
-      `transform 0.45s cubic-bezier(0.25,0.8,0.25,1) ${i * 0.07}s`;
-  });
+  if (prefersReducedMotion()) return;
 
   const card = document.querySelector('.cinfo-card');
   if (!card) return;
 
+  // FIX 2: clase CSS en lugar de inline opacity:0
+  items.forEach((item, i) => {
+    item.classList.add('cinfo-item--hidden');
+    item.style.transitionDelay = `${i * 0.07}s`;
+  });
+
   const observer = new IntersectionObserver(
     ([entry]) => {
       if (!entry.isIntersecting) return;
+
       items.forEach((item) => {
-        item.style.opacity   = '1';
-        item.style.transform = 'translateX(0)';
+        item.classList.remove('cinfo-item--hidden');
       });
+
+      // Limpiar transition-delay inline tras la animación
+      const maxDelay = (items.length - 1) * 70 + 450 + 50;
+      setTimeout(() => {
+        items.forEach((item) => {
+          item.style.transitionDelay = '';
+        });
+      }, maxDelay);
+
       observer.disconnect();
     },
     { threshold: 0.20 }
