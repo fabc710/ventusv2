@@ -1,0 +1,719 @@
+/* ================================================================
+   VENTUS INSURANCE AGENCY — SMS Terms Stylesheet
+   File: css/sms-terms.css
+   Requires: css/index.css + css/privacy.css
+================================================================ */
+
+
+/* ================================================================
+   HERO VARIANT — teal/navy for SMS page
+================================================================ */
+.page-hero--sms .page-hero__bg {
+  background:
+    radial-gradient(ellipse 55% 70% at 75% 40%, rgba(30,150,120,0.12) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 65% at 15% 75%, rgba(18,33,71,0.55) 0%, transparent 60%);
+}
+
+.page-hero--sms .page-hero__icon {
+  background: rgba(30,150,120,0.15);
+  border-color: rgba(30,150,120,0.35);
+}
+
+.page-hero--sms .page-hero__icon i { color: #4ecdb4; }
+
+
+/* ================================================================
+   QUICK SUMMARY BAR (below hero)
+================================================================ */
+.sms-summary-bar {
+  background: var(--color-white);
+  border-bottom: 2px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.sms-summary-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sms-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-secondary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-light);
+  padding: 0.35rem 0;
+}
+
+.sms-summary-item i {
+  font-size: 1.1rem;
+  color: var(--color-gold-dark);
+}
+
+.sms-summary-item strong { color: var(--color-navy-darkest); }
+
+.sms-summary-divider {
+  width: 1px;
+  height: 28px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+
+/* ================================================================
+   KEYWORD CARD (sidebar)
+================================================================ */
+.keyword-card {
+  margin-top: 1rem;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.keyword-card__header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem;
+  background: var(--gradient-navy);
+}
+
+.keyword-card__header i {
+  font-size: 1.1rem;
+  color: var(--color-gold);
+}
+
+.keyword-card__header h3 {
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-black);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-white);
+  margin: 0;
+}
+
+.keyword-card__body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.keyword-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.keyword-item code {
+  font-family: 'Courier New', monospace;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-black);
+  letter-spacing: 0.06em;
+  padding: 4px 12px;
+  border-radius: var(--radius-md);
+  min-width: 60px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.keyword-item--stop {
+  background: rgba(220,50,50,0.04);
+  border-color: rgba(220,50,50,0.20);
+}
+
+.keyword-item--stop code {
+  background: rgba(220,50,50,0.10);
+  color: #c0392b;
+  border: 1px solid rgba(220,50,50,0.25);
+}
+
+.keyword-item--help {
+  background: rgba(18,33,71,0.03);
+  border-color: rgba(18,33,71,0.12);
+}
+
+.keyword-item--help code {
+  background: rgba(18,33,71,0.08);
+  color: var(--color-navy-dark);
+  border: 1px solid rgba(18,33,71,0.15);
+}
+
+.keyword-item span {
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-light);
+  line-height: 1.4;
+}
+
+
+/* ================================================================
+   SMS TYPE CARDS (Section 2 — message examples)
+================================================================ */
+.sms-type-card {
+  margin-bottom: 1.25rem;
+}
+
+.sms-type-card:last-child { margin-bottom: 0; }
+
+.sms-type-card__label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+}
+
+.sms-type-card__icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-gold);
+  border-radius: var(--radius-md);
+  color: var(--color-white);
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
+.sms-type-card__label span {
+  font-family: var(--font-secondary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-black);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-navy-darkest);
+}
+
+/* SMS Chat Bubble */
+.sms-bubble {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 0 var(--radius-xl) var(--radius-xl) var(--radius-xl);
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Small notch top-left */
+.sms-bubble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -1px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 12px 12px 0 0;
+  border-color: var(--color-border) transparent transparent transparent;
+}
+
+.sms-bubble__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  background: var(--color-navy-darkest);
+}
+
+.sms-bubble__sender {
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-gold-light);
+  letter-spacing: 0.04em;
+}
+
+.sms-bubble__badge {
+  font-family: var(--font-secondary);
+  font-size: 0.6rem;
+  font-weight: var(--fw-black);
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  background: rgba(197,171,98,0.25);
+  color: var(--color-gold-light);
+  border: 1px solid rgba(197,171,98,0.35);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.sms-bubble p {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: 1.7;
+  font-style: italic;
+}
+
+.sms-bubble p strong { color: var(--color-navy-darkest); font-style: normal; }
+
+
+/* ================================================================
+   FREQUENCY BOX (Section 3)
+================================================================ */
+.frequency-box {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background: linear-gradient(135deg, rgba(18,33,71,0.04), rgba(197,171,98,0.05));
+  border: 1px solid rgba(197,171,98,0.30);
+  border-radius: var(--radius-2xl);
+  padding: 1.5rem 2rem;
+  margin: 1.25rem 0;
+}
+
+.frequency-box__number {
+  font-size: 4rem;
+  font-weight: var(--fw-black);
+  color: var(--color-gold);
+  line-height: 1;
+  font-family: var(--font-primary);
+  flex-shrink: 0;
+  min-width: 60px;
+  text-align: center;
+}
+
+.frequency-box__text strong {
+  display: block;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  margin-bottom: 0.35rem;
+}
+
+.frequency-box__text p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: 1.6;
+  margin: 0;
+}
+
+
+/* ================================================================
+   OPT-IN GRID (Section 5)
+================================================================ */
+.optin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.optin-item {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1.4rem 1.2rem;
+  text-align: center;
+  transition:
+    transform var(--transition-normal),
+    box-shadow var(--transition-normal),
+    border-color var(--transition-normal);
+}
+
+.optin-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(197,171,98,0.40);
+}
+
+.optin-item__icon {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-navy);
+  border-radius: var(--radius-lg);
+  color: var(--color-gold);
+  font-size: 1.3rem;
+  margin: 0 auto 0.8rem;
+  transition: transform var(--transition-bounce);
+}
+
+.optin-item:hover .optin-item__icon { transform: scale(1.1) rotate(-4deg); }
+
+.optin-item h3 {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  margin: 0 0 0.4rem;
+}
+
+.optin-item p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: 1.55;
+  margin: 0;
+}
+
+
+/* ================================================================
+   OPT-OUT STEPS (Section 6)
+================================================================ */
+.optout-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.optout-step {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1.25rem 1.5rem;
+}
+
+.optout-step__badge {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-navy);
+  border-radius: 50%;
+  color: var(--color-gold);
+  font-family: var(--font-secondary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-black);
+  flex-shrink: 0;
+}
+
+.optout-step__content h3 {
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  margin: 0 0 0.35rem;
+}
+
+.optout-step__content h3 code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  font-weight: var(--fw-black);
+  background: rgba(197,171,98,0.15);
+  color: var(--color-gold-dark);
+  border: 1px solid rgba(197,171,98,0.35);
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.optout-step__content p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: 1.65;
+  margin: 0 0 0.75rem;
+}
+
+.optout-contacts {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.optout-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-secondary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-dark);
+  text-decoration: none;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  padding: 0.4rem 0.9rem;
+  border-radius: var(--radius-full);
+  transition:
+    color var(--transition-fast),
+    border-color var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.optout-contact:hover {
+  color: var(--color-gold-dark);
+  border-color: var(--color-gold);
+  background: rgba(197,171,98,0.06);
+}
+
+.optout-contact i { font-size: 0.95rem; color: var(--color-gold-dark); }
+
+
+/* ================================================================
+   HELP OPTIONS (Section 7)
+================================================================ */
+.help-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.help-option {
+  border-radius: var(--radius-xl);
+  padding: 1.4rem 1.5rem;
+  border: 1px solid var(--color-border);
+}
+
+.help-option--sms {
+  background: linear-gradient(135deg, rgba(18,33,71,0.04), rgba(18,33,71,0.02));
+  border-color: rgba(18,33,71,0.15);
+}
+
+.help-option--web {
+  background: linear-gradient(135deg, rgba(197,171,98,0.07), rgba(197,171,98,0.03));
+  border-color: rgba(197,171,98,0.30);
+}
+
+.help-option__icon {
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-navy);
+  border-radius: var(--radius-lg);
+  color: var(--color-gold);
+  font-size: 1.2rem;
+  margin-bottom: 0.9rem;
+}
+
+.help-option h3 {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  margin: 0 0 0.4rem;
+}
+
+.help-option h3 code {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  font-weight: var(--fw-black);
+  background: rgba(18,33,71,0.08);
+  color: var(--color-navy-dark);
+  border: 1px solid rgba(18,33,71,0.15);
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.help-option p {
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: 1.65;
+  margin: 0;
+}
+
+
+/* ================================================================
+   DISCLOSURES LIST (Section 8)
+================================================================ */
+.disclosures-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 2rem;
+}
+
+.disclosure-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 0.85rem 1.1rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-sm);
+  color: var(--color-text-light);
+  line-height: 1.6;
+}
+
+.disclosure-item i {
+  font-size: 1.1rem;
+  color: var(--color-gold-dark);
+  flex-shrink: 0;
+  margin-top: 1px;
+  width: 20px;
+  text-align: center;
+}
+
+.disclosure-item code {
+  font-family: 'Courier New', monospace;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-black);
+  background: rgba(197,171,98,0.12);
+  color: var(--color-gold-dark);
+  border: 1px solid rgba(197,171,98,0.30);
+  padding: 1px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.06em;
+}
+
+
+/* ================================================================
+   RELATED PAGES (Section 8 footer)
+================================================================ */
+.related-pages {
+  border-top: 1px solid var(--color-border);
+  padding-top: 1.5rem;
+}
+
+.related-pages h3 {
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-black);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-light);
+  margin: 0 0 0.9rem;
+}
+
+.related-pages__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.related-page-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: 1rem 1.1rem;
+  text-decoration: none;
+  transition:
+    background var(--transition-normal),
+    border-color var(--transition-normal),
+    transform var(--transition-bounce),
+    box-shadow var(--transition-normal);
+}
+
+.related-page-card:hover {
+  background: var(--color-white);
+  border-color: var(--color-gold);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.related-page-card > i:first-child {
+  font-size: 1.2rem;
+  color: var(--color-gold);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-navy);
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.related-page-card div {
+  flex: 1;
+  min-width: 0;
+}
+
+.related-page-card strong {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-page-card span {
+  font-family: var(--font-secondary);
+  font-size: 0.65rem;
+  color: var(--color-text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.related-page-card__arrow {
+  font-size: 1rem;
+  color: var(--color-gold-dark);
+  opacity: 0;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.related-page-card:hover .related-page-card__arrow {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+@media (max-width: 1024px) {
+  .optin-grid { grid-template-columns: repeat(3, 1fr); }
+  .related-pages__grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .sms-summary-bar__inner {
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  .sms-summary-divider { display: none; }
+
+  .sms-summary-item {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 0.4rem 0.9rem;
+    font-size: var(--fs-xs);
+  }
+
+  .optin-grid { grid-template-columns: 1fr; }
+
+  .help-options { grid-template-columns: 1fr; }
+
+  .related-pages__grid { grid-template-columns: 1fr; }
+
+  .frequency-box {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+    gap: 0.75rem;
+  }
+
+  .frequency-box__number { font-size: 3rem; }
+
+  .optout-step { flex-direction: column; gap: 0.75rem; }
+
+  .keyword-card { display: none; } /* Hide on mobile, sidebar is already stacked */
+}
+
+@media (max-width: 480px) {
+  .sms-bubble p { padding: 0.85rem 1rem; }
+  .optout-contacts { flex-direction: column; }
+}
