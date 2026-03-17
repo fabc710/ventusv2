@@ -1,7 +1,7 @@
 /* ================================================================
    VENTUS INSURANCE AGENCY — Main Stylesheet
    Author: Ventus Web Team
-   Version: 2.3 — Dropdown click/touch fix + general corrections
+   Version: 2.4 — Testimonials infinite carousel
    Description: Full design system for index.html
 ================================================================ */
 
@@ -22,7 +22,7 @@
    13. Products Section
    14. Why Choose Us Section
    15. Process Section
-   16. Testimonials Section
+   16. Testimonials Section — Carrusel Infinito
    17. CTA Banner Section
    18. Blog Section
    19. Contact Strip
@@ -603,31 +603,23 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   font-size: 1rem;
   transition: transform var(--transition-fast);
 }
-/* Arrow rotation on hover OR when dropdown is open via click */
 .nav__dropdown:hover > .nav__link--dropdown i,
 .nav__dropdown.is-open > .nav__link--dropdown i {
   transform: rotate(180deg);
 }
 
-/* Dropdown */
 .nav__dropdown { position: relative; }
 
-/*
- * HOVER BRIDGE FIX: Invisible pseudo-element that covers the 12px gap
- * between the nav link and the dropdown menu. Without this, moving the
- * mouse across the gap loses the :hover state and closes the menu before
- * the user can click an item.
- */
 .nav__dropdown::before {
   content: '';
   position: absolute;
   top: 100%;
   left: -16px;
   right: -16px;
-  height: 20px; /* must be >= the gap (12px) + a small buffer */
+  height: 20px;
   background: transparent;
   z-index: calc(var(--z-dropdown) - 1);
-  display: none; /* only active on desktop via media query below */
+  display: none;
 }
 @media (min-width: 1025px) {
   .nav__dropdown::before { display: block; }
@@ -674,7 +666,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   z-index: 2;
 }
 
-/* FIX: dropdown abre en hover (desktop) O cuando tiene clase .is-open (click/touch) */
 .nav__dropdown:hover > .dropdown__menu,
 .nav__dropdown.is-open > .dropdown__menu {
   opacity: 1;
@@ -951,7 +942,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   background: var(--color-navy-darkest);
 }
 
-/* ── SLIDES LAYER ── */
 .hero__slides {
   position: absolute;
   inset: 0;
@@ -988,7 +978,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   background: var(--gradient-hero);
 }
 
-/* ── HERO CONTENT ── */
 .hero__content {
   position: relative;
   z-index: 3;
@@ -997,7 +986,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   max-width: 560px;
 }
 
-/* ── SLIDE TEXT BLOCKS ── */
 .hero__text-block { position: relative; }
 
 .hero__slide-text { display: none; }
@@ -1110,7 +1098,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   flex-shrink: 0;
 }
 
-/* Scroll Indicator */
 .hero__scroll {
   position: absolute;
   bottom: var(--space-6);
@@ -1146,7 +1133,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   animation: scrollBounce 1.8s ease-in-out infinite;
 }
 
-/* ── FLECHAS ── */
 .hero__arrow {
   position: absolute;
   top: 50%;
@@ -1176,7 +1162,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   transform: translateY(-50%) scale(1.08);
 }
 
-/* ── DOTS + PAUSE ── */
 .hero__controls {
   position: absolute;
   bottom: var(--space-8);
@@ -1222,7 +1207,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   color: var(--color-white);
 }
 
-/* ── PROGRESS BAR ── */
 .hero__progress {
   position: absolute;
   bottom: 0; left: 0;
@@ -1538,17 +1522,86 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 
 
 /* ================================================================
-   16. TESTIMONIALS SECTION
+   16. TESTIMONIALS SECTION — CARRUSEL INFINITO
+   Estructura: wrapper → flechas + track-outer → track (flex) → cards
+   El JS prepend/append clones para efecto infinito sin saltos
 ================================================================ */
 .testimonials-section { background: var(--color-bg-alt); }
 
-.testimonials__slider {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-6);
+/* ── Wrapper: espacio lateral para las flechas ── */
+.testimonials__carousel-wrapper {
+  position: relative;
+  padding: 0 64px;
 }
 
+/* ── Contenedor con overflow:hidden + gradientes de fade en los bordes ── */
+.testimonials__track-outer {
+  overflow: hidden;
+  position: relative;
+}
+.testimonials__track-outer::before,
+.testimonials__track-outer::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: 64px;
+  z-index: 2;
+  pointer-events: none;
+}
+.testimonials__track-outer::before {
+  left: 0;
+  background: linear-gradient(to right, var(--color-bg-alt), transparent);
+}
+.testimonials__track-outer::after {
+  right: 0;
+  background: linear-gradient(to left, var(--color-bg-alt), transparent);
+}
+
+/* ── Track: fila flex de tarjetas, movido con transform por JS ── */
+.testimonials__track {
+  display: flex;
+  gap: 24px;
+  will-change: transform;
+  /* La transición se aplica por JS al navegar; se quita al hacer saltos instantáneos */
+}
+
+/* ── Flechas de navegación ── */
+.testimonials__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  background: var(--color-white);
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-navy-darkest);
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background var(--transition-normal),
+    border-color var(--transition-normal),
+    color var(--transition-normal),
+    box-shadow var(--transition-normal),
+    transform var(--transition-bounce);
+}
+.testimonials__arrow--prev { left: 0; }
+.testimonials__arrow--next { right: 0; }
+.testimonials__arrow:hover {
+  background: var(--gradient-navy);
+  border-color: transparent;
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-50%) scale(1.08);
+}
+
+/* ── Tarjeta individual — flex-shrink:0 para que no se compriman ── */
 .testimonial-card {
+  flex-shrink: 0;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-2xl);
@@ -1556,10 +1609,11 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), border-color var(--transition-normal);
   position: relative;
   overflow: hidden;
 }
+/* Comilla decorativa de fondo */
 .testimonial-card::before {
   content: '"';
   position: absolute;
@@ -1571,11 +1625,36 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   line-height: 1;
   pointer-events: none;
 }
-.testimonial-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+/* Acento dorado en la parte superior al hacer hover */
+.testimonial-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient-gold);
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+}
+.testimonial-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(197,171,98,0.30);
+}
+.testimonial-card:hover::after { opacity: 1; }
 
+/* Estrellas */
 .testimonial-card__stars { display: flex; gap: 3px; color: var(--color-gold); font-size: var(--fs-md); }
-.testimonial-card__quote { font-size: var(--fs-base); color: var(--color-text-light); line-height: var(--lh-loose); flex: 1; }
 
+/* Texto de la reseña */
+.testimonial-card__quote {
+  font-size: var(--fs-base);
+  color: var(--color-text-light);
+  line-height: var(--lh-loose);
+  flex: 1;
+}
+
+/* Pie de la tarjeta: avatar + nombre + ubicación */
 .testimonial-card__author {
   display: flex;
   align-items: center;
@@ -1583,10 +1662,79 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
 }
-.author__avatar { width: 56px; height: 56px; border-radius: var(--radius-full); overflow: hidden; border: 2px solid var(--color-gold); flex-shrink: 0; }
+
+/* Avatar con iniciales (sin imagen) */
+.author__avatar {
+  width: 56px; height: 56px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 2px solid var(--color-gold);
+  flex-shrink: 0;
+}
 .author__avatar img { width: 100%; height: 100%; object-fit: cover; }
-.author__info strong { display: block; font-size: var(--fs-base); font-weight: var(--fw-bold); color: var(--color-navy-darkest); }
-.author__info span   { font-family: var(--font-secondary); font-size: var(--fs-xs); color: var(--color-text-light); }
+
+/* Avatar de iniciales — gradiente navy + texto dorado */
+.author__avatar--initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-navy);
+  color: var(--color-gold-light);
+  font-family: var(--font-primary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-black);
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+.author__info strong {
+  display: block;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--color-navy-darkest);
+}
+/* Ubicación con ícono de pin */
+.author__info span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  color: var(--color-text-light);
+}
+.author__info span i { color: var(--color-gold-dark); font-size: var(--fs-sm); }
+
+/* ── Puntos de navegación — generados por JS ── */
+.testimonials__dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: var(--space-10);
+  flex-wrap: wrap;
+}
+
+.testimonials__dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: rgba(18,33,71,0.18);
+  border: none;
+  cursor: pointer;
+  transition:
+    background var(--transition-normal),
+    width var(--transition-normal),
+    border-radius var(--transition-normal),
+    transform var(--transition-bounce);
+}
+.testimonials__dot.is-active {
+  background: var(--gradient-gold);
+  width: 26px;
+  border-radius: 5px;
+}
+.testimonials__dot:hover:not(.is-active) {
+  background: rgba(18,33,71,0.35);
+  transform: scale(1.2);
+}
 
 
 /* ================================================================
@@ -1916,6 +2064,12 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   .cta__desc { margin-inline: auto; }
 
   .topbar__hours { display: none; }
+
+  /* Carrusel: padding y flechas más pequeños en tablet */
+  .testimonials__carousel-wrapper { padding: 0 52px; }
+  .testimonials__track-outer::before,
+  .testimonials__track-outer::after { width: 40px; }
+  .testimonials__arrow { width: 44px; height: 44px; font-size: 1.35rem; }
 }
 
 
@@ -1934,21 +2088,17 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   .header__topbar { height: 40px; }
   .topbar__info .topbar__item:not(:first-child) { display: none; }
 
-  /* ── Hero mobile ── */
   .hero {
     height: 100svh;
     min-height: 580px;
     max-height: 780px;
   }
-
   .hero__content {
     padding-top: var(--space-6);
     padding-bottom: var(--space-10);
     max-width: 100%;
   }
-
   .hero__slide-img { object-position: 68% center; }
-
   .hero__slide-overlay {
     background: linear-gradient(
       to bottom,
@@ -1957,28 +2107,21 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
       rgba(7,14,31,0.70) 100%
     );
   }
-
   .hero__title { font-size: clamp(1.75rem, 7vw, 2.4rem); }
   .hero__subtitle { font-size: 0.9rem; }
-
   .hero__actions { flex-direction: column; width: 100%; }
   .hero__actions .btn { width: 100%; justify-content: center; }
-
   .hero__stats { gap: 0; padding: var(--space-3) var(--space-3); }
   .stat__item  { min-width: 70px; padding-inline: var(--space-2); }
   .stat__divider { height: 32px; }
   .stat__label { font-size: 0.6rem; }
-
   .hero__scroll { display: none; }
-
   .hero__arrow { width: 40px; height: 40px; font-size: 1.4rem; }
   .hero__arrow--prev { left: 8px; }
   .hero__arrow--next { right: 8px; }
-
   .hero__controls { bottom: var(--space-10); }
 
   .products__grid      { grid-template-columns: 1fr; }
-  .testimonials__slider{ grid-template-columns: 1fr; }
   .blog__grid          { grid-template-columns: 1fr; }
 
   .process__steps { flex-direction: column; align-items: stretch; }
@@ -1998,6 +2141,12 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   .floating-buttons { bottom: 5rem; right: 1rem; gap: 10px; }
   .float-btn { width: 46px; height: 46px; font-size: 1.3rem; }
   .float-btn::before { display: none; }
+
+  /* Carrusel mobile: 1 tarjeta visible, flechas pequeñas */
+  .testimonials__carousel-wrapper { padding: 0 44px; }
+  .testimonials__track-outer::before,
+  .testimonials__track-outer::after { width: 32px; }
+  .testimonials__arrow { width: 40px; height: 40px; font-size: 1.25rem; }
 }
 
 
@@ -2008,7 +2157,6 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
 
   .hero { min-height: 560px; }
   .hero__slide-img { object-position: center center; }
-
   .hero__stats { flex-direction: column; align-items: stretch; }
   .stat__item  { padding-inline: var(--space-2); padding-block: var(--space-2); flex-direction: row; justify-content: center; align-items: baseline; gap: 4px; }
   .stat__label { margin-top: 0; font-size: 0.65rem; }
@@ -2028,6 +2176,12 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   .footer__legal span { display: none; }
 
   .mobile-menu__drawer { width: 100vw; }
+
+  /* Carrusel small mobile: flechas más compactas, sin fade lateral */
+  .testimonials__carousel-wrapper { padding: 0 40px; }
+  .testimonials__arrow { width: 36px; height: 36px; font-size: 1.1rem; }
+  .testimonials__track-outer::before,
+  .testimonials__track-outer::after { display: none; }
 }
 
 
@@ -2042,7 +2196,9 @@ blockquote { font-style: italic; line-height: var(--lh-loose); }
   .mobile-menu,
   .hero__controls,
   .hero__arrow,
-  .hero__scroll { display: none !important; }
+  .hero__scroll,
+  .testimonials__arrow,
+  .testimonials__dots { display: none !important; }
 
   body { color: #000; background: #fff; }
 

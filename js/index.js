@@ -2,15 +2,20 @@
  * ================================================================
  * VENTUS INSURANCE AGENCY — Main JavaScript
  * File: js/index.js
- * Version: 3.1 — Bug fixes: IntersectionObserver spread, dropdown click/touch
+ * Version: 3.2 — Testimonials infinite carousel added
  * ================================================================
  *
- * FIXES IN THIS VERSION:
- * 1. initStatsCounter: Removed broken .observe(...els) — observe() only accepts
- *    one element. The first broken observer was removed; obs2 is the correct one.
- * 2. initScrollSpy: Fixed .observe(...[...sections]) — replaced with forEach loop.
- * 3. initDropdownKeyboard/initDropdownClick: Added click+touch support so the
- *    dropdown works on all devices (not just hover on desktop).
+ * CAMBIOS EN ESTA VERSION:
+ * 1. initTestimonialsCarousel(): Carrusel infinito de 9 reseñas.
+ *    - Clona las primeras y últimas N tarjetas para efecto infinito sin saltos.
+ *    - Flechas prev/next, dots de navegación, auto-avance, touch swipe.
+ *    - Responsive: 3 tarjetas en desktop, 2 en tablet, 1 en mobile.
+ *    - Pausa al hacer hover o cuando el tab está oculto.
+ *
+ * FIXES PREVIOS (v3.1):
+ * 1. initStatsCounter: Corregido .observe() — solo acepta un elemento.
+ * 2. initScrollSpy: Corregido spread en .observe() — reemplazado con forEach.
+ * 3. initDropdownClick: Soporte click+touch en dropdown desktop/mobile.
  * ================================================================
  */
 
@@ -22,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initHamburger();
   initMobileMenu();
   initMobileAccordion();
-  initDropdownClick();       // FIX: click/touch dropdown (replaces keyboard-only version)
+  initDropdownClick();
   initDropdownKeyboard();
   initAOS();
   initStatsCounter();
@@ -31,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothScroll();
   initScrollSpy();
   initHeroSlider();
+  initTestimonialsCarousel();   // ← Carrusel de reseñas
 });
 
 
@@ -143,19 +149,11 @@ function initMobileAccordion() {
 
 
 /* ================================================================
-   7. DESKTOP DROPDOWN — CLICK / TOUCH SUPPORT  (v2 — fixed)
-   
-   FIXES:
-   - Usa (pointer: fine) en lugar de (hover: none) — más confiable
-   - Separa claramente comportamiento mouse vs touch
-   - mouseleave limpia is-open si quedó pegado en desktop
-   - Lógica simplificada sin el else que corría en todos los devices
+   7. DESKTOP DROPDOWN — CLICK / TOUCH SUPPORT
 ================================================================ */
 function initDropdownClick() {
   const dropdowns = qsAll('.nav__dropdown');
 
-  // pointer:fine = mouse/trackpad real  |  pointer:coarse = touch/dedo
-  // Esta detección es más confiable que hover:none en dispositivos híbridos
   const isTouchPrimary = () =>
     window.matchMedia('(hover: none), (pointer: coarse)').matches;
 
@@ -163,33 +161,19 @@ function initDropdownClick() {
     const trigger = qs('.nav__link--dropdown', dropdown);
     if (!trigger) return;
 
-    // ── CLICK / TAP HANDLER ──
     trigger.addEventListener('click', (e) => {
       if (!isTouchPrimary()) {
-        // Desktop con mouse: el CSS :hover ya muestra el dropdown.
-        // El click navega a products.html directamente.
-        // Solo limpiamos is-open por si quedó de un estado anterior (teclado).
         dropdown.classList.remove('is-open');
-        return; // Dejar navegar
+        return;
       }
-
-      // Touch: primer tap abre, segundo tap navega
       const isOpen = dropdown.classList.contains('is-open');
-
-      // Cerrar otros dropdowns abiertos
       dropdowns.forEach((d) => { if (d !== dropdown) d.classList.remove('is-open'); });
-
       if (!isOpen) {
-        // Primer tap: prevenir navegación y abrir dropdown
         e.preventDefault();
         dropdown.classList.add('is-open');
       }
-      // isOpen === true: segundo tap → dejar navegar a products.html
     });
 
-    // ── FIX: Limpiar is-open cuando el mouse sale (evita "dropdown pegado") ──
-    // Sólo aplica en desktop (no touch). El CSS :hover ya cierra visualmente,
-    // pero is-open podría quedar seteado desde teclado o edge cases.
     dropdown.addEventListener('mouseleave', () => {
       if (!isTouchPrimary()) {
         dropdown.classList.remove('is-open');
@@ -197,14 +181,12 @@ function initDropdownClick() {
     });
   });
 
-  // ── Cerrar al hacer click fuera del dropdown ──
   document.addEventListener('click', (e) => {
     if (!e.target.closest('.nav__dropdown')) {
       dropdowns.forEach((d) => d.classList.remove('is-open'));
     }
   });
 
-  // ── Cerrar con tecla Escape ──
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       dropdowns.forEach((d) => d.classList.remove('is-open'));
@@ -289,9 +271,6 @@ function initAOS() {
 
 /* ================================================================
    10. HERO STATS COUNTER
-   FIX: Removed the first broken IntersectionObserver that used
-   .observe(...els) — observe() only accepts a single element.
-   The correct observer (obs2) now handles all stat elements.
 ================================================================ */
 function initStatsCounter() {
   const els = qsAll('.stat__number[data-target]');
@@ -299,7 +278,6 @@ function initStatsCounter() {
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // FIX: Use a single correct observer that loops over each element
   const observer = new IntersectionObserver((entries, obs) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -315,7 +293,6 @@ function initStatsCounter() {
     });
   }, { threshold: 0.5 });
 
-  // Observe each element individually (observe() accepts only one element at a time)
   els.forEach((el) => observer.observe(el));
 }
 
@@ -398,10 +375,6 @@ function initNavbarScrollDirection() {
 
 /* ================================================================
    15. HERO IMAGE SLIDER
-   - Slider advances automatically every 5 seconds.
-   - Only the pause button (⏸) can stop/resume it.
-   - Arrows and dots change the slide without interrupting the timer.
-   - Touch swipe works on mobile and tablet.
 ================================================================ */
 function initHeroSlider() {
   const slides       = qsAll('.hero__slide');
@@ -420,7 +393,6 @@ function initHeroSlider() {
   let current  = 0;
   let isPaused = false;
 
-  /* ── Change to slide N ── */
   function goTo(index) {
     const prev = current;
     current = ((index % TOTAL) + TOTAL) % TOTAL;
@@ -442,12 +414,10 @@ function initHeroSlider() {
     if (!isPaused) restartProgress();
   }
 
-  /* ── Auto timer ── */
   setInterval(() => {
     if (!isPaused) goTo(current + 1);
   }, INTERVAL);
 
-  /* ── Progress bar ── */
   function restartProgress() {
     if (!progressFill) return;
     progressFill.style.transition = 'none';
@@ -463,16 +433,13 @@ function initHeroSlider() {
     progressFill.style.width      = '0%';
   }
 
-  /* ── Arrows ── */
   prevBtn?.addEventListener('click', () => goTo(current - 1));
   nextBtn?.addEventListener('click', () => goTo(current + 1));
 
-  /* ── Dots ── */
   dots.forEach((dot) => {
     dot.addEventListener('click', () => goTo(Number(dot.dataset.target)));
   });
 
-  /* ── Pause button ── */
   pauseBtn?.addEventListener('click', () => {
     isPaused = !isPaused;
     const icon = pauseBtn.querySelector('i');
@@ -489,7 +456,6 @@ function initHeroSlider() {
     }
   });
 
-  /* ── Touch swipe ── */
   let touchStartX = 0;
   const heroEl = qs('.hero');
   heroEl?.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; }, { passive: true });
@@ -498,13 +464,11 @@ function initHeroSlider() {
     if (Math.abs(delta) > 40) goTo(delta < 0 ? current + 1 : current - 1);
   }, { passive: true });
 
-  /* ── Pause when tab is hidden ── */
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stopProgress();
     else if (!isPaused)  restartProgress();
   });
 
-  /* ── Init state ── */
   slides.forEach((s, i) => { s.classList.toggle('is-active', i === 0); s.classList.remove('is-leaving'); });
   texts.forEach( (t, i) =>   t.classList.toggle('is-active', i === 0));
   dots.forEach(  (d, i) => { d.classList.toggle('is-active', i === 0); d.setAttribute('aria-current', i === 0 ? 'true' : 'false'); });
@@ -515,9 +479,6 @@ function initHeroSlider() {
 
 /* ================================================================
    16. SCROLL SPY
-   FIX: Replaced .observe(...[...sections]) — the spread operator
-   passes multiple arguments but observe() only accepts one element.
-   Now uses forEach to observe each section individually.
 ================================================================ */
 function initScrollSpy() {
   const sections = qsAll('section[id]');
@@ -541,7 +502,6 @@ function initScrollSpy() {
     });
   }
 
-  // FIX: observe each section individually — observe() only accepts one element
   const spy = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -554,4 +514,225 @@ function initScrollSpy() {
   );
 
   sections.forEach((section) => spy.observe(section));
+}
+
+
+/* ================================================================
+   17. TESTIMONIALS CAROUSEL — CARRUSEL INFINITO
+   ----------------------------------------------------------------
+   Funcionamiento:
+   - Se toman las N tarjetas reales del HTML.
+   - Se clonan las últimas CLONES tarjetas y se prependen al track.
+   - Se clonan las primeras CLONES tarjetas y se appenden al track.
+   - El índice `idx` empieza en CLONES (apuntando a la 1ª card real).
+   - Al llegar al borde de los clones, se hace un salto instantáneo
+     (sin animación) al extremo opuesto de las cards reales.
+
+   Responsive (perView):
+   - Desktop ≥ 1025px → 3 tarjetas visibles
+   - Tablet  768–1024px → 2 tarjetas visibles
+   - Mobile  < 768px → 1 tarjeta visible
+
+   Controles:
+   - Flechas prev/next
+   - Dots de navegación (9 puntos, uno por card real)
+   - Auto-avance cada AUTO_DELAY ms
+   - Pausa al pasar el mouse encima
+   - Pausa cuando el tab está oculto
+   - Touch swipe (delta > 50px)
+================================================================ */
+function initTestimonialsCarousel() {
+  const track     = qs('#testimonials-track');
+  const dotsWrap  = qs('#testimonials-dots');
+  const prevBtn   = qs('#test-prev');
+  const nextBtn   = qs('#test-next');
+
+  if (!track) return;
+
+  /* ── Constantes ── */
+  const GAP        = 24;           // px — debe coincidir con el gap CSS
+  const CLONES     = 3;            // tarjetas clonadas a cada lado
+  const AUTO_DELAY = 4000;         // ms entre avances automáticos
+  const TRANS_MS   = 600;          // ms de duración de la transición CSS
+
+  /* ── Obtener tarjetas reales ── */
+  const realCards = Array.from(track.children);
+  const N         = realCards.length; // 9
+
+  if (N === 0) return;
+
+  /* ── Clonar y añadir al DOM ── */
+  // Prepend: clones de las últimas CLONES cards (para ir hacia atrás)
+  const preClonesFragment = document.createDocumentFragment();
+  for (let i = N - CLONES; i < N; i++) {
+    const clone = realCards[i].cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    preClonesFragment.appendChild(clone);
+  }
+  track.prepend(preClonesFragment);
+
+  // Append: clones de las primeras CLONES cards (para ir hacia adelante)
+  for (let i = 0; i < CLONES; i++) {
+    const clone = realCards[i].cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  }
+
+  /* ── Estado ── */
+  let idx        = CLONES;   // índice actual en el track total (con clones)
+  let isAnimating = false;
+  let autoTimer   = null;
+  let isHovered   = false;
+
+  /* ── Calcular ancho de tarjeta según viewport ── */
+  function getPerView() {
+    if (window.innerWidth >= 1025) return 3;
+    if (window.innerWidth >= 768)  return 2;
+    return 1;
+  }
+
+  function getCardWidth() {
+    const outer     = qs('#testimonials-outer');
+    const outerW    = outer ? outer.clientWidth : track.parentElement.clientWidth;
+    const perView   = getPerView();
+    const totalGaps = (perView - 1) * GAP;
+    return (outerW - totalGaps) / perView;
+  }
+
+  /* ── Posicionar el track sin animación ── */
+  function setPosition(instant) {
+    const cardW  = getCardWidth();
+    const offset = idx * (cardW + GAP);
+    if (instant) {
+      track.style.transition = 'none';
+    } else {
+      track.style.transition = `transform ${TRANS_MS}ms cubic-bezier(0.4, 0, 0.2, 1)`;
+    }
+    track.style.transform = `translateX(-${offset}px)`;
+  }
+
+  /* ── Actualizar ancho de todas las tarjetas ── */
+  function updateCardWidths() {
+    const cardW = getCardWidth();
+    Array.from(track.children).forEach((card) => {
+      card.style.width = `${cardW}px`;
+    });
+  }
+
+  /* ── Ir a un slot del track (incluye clones) ── */
+  function goToSlot(newIdx, animate = true) {
+    if (isAnimating) return;
+    isAnimating = true;
+    idx = newIdx;
+    setPosition(!animate);
+
+    setTimeout(() => {
+      // Salto infinito: si caímos en zona de clones, reposicionar
+      if (idx >= CLONES + N) {
+        idx = idx - N;
+        setPosition(true); // sin animación
+      } else if (idx < CLONES) {
+        idx = idx + N;
+        setPosition(true); // sin animación
+      }
+      isAnimating = false;
+      updateDots();
+    }, animate ? TRANS_MS + 20 : 0);
+  }
+
+  /* ── Navegar por delta (+1 o -1) ── */
+  function navigate(delta) {
+    goToSlot(idx + delta);
+  }
+
+  /* ── Auto-avance ── */
+  function startAuto() {
+    stopAuto();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    autoTimer = setInterval(() => {
+      if (!isHovered && !document.hidden) navigate(1);
+    }, AUTO_DELAY);
+  }
+
+  function stopAuto() {
+    if (autoTimer) { clearInterval(autoTimer); autoTimer = null; }
+  }
+
+  /* ── Actualizar puntos de navegación ── */
+  function updateDots() {
+    // Índice real (0–8)
+    const realIdx = ((idx - CLONES) % N + N) % N;
+    qsAll('.testimonials__dot', dotsWrap).forEach((dot, i) => {
+      dot.classList.toggle('is-active', i === realIdx);
+      dot.setAttribute('aria-selected', i === realIdx ? 'true' : 'false');
+    });
+  }
+
+  /* ── Construir dots ── */
+  function buildDots() {
+    if (!dotsWrap) return;
+    dotsWrap.innerHTML = '';
+    for (let i = 0; i < N; i++) {
+      const dot = document.createElement('button');
+      dot.className    = 'testimonials__dot' + (i === 0 ? ' is-active' : '');
+      dot.setAttribute('role', 'tab');
+      dot.setAttribute('aria-label', `Reseña ${i + 1}`);
+      dot.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      dot.addEventListener('click', () => {
+        stopAuto();
+        goToSlot(CLONES + i);
+        startAuto();
+      });
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  /* ── Flechas ── */
+  prevBtn?.addEventListener('click', () => {
+    stopAuto();
+    navigate(-1);
+    startAuto();
+  });
+  nextBtn?.addEventListener('click', () => {
+    stopAuto();
+    navigate(1);
+    startAuto();
+  });
+
+  /* ── Pausa al hacer hover ── */
+  const wrapper = qs('#testimonials-outer');
+  wrapper?.addEventListener('mouseenter', () => { isHovered = true; });
+  wrapper?.addEventListener('mouseleave', () => { isHovered = false; });
+
+  /* ── Touch swipe ── */
+  let touchStartX = 0;
+  wrapper?.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+  wrapper?.addEventListener('touchend', (e) => {
+    const delta = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(delta) > 50) {
+      stopAuto();
+      navigate(delta < 0 ? 1 : -1);
+      startAuto();
+    }
+  }, { passive: true });
+
+  /* ── Pausa cuando el tab está oculto ── */
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stopAuto();
+    else startAuto();
+  });
+
+  /* ── Resize — recalcular anchos y reposicionar ── */
+  window.addEventListener('resize', throttle(() => {
+    updateCardWidths();
+    setPosition(true); // reposicionar sin animación para evitar salto visual
+  }, 200));
+
+  /* ── Inicialización ── */
+  buildDots();
+  updateCardWidths();
+  setPosition(true); // posición inicial sin animación
+  startAuto();
 }
