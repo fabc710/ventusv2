@@ -26,10 +26,10 @@
 /* ================================================================
    1. CONTACT PAGE HERO
    Orden de capas (z-index):
-     0 → .contact-hero__img      imagen de fondo
-     1 → .contact-hero__bg       overlay de gradiente oscuro
-     2 → .contact-hero__img-overlay  patrón de grilla decorativo
-     3 → .contact-hero__content  texto y pills
+     0 → .contact-hero__img         imagen de fondo  ← NUEVO
+     1 → .contact-hero__bg          overlay gradiente oscuro
+     2 → .contact-hero__img-overlay patrón de grilla decorativo
+     3 → .contact-hero__content     texto y pills
 ================================================================ */
 .contact-hero {
   position: relative;
@@ -41,10 +41,10 @@
   padding-block: var(--space-20) var(--space-14);
 }
 
-/* ── Imagen de fondo ──────────────────────────────────────────
+/* ── NUEVO: Capa de imagen de fondo ─────────────────────────────
    Cambia la URL por la ruta real de tu imagen.
    Recomendado: assets/images/hero-contact-bg.webp
-   (mínimo 1920×700 px, optimizada en formato WebP)
+   (mínimo 1920×700 px, formato WebP)
 ──────────────────────────────────────────────────────────────── */
 .contact-hero__img {
   position: absolute;
@@ -54,7 +54,6 @@
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
-  /* Sutil zoom-out al cargar la página */
   animation: contactHeroZoom 12s ease-out forwards;
 }
 
@@ -63,41 +62,31 @@
   to   { transform: scale(1.00); }
 }
 
-/* ── Overlay de gradiente sobre la imagen ───────────────────── */
+/* ── Overlay de gradiente (original — ahora z-index:1 sobre imagen) */
 .contact-hero__bg {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    /* Franja izquierda oscura → texto legible */
-    linear-gradient(
-      to right,
-      rgba(7, 14, 31, 0.96)  0%,
-      rgba(7, 14, 31, 0.84) 40%,
-      rgba(7, 14, 31, 0.52) 68%,
-      rgba(7, 14, 31, 0.18) 100%
-    ),
-    /* Tono general oscuro sobre toda la imagen */
-    linear-gradient(
-      150deg,
-      rgba(7, 14, 31, 0.72)  0%,
-      rgba(18, 33, 71, 0.55) 45%,
-      rgba(28, 50, 100, 0.22) 100%
-    );
+    radial-gradient(ellipse 70% 80% at 0% 55%,  rgba(30,56,104,0.60) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 55% at 100% 15%, rgba(0,97,158,0.25) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 35% at 60% 95%,  rgba(197,171,98,0.08) 0%, transparent 70%),
+    linear-gradient(150deg, rgba(7,14,31,0.95) 0%, rgba(18,33,71,0.80) 45%, rgba(28,50,100,0.60) 100%);
 }
 
-/* ── Patrón de grilla decorativo (igual que el original) ─────── */
+/* ── Patrón de grilla decorativo (original — z-index:2) */
 .contact-hero__img-overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
   background-size: 56px 56px;
   pointer-events: none;
 }
 
+/* ── Contenido (z-index:3 para estar sobre todo) */
 .contact-hero__content {
   position: relative;
   z-index: 3;
@@ -111,12 +100,12 @@
 .contact-breadcrumb a {
   display: inline-flex; align-items: center; gap: 5px;
   font-family: var(--font-secondary); font-size: var(--fs-xs);
-  font-weight: var(--fw-semibold); color: rgba(255, 255, 255, 0.55);
+  font-weight: var(--fw-semibold); color: rgba(255,255,255,0.55);
   letter-spacing: 0.05em; text-transform: uppercase;
   transition: color var(--transition-fast);
 }
 .contact-breadcrumb a:hover                { color: var(--color-gold-light); }
-.contact-breadcrumb i.ri-arrow-right-s-line { color: rgba(255, 255, 255, 0.25); font-size: var(--fs-md); }
+.contact-breadcrumb i.ri-arrow-right-s-line { color: rgba(255,255,255,0.25); font-size: var(--fs-md); }
 .contact-breadcrumb span[aria-current] {
   font-family: var(--font-secondary); font-size: var(--fs-xs);
   font-weight: var(--fw-bold); color: var(--color-gold);
@@ -131,8 +120,7 @@
   letter-spacing: -0.025em;
   margin-top: var(--space-4);
   margin-bottom: var(--space-5);
-  /* Sombra de texto para máxima legibilidad sobre imagen */
-  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.45);
+  text-shadow: 0 2px 20px rgba(0,0,0,0.45);
 }
 
 .contact-hero__title--accent {
@@ -144,11 +132,11 @@
 
 .contact-hero__desc {
   font-size: clamp(var(--fs-base), 2vw, var(--fs-lg));
-  color: rgba(255, 255, 255, 0.75);
+  color: rgba(255,255,255,0.70);
   line-height: var(--lh-loose);
   max-width: 560px;
   margin-bottom: var(--space-9);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.35);
+  text-shadow: 0 1px 8px rgba(0,0,0,0.35);
 }
 
 /* Hero pills */
@@ -166,9 +154,9 @@
   font-family: var(--font-secondary);
   font-size: var(--fs-sm);
   font-weight: var(--fw-bold);
-  color: rgba(255, 255, 255, 0.80);
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.13);
+  color: rgba(255,255,255,0.80);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.13);
   padding: var(--space-2) var(--space-5);
   border-radius: var(--radius-full);
   text-decoration: none;
@@ -184,13 +172,13 @@
 
 .contact-pill:hover {
   color: var(--color-white);
-  background: rgba(197, 171, 98, 0.18);
-  border-color: rgba(197, 171, 98, 0.45);
+  background: rgba(197,171,98,0.18);
+  border-color: rgba(197,171,98,0.45);
   transform: translateY(-2px);
 }
 
 .contact-pill--hours          { cursor: default; }
-.contact-pill--hours:hover    { transform: none; background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.13); }
+.contact-pill--hours:hover    { transform: none; background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.13); }
 
 
 /* ================================================================
@@ -222,12 +210,13 @@
   top: calc(var(--nav-total) + 1.5rem);
 }
 
+/* ── Info Card ── */
 .cinfo-card {
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 2px 16px rgba(18, 33, 71, 0.07);
+  box-shadow: 0 2px 16px rgba(18,33,71,0.07);
 }
 
 .cinfo-card::before {
@@ -243,6 +232,10 @@
   gap: 14px;
   padding: 28px 28px 20px;
   border-bottom: 1px solid var(--color-border);
+  font-size: 1.125rem;
+  font-weight: 800;
+  color: var(--color-navy-darkest);
+  line-height: 1.2;
 }
 
 .cinfo-card__title i {
@@ -259,13 +252,6 @@
   flex-shrink: 0;
 }
 
-.cinfo-card__title span {
-  font-size: 1.125rem;
-  font-weight: 800;
-  color: var(--color-navy-darkest);
-  line-height: 1.2;
-}
-
 .cinfo-list {
   display: flex;
   flex-direction: column;
@@ -277,13 +263,12 @@
   align-items: flex-start;
   gap: 16px;
   padding: 16px 28px;
-  border-bottom: 1px solid rgba(18, 33, 71, 0.06);
+  border-bottom: 1px solid rgba(18,33,71,0.06);
   transition: background var(--transition-fast);
 }
 
 .cinfo-item:last-child { border-bottom: none; }
-
-.cinfo-item:hover { background: rgba(197, 171, 98, 0.04); }
+.cinfo-item:hover { background: rgba(197,171,98,0.04); }
 
 .cinfo-item__icon {
   display: flex;
@@ -292,8 +277,8 @@
   width: 42px;
   height: 42px;
   min-width: 42px;
-  background: linear-gradient(135deg, rgba(18, 33, 71, 0.05), rgba(197, 171, 98, 0.07));
-  border: 1px solid rgba(197, 171, 98, 0.22);
+  background: linear-gradient(135deg, rgba(18,33,71,0.05), rgba(197,171,98,0.07));
+  border: 1px solid rgba(197,171,98,0.22);
   border-radius: 10px;
   color: var(--color-gold-dark);
   font-size: 1.15rem;
@@ -342,7 +327,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 18px 28px;
-  background: rgba(18, 33, 71, 0.025);
+  background: rgba(18,33,71,0.025);
   border-top: 1px solid var(--color-border);
 }
 
@@ -391,7 +376,7 @@
   border: 1px solid var(--color-border);
   border-radius: 20px;
   padding: 24px;
-  box-shadow: 0 2px 16px rgba(18, 33, 71, 0.07);
+  box-shadow: 0 2px 16px rgba(18,33,71,0.07);
 }
 
 .cinfo-quicklinks__title {
@@ -434,10 +419,10 @@
 }
 
 .cinfo-ql-btn:hover {
-  background: rgba(18, 33, 71, 0.04);
-  border-color: rgba(18, 33, 71, 0.16);
+  background: rgba(18,33,71,0.04);
+  border-color: rgba(18,33,71,0.16);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(18, 33, 71, 0.08);
+  box-shadow: 0 4px 12px rgba(18,33,71,0.08);
 }
 
 .cinfo-ql-btn i {
@@ -454,7 +439,7 @@
   line-height: 1.3;
 }
 
-.cinfo-ql-btn--whatsapp:hover { background: rgba(37, 211, 102, 0.07); border-color: rgba(37, 211, 102, 0.28); }
+.cinfo-ql-btn--whatsapp:hover { background: rgba(37,211,102,0.07); border-color: rgba(37,211,102,0.28); }
 .cinfo-ql-btn--whatsapp i    { color: #25d366; }
 
 
@@ -468,7 +453,7 @@
   border: 1px solid var(--color-border);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 4px 24px rgba(18, 33, 71, 0.09);
+  box-shadow: 0 4px 24px rgba(18,33,71,0.09);
 }
 
 .cform-card::before {
@@ -489,6 +474,10 @@
   align-items: center;
   gap: 14px;
   margin-bottom: 10px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-navy-darkest);
+  line-height: 1.2;
 }
 
 .cform-card__title i {
@@ -503,13 +492,6 @@
   border-radius: 12px;
   font-size: 1.25rem;
   flex-shrink: 0;
-}
-
-.cform-card__title span {
-  font-size: 1.4rem;
-  font-weight: 800;
-  color: var(--color-navy-darkest);
-  line-height: 1.2;
 }
 
 .cform-card__subtitle {
@@ -564,7 +546,7 @@
 .cform__input-icon {
   position: absolute;
   left: 16px;
-  color: rgba(100, 116, 139, 0.55);
+  color: rgba(100,116,139,0.55);
   font-size: 1.15rem;
   pointer-events: none;
   z-index: 1;
@@ -591,12 +573,12 @@
     box-shadow var(--transition-fast);
 }
 
-.cform__input::placeholder { color: rgba(100, 116, 139, 0.55); }
+.cform__input::placeholder { color: rgba(100,116,139,0.55); }
 
 .cform__input:focus {
   border-color: var(--color-navy-mid);
   background: var(--color-white);
-  box-shadow: 0 0 0 4px rgba(59, 82, 131, 0.09);
+  box-shadow: 0 0 0 4px rgba(59,82,131,0.09);
 }
 
 .cform__textarea {
@@ -605,8 +587,8 @@
   line-height: 1.65;
 }
 
-.cform__input.is-valid   { border-color: #22c55e; background: rgba(34, 197, 94, 0.03); }
-.cform__input.is-invalid { border-color: #ef4444; background: rgba(239, 68, 68, 0.03); }
+.cform__input.is-valid   { border-color: #22c55e; background: rgba(34,197,94,0.03); }
+.cform__input.is-invalid { border-color: #ef4444; background: rgba(239,68,68,0.03); }
 
 .cform__error {
   display: flex;
@@ -630,8 +612,8 @@
    7. SMS CONSENT CHECKBOX
 ================================================================ */
 .cform__consent {
-  background: rgba(18, 33, 71, 0.025);
-  border: 1px solid rgba(18, 33, 71, 0.09);
+  background: rgba(18,33,71,0.025);
+  border: 1px solid rgba(18,33,71,0.09);
   border-radius: 14px;
   padding: 18px 20px;
 }
@@ -670,7 +652,7 @@
 .cform__consent-label:hover .cform__consent-custom { border-color: var(--color-navy-mid); }
 
 .cform__consent-checkbox:focus ~ .cform__consent-custom {
-  box-shadow: 0 0 0 3px rgba(59, 82, 131, 0.18);
+  box-shadow: 0 0 0 3px rgba(59,82,131,0.18);
   border-color: var(--color-navy-mid);
 }
 
@@ -735,18 +717,18 @@
 }
 
 .cform__message-success {
-  background: rgba(34, 197, 94, 0.09);
-  border: 1px solid rgba(34, 197, 94, 0.28);
+  background: rgba(34,197,94,0.09);
+  border: 1px solid rgba(34,197,94,0.28);
   color: #166534;
 }
 .cform__message-error {
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.24);
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.24);
   color: #991b1b;
 }
 .cform__message-loading {
-  background: rgba(59, 82, 131, 0.06);
-  border: 1px solid rgba(59, 82, 131, 0.14);
+  background: rgba(59,82,131,0.06);
+  border: 1px solid rgba(59,82,131,0.14);
   color: var(--color-navy-mid);
 }
 
@@ -763,9 +745,9 @@
   margin-top: 4px;
 }
 
-.cform__submit:disabled   { opacity: 0.72; cursor: not-allowed; }
-.cform__submit-text[hidden]    { display: none; }
-.cform__submit-loading[hidden] { display: none; }
+.cform__submit:disabled          { opacity: 0.72; cursor: not-allowed; }
+.cform__submit-text[hidden]      { display: none; }
+.cform__submit-loading[hidden]   { display: none; }
 
 @keyframes cformSpin { to { transform: rotate(360deg); } }
 .cform__spinner { display: inline-block; animation: cformSpin 0.8s linear infinite; }
@@ -774,7 +756,7 @@
 /* ================================================================
    9. MAP SECTION
 ================================================================ */
-.map-section       { background: var(--color-bg); }
+.map-section         { background: var(--color-bg); }
 .map-section__header { padding-block: var(--space-14) var(--space-8); }
 .map-section__text   { max-width: 540px; }
 
@@ -798,8 +780,8 @@
 /* ================================================================
    10. TRUST STRIP
 ================================================================ */
-.contact-trust         { background: var(--color-bg-alt); }
-.contact-trust__grid   {
+.contact-trust       { background: var(--color-bg-alt); }
+.contact-trust__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--space-5);
@@ -820,7 +802,7 @@
 .ctrust-item:hover {
   transform: translateY(-6px);
   box-shadow: var(--shadow-md);
-  border-color: rgba(197, 171, 98, 0.35);
+  border-color: rgba(197,171,98,0.35);
 }
 
 .ctrust-item__icon {
@@ -828,8 +810,8 @@
   align-items: center;
   justify-content: center;
   width: 64px; height: 64px;
-  background: linear-gradient(135deg, rgba(18, 33, 71, 0.05), rgba(197, 171, 98, 0.06));
-  border: 1px solid rgba(197, 171, 98, 0.20);
+  background: linear-gradient(135deg, rgba(18,33,71,0.05), rgba(197,171,98,0.06));
+  border: 1px solid rgba(197,171,98,0.20);
   border-radius: 16px;
   color: var(--color-gold-dark);
   font-size: 1.75rem;
@@ -882,7 +864,7 @@
   border-radius: 50%;
   color: var(--color-white);
   font-size: 1.5rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.20);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.20);
   text-decoration: none;
   transition: transform var(--transition-bounce), box-shadow var(--transition-normal);
   position: relative;
@@ -897,7 +879,7 @@
   font-size: 0.72rem;
   font-weight: 700;
   color: var(--color-white);
-  background: rgba(18, 33, 71, 0.88);
+  background: rgba(18,33,71,0.88);
   padding: 5px 10px;
   border-radius: 8px;
   opacity: 0;
@@ -906,22 +888,14 @@
 }
 
 .float-btn:hover::before { opacity: 1; }
-.float-btn:hover { transform: scale(1.10) translateY(-2px); box-shadow: 0 8px 28px rgba(0, 0, 0, 0.24); }
+.float-btn:hover { transform: scale(1.10) translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.24); }
 
 .float-btn--payment  { background: var(--gradient-navy); }
 .float-btn--whatsapp { background: linear-gradient(135deg, #25d366, #128c7e); }
 
-/* Hidden state para JS entrance animation */
-.float-btn--hidden {
-  opacity: 0;
-  transform: translateX(80px);
-}
-
-/* Hidden state para JS panel entrance */
-.cinfo-item--hidden {
-  opacity: 0;
-  transform: translateX(-16px);
-}
+/* Estados hidden para animaciones JS */
+.float-btn--hidden  { opacity: 0; transform: translateX(80px); }
+.cinfo-item--hidden { opacity: 0; transform: translateX(-16px); }
 
 
 /* ================================================================
@@ -943,7 +917,7 @@
 
   .contact-trust__grid { grid-template-columns: repeat(2, 1fr); }
 
-  .cform             { padding: 28px 30px 32px; }
+  .cform              { padding: 28px 30px 32px; }
   .cform-card__header { padding: 28px 30px 22px; }
   .cform-card__subtitle { padding-left: 0; }
 }
@@ -959,22 +933,21 @@
     padding-block: var(--space-12) var(--space-10);
   }
 
-  /* En móvil el overlay cubre más para máxima legibilidad */
+  /* Overlay más opaco en móvil para máxima legibilidad */
   .contact-hero__bg {
     background:
       linear-gradient(
         to bottom,
-        rgba(7, 14, 31, 0.90) 0%,
-        rgba(7, 14, 31, 0.78) 60%,
-        rgba(7, 14, 31, 0.90) 100%
+        rgba(7,14,31,0.92)  0%,
+        rgba(7,14,31,0.80) 60%,
+        rgba(7,14,31,0.92) 100%
       );
   }
 
-  /* Imagen: foco superior en móvil */
   .contact-hero__img { background-position: center top; }
 
-  .contact-hero__title { font-size: clamp(1.8rem, 7vw, 2.5rem); }
-  .contact-hero__pills { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .contact-hero__title  { font-size: clamp(1.8rem, 7vw, 2.5rem); }
+  .contact-hero__pills  { flex-direction: column; align-items: flex-start; gap: 8px; }
 
   .contact-main,
   .contact-main.section { padding-block: var(--space-10) var(--space-14); }
@@ -986,9 +959,9 @@
   .cinfo-social         { padding: 14px 20px; }
   .cinfo-quicklinks     { padding: 20px; }
 
-  .cform               { padding: 22px 20px 28px; gap: 16px; }
-  .cform-card__header  { padding: 22px 20px 18px; }
-  .cform__row          { grid-template-columns: 1fr; gap: 16px; }
+  .cform              { padding: 22px 20px 28px; gap: 16px; }
+  .cform-card__header { padding: 22px 20px 18px; }
+  .cform__row         { grid-template-columns: 1fr; gap: 16px; }
 
   .map-section__embed iframe { height: 340px; }
 
@@ -1005,13 +978,12 @@
 
   .contact-hero__title { font-size: 1.75rem; }
 
-  .contact-trust__grid { grid-template-columns: 1fr; }
-
+  .contact-trust__grid    { grid-template-columns: 1fr; }
   .cinfo-quicklinks__grid { grid-template-columns: 1fr 1fr; }
 
   .cform__consent-text { font-size: 0.71rem; }
 
-  .cform-card  { border-radius: 16px; }
+  .cform-card,
   .cinfo-card,
   .cinfo-quicklinks { border-radius: 16px; }
 

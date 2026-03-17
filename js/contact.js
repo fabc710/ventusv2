@@ -253,7 +253,6 @@ function clearAllValidationStates() {
 /* ================================================================
    5. PHONE NUMBER AUTO-FORMATTING
    Formatea números de teléfono US como (XXX) XXX-XXXX al escribir.
-   Sin cambios — la lógica original es correcta.
 ================================================================ */
 function initPhoneFormatter() {
   const phoneInput = document.getElementById('phone');
@@ -290,10 +289,7 @@ function initPhoneFormatter() {
 
 /* ================================================================
    6. SMS CONSENT CHECKBOX ANIMATION
-   FIX 4: custom.style.transition se seteaba inline en cada evento
-   change y nunca se limpiaba — dejaba la transición inline activa
-   permanentemente, bloqueando transiciones CSS del elemento.
-   Ahora se limpia con setTimeout tras finalizar la animación.
+   FIX 4: limpia inline transition después de la animación.
 ================================================================ */
 function initConsentAnimation() {
   const checkbox = document.getElementById('smsConsentCheckbox');
@@ -302,15 +298,12 @@ function initConsentAnimation() {
   if (prefersReducedMotion()) return;
 
   checkbox.addEventListener('change', () => {
-    // FIX 4: setear transition antes de la animación
     custom.style.transition = 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), background 0.2s ease';
     custom.style.transform  = 'scale(1.25)';
 
     setTimeout(() => {
       custom.style.transform = 'scale(1)';
 
-      // FIX 4: limpiar inline transition después de la animación
-      // para que los estados CSS futuros no queden bloqueados
       setTimeout(() => {
         custom.style.transition = '';
         custom.style.transform  = '';
@@ -322,66 +315,32 @@ function initConsentAnimation() {
 
 /* ================================================================
    7. FLOATING BUTTONS — Entrance Animation
-   FIX 1 + 2 + 3:
-   - FOIC eliminado: se usa clase CSS .float-btn--hidden en lugar
-     de inline opacity:0.
-   - Doble rAF para garantizar que el estado inicial se pinte ANTES
-     de aplicar la clase visible (un solo rAF no es suficiente).
-   - Guard para no duplicar animación si index.css ya corre
-     @keyframes floatBtnsIn sobre .floating-buttons.
-
-   REQUIERE en tu CSS (contact.css o index.css):
-   ─────────────────────────────────────────────
-   .float-btn--hidden {
-     opacity: 0;
-     transform: translateX(80px);
-   }
-   .float-btn {
-     transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1);
-   }
-   ─────────────────────────────────────────────
-   NOTA: Si index.css ya tiene @keyframes floatBtnsIn aplicado a
-   .floating-buttons con la animación de entrada, esta función
-   puede omitirse o la clase --hidden puede no agregarse.
 ================================================================ */
 function initFloatingButtons() {
   const buttons = document.querySelectorAll('.float-btn');
   if (!buttons.length) return;
   if (prefersReducedMotion()) return;
 
-  // FIX 3: Guard — si el contenedor ya tiene animación CSS activa
-  // (floatBtnsIn desde index.css), no aplicar JS adicional
+  // Guard — si el contenedor ya tiene animación CSS activa, no duplicar
   const container = document.querySelector('.floating-buttons');
   if (container) {
     const computedAnim = getComputedStyle(container).animationName;
-    if (computedAnim && computedAnim !== 'none') {
-      // La animación CSS ya maneja la entrada — no hacer nada
-      return;
-    }
+    if (computedAnim && computedAnim !== 'none') return;
   }
 
-  // FIX 2: clase CSS en lugar de inline opacity:0 (evita FOIC)
   buttons.forEach((btn, i) => {
     btn.classList.add('float-btn--hidden');
     btn.style.transitionDelay = `${1.2 + i * 0.15}s`;
   });
 
-  // FIX 1: Doble rAF — garantiza que el estado inicial (--hidden)
-  // se pinte ANTES de aplicar la clase de entrada.
-  // Un solo rAF puede ejecutarse antes del primer paint, haciendo
-  // que el browser omita la transición y salte al estado final.
+  // Doble rAF — garantiza que el estado inicial se pinte antes de la transición
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
-      buttons.forEach((btn) => {
-        btn.classList.remove('float-btn--hidden');
-      });
+      buttons.forEach((btn) => btn.classList.remove('float-btn--hidden'));
 
-      // Limpiar transition-delay inline tras la animación
-      const maxDelay = (1.2 + (buttons.length - 1) * 0.15) * 1000 + 500 + 50;
+      const maxDelay = (1.2 + (buttons.length - 1) * 0.15) * 1000 + 550;
       setTimeout(() => {
-        buttons.forEach((btn) => {
-          btn.style.transitionDelay = '';
-        });
+        buttons.forEach((btn) => { btn.style.transitionDelay = ''; });
       }, maxDelay);
     });
   });
@@ -390,19 +349,6 @@ function initFloatingButtons() {
 
 /* ================================================================
    8. INFO PANEL ITEMS — Staggered Entrance
-   FIX 2: Eliminado inline opacity:0 al DOMContentLoaded (FOIC).
-   Ahora usa clase CSS .cinfo-item--hidden para el estado inicial.
-
-   REQUIERE en tu CSS:
-   ─────────────────────────────────────────────
-   .cinfo-item--hidden {
-     opacity: 0;
-     transform: translateX(-16px);
-   }
-   .cinfo-item {
-     transition: opacity 0.45s ease, transform 0.45s cubic-bezier(0.25,0.8,0.25,1);
-   }
-   ─────────────────────────────────────────────
 ================================================================ */
 function initInfoPanelEntrance() {
   const items = document.querySelectorAll('.cinfo-item');
@@ -412,7 +358,6 @@ function initInfoPanelEntrance() {
   const card = document.querySelector('.cinfo-card');
   if (!card) return;
 
-  // FIX 2: clase CSS en lugar de inline opacity:0
   items.forEach((item, i) => {
     item.classList.add('cinfo-item--hidden');
     item.style.transitionDelay = `${i * 0.07}s`;
@@ -422,16 +367,11 @@ function initInfoPanelEntrance() {
     ([entry]) => {
       if (!entry.isIntersecting) return;
 
-      items.forEach((item) => {
-        item.classList.remove('cinfo-item--hidden');
-      });
+      items.forEach((item) => item.classList.remove('cinfo-item--hidden'));
 
-      // Limpiar transition-delay inline tras la animación
       const maxDelay = (items.length - 1) * 70 + 450 + 50;
       setTimeout(() => {
-        items.forEach((item) => {
-          item.style.transitionDelay = '';
-        });
+        items.forEach((item) => { item.style.transitionDelay = ''; });
       }, maxDelay);
 
       observer.disconnect();
