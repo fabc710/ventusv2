@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto+Condensed:wght@300;400;600;700&display=swap" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
 
   <link rel="stylesheet" href="css/index.css" />
   <link rel="stylesheet" href="css/contact.css" />
@@ -137,7 +137,14 @@
          PAGE HERO
     ============================================================ -->
     <section class="contact-hero" aria-labelledby="contact-hero-title">
+
+      <!-- Imagen de fondo: reemplaza "hero-contact-bg.webp" con tu imagen real -->
+      <div class="contact-hero__img" aria-hidden="true"></div>
+
+      <!-- Overlay de gradiente oscuro sobre la imagen -->
       <div class="contact-hero__bg" aria-hidden="true"></div>
+
+      <!-- Patrón de grilla decorativo (mantiene el diseño original) -->
       <div class="contact-hero__img-overlay" aria-hidden="true"></div>
 
       <div class="container contact-hero__content">
@@ -293,11 +300,6 @@
                 </p>
               </div>
 
-              <!-- ================================================
-                   CONTACT FORM
-                   Action: send_mail.php (same as original)
-                   Method: POST via fetch (async, no page reload)
-              ================================================ -->
               <form
                 class="cform"
                 id="contactForm"
@@ -350,7 +352,7 @@
                   </div>
                 </div>
 
-                <!-- Row 2: Phone (full width) -->
+                <!-- Row 2: Phone -->
                 <div class="cform__group">
                   <label for="phone" class="cform__label">Phone Number</label>
                   <div class="cform__input-wrap">
@@ -386,7 +388,7 @@
                   <span class="cform__error" id="message-error" role="alert" hidden></span>
                 </div>
 
-                <!-- SMS Consent Checkbox (ORIGINAL TEXT — DO NOT MODIFY) -->
+                <!-- SMS Consent Checkbox -->
                 <div class="cform__consent">
                   <label for="smsConsentCheckbox" class="cform__consent-label">
                     <input
@@ -411,7 +413,7 @@
                   </label>
                 </div>
 
-                <!-- Status message (success / error) -->
+                <!-- Status message -->
                 <div id="formMessage" class="cform__message" aria-live="polite" hidden></div>
 
                 <!-- Submit Button -->
@@ -504,7 +506,7 @@
 
 
   <!-- ============================================================
-       FLOATING BUTTONS (Payment + WhatsApp — same as original)
+       FLOATING BUTTONS
   ============================================================ -->
   <div class="floating-buttons" aria-label="Quick action buttons">
     <a href="https://ventus-insurance.epaypolicy.com/"

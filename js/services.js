@@ -2,24 +2,16 @@
  * ================================================================
  * VENTUS INSURANCE AGENCY — Services Page JavaScript
  * File: js/services.js
- * Version: 2.0 — Bug fixes applied
+ * Version: 3.0 — Carrusel de testimonials agregado
  *
- * FIXES IN THIS VERSION:
- * 1. initHeroRingsParallax: Replaced (hover:none) with
- *    (hover:none),(pointer:coarse) — más confiable en híbridos.
- * 2. initProcessStepsHighlight: Ahora limpia también
- *    step.style.transition después del reset, evitando que el
- *    inline style interfiera con los hovers del CSS.
- * 3. animateSvcCounter: Refactored para usar requestAnimationFrame
- *    correctamente desde el primer frame (sin IIFE con start).
- * 4. initSpecialtyStagger: Las cards ahora usan una clase CSS
- *    (.specialty-card--hidden) en lugar de inline styles, evitando
- *    flash de contenido invisible cuando el JS tarda en cargar.
- *    Requiere agregar en CSS: .specialty-card--hidden { opacity:0;
- *    transform: translateY(24px); }
- * 5. initServiceCardRipple: Ya no fuerza position/overflow inline.
- *    Usa overflow:clip en el ripple mismo para contenerlo, y solo
- *    actúa si el iconWrap existe.
+ * CAMBIOS EN ESTA VERSIÓN:
+ * + initTestimonialsCarousel — carrusel completo con:
+ *     · Flechas prev / next
+ *     · Puntos de navegación generados dinámicamente
+ *     · Auto-play con pausa al hover
+ *     · Soporte táctil (swipe left / right)
+ *     · Responsive (3 cards → 2 → 1 según breakpoint)
+ *     · Accesibilidad: aria-labels en los dots
  *
  * TABLE OF CONTENTS
  * 1.  DOMContentLoaded Init
@@ -28,6 +20,7 @@
  * 4.  Process Steps — Sequential Highlight on Scroll
  * 5.  Hero Rings — Mouse Parallax
  * 6.  Specialty Cards — Staggered Entrance
+ * 7.  Testimonials Carousel  ← NUEVO
  * ================================================================
  */
 
@@ -39,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProcessStepsHighlight();
   initHeroRingsParallax();
   initSpecialtyStagger();
+  initTestimonialsCarousel(); // ← NUEVO
 });
 
 
@@ -46,18 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
    UTILITY
 ================================================================ */
 
-/**
- * Devuelve true si el dispositivo es principalmente touch.
- * Usa (hover:none) AND (pointer:coarse) para mayor precisión
- * en laptops con pantalla táctil (dispositivos híbridos).
- */
 function isTouchDevice() {
   return window.matchMedia('(hover: none), (pointer: coarse)').matches;
 }
 
-/**
- * Devuelve true si el usuario prefiere movimiento reducido.
- */
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
@@ -65,8 +51,6 @@ function prefersReducedMotion() {
 
 /* ================================================================
    2. SERVICE STATS COUNTER ANIMATION
-   Cuenta .svc-stat-item__value desde 0 → data-target
-   con easeOutQuart y requestAnimationFrame.
 ================================================================ */
 function initServiceStatsCounter() {
   const statValues = document.querySelectorAll('.svc-stat-item__value[data-target]');
@@ -97,15 +81,6 @@ function initServiceStatsCounter() {
   statValues.forEach((el) => observer.observe(el));
 }
 
-/**
- * FIX 3: Animación de contador corregida.
- * El primer requestAnimationFrame recibe el timestamp real del browser,
- * evitando el patrón IIFE(start) que era frágil.
- *
- * @param {Element} el       - Elemento DOM a actualizar
- * @param {number}  target   - Valor final
- * @param {number}  duration - Duración en ms (default 1800)
- */
 function animateSvcCounter(el, target, duration = 1800) {
   let startTime = null;
 
@@ -125,7 +100,7 @@ function animateSvcCounter(el, target, duration = 1800) {
     if (progress < 1) {
       requestAnimationFrame(tick);
     } else {
-      el.textContent = target.toLocaleString(); // garantizar valor exacto final
+      el.textContent = target.toLocaleString();
     }
   }
 
@@ -135,19 +110,12 @@ function animateSvcCounter(el, target, duration = 1800) {
 
 /* ================================================================
    3. SERVICE CARDS — Hover Icon Ripple Effect
-   Crea un ripple desde el icono al hacer hover.
-   Pure JS — sin librerías externas.
-
-   FIX 5: Ya no se fuerzan estilos position/overflow inline sobre
-   el iconWrap (podían romper CSS existente). El ripple es
-   contenido por border-radius + clip-path en su propio nodo.
 ================================================================ */
 function initServiceCardRipple() {
   const cards = document.querySelectorAll('.svc-card');
   if (!cards.length) return;
   if (prefersReducedMotion()) return;
 
-  // Inyectar keyframe una sola vez
   if (!document.getElementById('svc-ripple-style')) {
     const style = document.createElement('style');
     style.id = 'svc-ripple-style';
@@ -178,7 +146,6 @@ function initServiceCardRipple() {
     if (!iconWrap) return;
 
     card.addEventListener('mouseenter', () => {
-      // Eliminar ripple previo si existe
       iconWrap.querySelector('.svc-icon-ripple')?.remove();
 
       const ripple = document.createElement('span');
@@ -193,12 +160,6 @@ function initServiceCardRipple() {
 
 /* ================================================================
    4. PROCESS STEPS — Sequential Highlight on Scroll
-   Los pasos se iluminan uno por uno cuando la sección entra
-   en el viewport.
-
-   FIX 2: Ahora limpia TAMBIÉN step.style.transition en el reset,
-   evitando que el inline style bloquee las transiciones del CSS
-   (ej: estados hover definidos en la hoja de estilos).
 ================================================================ */
 function initProcessStepsHighlight() {
   const section = document.querySelector('.svc-process');
@@ -214,21 +175,16 @@ function initProcessStepsHighlight() {
       animated = true;
 
       steps.forEach((step, i) => {
-        // Fase 1: iluminar
         setTimeout(() => {
           step.style.transition  = 'background 0.4s ease, border-color 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
           step.style.background  = 'rgba(255,255,255,0.09)';
           step.style.borderColor = 'rgba(197,171,98,0.30)';
           step.style.transform   = 'translateY(-4px)';
 
-          // Fase 2: reset — limpia TODOS los inline styles para
-          // no interferir con hover states del CSS
           setTimeout(() => {
             step.style.background  = '';
             step.style.borderColor = '';
             step.style.transform   = '';
-
-            // FIX 2: también limpiar transition inline
             step.style.transition  = '';
           }, 600);
 
@@ -246,21 +202,14 @@ function initProcessStepsHighlight() {
 
 /* ================================================================
    5. HERO RINGS — Mouse Parallax
-   Los anillos decorativos responden al movimiento del mouse.
-
-   FIX 1: Reemplazado (hover:none) por (hover:none),(pointer:coarse)
-   para detectar touch correctamente en dispositivos híbridos
-   (laptops con touchscreen, tablets con teclado, etc.).
 ================================================================ */
 function initHeroRingsParallax() {
   const hero  = document.querySelector('.svc-hero');
   const rings = document.querySelectorAll('.svc-hero__ring');
   if (!hero || !rings.length) return;
 
-  // FIX 1: detección de touch más confiable
   if (isTouchDevice() || prefersReducedMotion()) return;
 
-  // Multiplicadores distintos por anillo para efecto de profundidad
   const multipliers = [0.015, 0.025, 0.035];
 
   hero.addEventListener('mousemove', (e) => {
@@ -290,29 +239,6 @@ function initHeroRingsParallax() {
 
 /* ================================================================
    6. SPECIALTY CARDS — Staggered Entrance on Scroll
-
-   FIX 4: Las cards ya NO reciben opacity/transform inline desde JS
-   al cargar. En su lugar se agrega la clase .specialty-card--hidden
-   ANTES del primer frame de pintura (en el mismo tick del observer
-   setup), y la clase se remueve al entrar en viewport.
-
-   Esto evita el flash de contenido invisible (FOIC) cuando el JS
-   tarda en ejecutarse, porque el CSS puede proveer un fallback
-   visible si la clase no existe todavía.
-
-   REQUIERE en tu CSS (services.css o index.css):
-   ─────────────────────────────────────────────
-   .specialty-card--hidden {
-     opacity: 0;
-     transform: translateY(24px);
-   }
-   .specialty-card {
-     transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.25,0.8,0.25,1);
-   }
-   ─────────────────────────────────────────────
-   El delay escalonado se aplica vía CSS custom property --card-index.
-   Si usas JS para el delay (como abajo), aplica directamente al
-   elemento y se respeta igual.
 ================================================================ */
 function initSpecialtyStagger() {
   const cards = document.querySelectorAll('.specialty-card');
@@ -322,10 +248,8 @@ function initSpecialtyStagger() {
   const grid = document.querySelector('.specialty__grid');
   if (!grid) return;
 
-  // FIX 4: Agregar clase hidden (no inline opacity) — permite fallback CSS
   cards.forEach((card, i) => {
     card.classList.add('specialty-card--hidden');
-    // Aplicar el delay de forma individual para el efecto escalonado
     card.style.transitionDelay = `${i * 0.08}s`;
   });
 
@@ -337,9 +261,7 @@ function initSpecialtyStagger() {
         card.classList.remove('specialty-card--hidden');
       });
 
-      // Limpiar transition-delay inline después de la animación
-      // para no interferir con futuras transiciones del elemento
-      const maxDelay = (cards.length - 1) * 80 + 550 + 50; // ms
+      const maxDelay = (cards.length - 1) * 80 + 550 + 50;
       setTimeout(() => {
         cards.forEach((card) => {
           card.style.transitionDelay = '';
@@ -352,4 +274,227 @@ function initSpecialtyStagger() {
   );
 
   observer.observe(grid);
+}
+
+
+/* ================================================================
+   7. TESTIMONIALS CAROUSEL
+   ──────────────────────────────────────────────────────────────
+   Características:
+   · Slides en grupos (3 desktop / 2 tablet / 1 mobile)
+   · Flechas prev/next con bucle infinito
+   · Puntos de navegación generados automáticamente
+   · Auto-play cada 5 s (pausa en hover y focus)
+   · Soporte táctil (swipe left / right)
+   · Movimiento desactivado si prefers-reduced-motion
+================================================================ */
+function initTestimonialsCarousel() {
+
+  // ── Elementos del DOM ──────────────────────────────────────
+  const track      = document.getElementById('testimonials-track');
+  const outer      = document.getElementById('testimonials-outer');
+  const prevBtn    = document.getElementById('test-prev');
+  const nextBtn    = document.getElementById('test-next');
+  const dotsWrap   = document.getElementById('testimonials-dots');
+  const wrapper    = document.querySelector('.testimonials__carousel-wrapper');
+
+  if (!track || !prevBtn || !nextBtn || !dotsWrap) return;
+
+  const cards      = Array.from(track.querySelectorAll('.testimonial-card'));
+  const totalCards = cards.length;
+  if (totalCards === 0) return;
+
+  // ── Estado ──────────────────────────────────────────────────
+  let currentIndex = 0;   // índice del primer card visible
+  let autoPlayTimer = null;
+  const AUTOPLAY_DELAY = 5000; // ms
+
+  // ── Calcular cuántas cards son visibles según viewport ──────
+  function getVisibleCount() {
+    const w = window.innerWidth;
+    if (w <= 640)  return 1;
+    if (w <= 1024) return 2;
+    return 3;
+  }
+
+  // ── Número total de "páginas" (grupos de cards) ─────────────
+  function getTotalPages() {
+    return Math.ceil(totalCards / getVisibleCount());
+  }
+
+  // ── Número de página actual ──────────────────────────────────
+  function getCurrentPage() {
+    return Math.floor(currentIndex / getVisibleCount());
+  }
+
+  // ── Calcular el ancho de cada card en px ────────────────────
+  function getCardWidth() {
+    const visible  = getVisibleCount();
+    const gap      = parseFloat(getComputedStyle(track).gap) || 24;
+    const outerW   = outer.getBoundingClientRect().width;
+    return (outerW - gap * (visible - 1)) / visible;
+  }
+
+  // ── Mover el track al índice indicado ───────────────────────
+  function goTo(index) {
+    const visible   = getVisibleCount();
+    const maxIndex  = Math.max(0, totalCards - visible);
+    currentIndex    = Math.max(0, Math.min(index, maxIndex));
+
+    const gap       = parseFloat(getComputedStyle(track).gap) || 24;
+    const cardW     = getCardWidth();
+    const offset    = currentIndex * (cardW + gap);
+
+    if (prefersReducedMotion()) {
+      track.style.transition = 'none';
+    } else {
+      track.style.transition = 'transform 0.50s cubic-bezier(0.4, 0, 0.2, 1)';
+    }
+
+    track.style.transform = `translateX(-${offset}px)`;
+
+    updateDots();
+    updateArrows();
+  }
+
+  // ── Actualizar estado visual de los dots ─────────────────────
+  function updateDots() {
+    const page = getCurrentPage();
+    dotsWrap.querySelectorAll('.testimonials__dot').forEach((dot, i) => {
+      const isActive = i === page;
+      dot.classList.toggle('testimonials__dot--active', isActive);
+      dot.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      dot.setAttribute('aria-label', `Review group ${i + 1}`);
+    });
+  }
+
+  // ── Actualizar estado visual de las flechas ──────────────────
+  function updateArrows() {
+    const visible  = getVisibleCount();
+    const maxIndex = Math.max(0, totalCards - visible);
+    prevBtn.disabled = currentIndex <= 0;
+    nextBtn.disabled = currentIndex >= maxIndex;
+    prevBtn.style.opacity = prevBtn.disabled ? '0.40' : '1';
+    nextBtn.style.opacity = nextBtn.disabled ? '0.40' : '1';
+  }
+
+  // ── Generar puntos de navegación ────────────────────────────
+  function buildDots() {
+    dotsWrap.innerHTML = '';
+    const pages = getTotalPages();
+
+    for (let i = 0; i < pages; i++) {
+      const dot = document.createElement('button');
+      dot.className    = 'testimonials__dot';
+      dot.role         = 'tab';
+      dot.setAttribute('aria-label', `Review group ${i + 1}`);
+      dot.setAttribute('aria-selected', 'false');
+
+      dot.addEventListener('click', () => {
+        stopAutoPlay();
+        goTo(i * getVisibleCount());
+        startAutoPlay();
+      });
+
+      dotsWrap.appendChild(dot);
+    }
+  }
+
+  // ── Recalcular todo al cambiar el viewport ──────────────────
+  function recalculate() {
+    // Forzar ancho correcto en cada card via CSS custom property
+    const cardW   = getCardWidth();
+    const gap     = parseFloat(getComputedStyle(track).gap) || 24;
+    const visible = getVisibleCount();
+
+    cards.forEach((card) => {
+      card.style.flex = `0 0 ${cardW}px`;
+    });
+
+    buildDots();
+    goTo(currentIndex); // reposicionar sin animación
+  }
+
+  // ── Auto-play ────────────────────────────────────────────────
+  function startAutoPlay() {
+    if (prefersReducedMotion()) return;
+
+    stopAutoPlay();
+    autoPlayTimer = setInterval(() => {
+      const visible  = getVisibleCount();
+      const maxIndex = Math.max(0, totalCards - visible);
+
+      if (currentIndex >= maxIndex) {
+        goTo(0); // bucle infinito
+      } else {
+        goTo(currentIndex + visible);
+      }
+    }, AUTOPLAY_DELAY);
+  }
+
+  function stopAutoPlay() {
+    if (autoPlayTimer) {
+      clearInterval(autoPlayTimer);
+      autoPlayTimer = null;
+    }
+  }
+
+  // ── Event listeners — Flechas ────────────────────────────────
+  prevBtn.addEventListener('click', () => {
+    stopAutoPlay();
+    goTo(currentIndex - getVisibleCount());
+    startAutoPlay();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    stopAutoPlay();
+    goTo(currentIndex + getVisibleCount());
+    startAutoPlay();
+  });
+
+  // ── Pausa al hover / focus ────────────────────────────────────
+  if (wrapper) {
+    wrapper.addEventListener('mouseenter', stopAutoPlay);
+    wrapper.addEventListener('mouseleave', startAutoPlay);
+    wrapper.addEventListener('focusin',    stopAutoPlay);
+    wrapper.addEventListener('focusout',   startAutoPlay);
+  }
+
+  // ── Soporte táctil (swipe) ────────────────────────────────────
+  let touchStartX = 0;
+  let touchEndX   = 0;
+  const SWIPE_THRESHOLD = 50; // px mínimos para considerar swipe
+
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].clientX;
+  }, { passive: true });
+
+  track.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].clientX;
+    const delta = touchStartX - touchEndX;
+
+    if (Math.abs(delta) >= SWIPE_THRESHOLD) {
+      stopAutoPlay();
+      if (delta > 0) {
+        goTo(currentIndex + getVisibleCount()); // swipe izquierda → siguiente
+      } else {
+        goTo(currentIndex - getVisibleCount()); // swipe derecha → anterior
+      }
+      startAutoPlay();
+    }
+  }, { passive: true });
+
+  // ── Resize: recalcular responsive ────────────────────────────
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+      currentIndex = 0; // reset al cambiar breakpoint
+      recalculate();
+    }, 200);
+  });
+
+  // ── Inicialización ───────────────────────────────────────────
+  recalculate();
+  startAutoPlay();
 }

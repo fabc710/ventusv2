@@ -132,10 +132,16 @@
   <main id="main-content">
 
     <!-- ============================================================
-         PAGE HERO
+         PAGE HERO — Con imagen de fondo
     ============================================================ -->
     <section class="svc-hero" aria-labelledby="svc-hero-title">
+
+      <!-- Imagen de fondo: reemplaza "hero-services-bg.webp" con tu imagen real -->
+      <div class="svc-hero__img" aria-hidden="true"></div>
+
+      <!-- Overlay de gradiente oscuro sobre la imagen -->
       <div class="svc-hero__bg" aria-hidden="true"></div>
+
       <!-- Animated accent rings -->
       <div class="svc-hero__ring svc-hero__ring--1" aria-hidden="true"></div>
       <div class="svc-hero__ring svc-hero__ring--2" aria-hidden="true"></div>
@@ -555,7 +561,7 @@
 
 
     <!-- ============================================================
-         TESTIMONIALS
+         TESTIMONIALS — Carrusel con flechas y puntos de navegación
     ============================================================ -->
     <section class="svc-testimonials section section--alt" id="testimonials" aria-labelledby="svc-test-title">
       <div class="container">
@@ -569,72 +575,163 @@
           </p>
         </div>
 
-        <div class="svc-test__grid">
+        <div class="testimonials__carousel-wrapper" data-aos="fade-up" data-aos-delay="100">
 
-          <article class="svc-test-card" data-aos="fade-up" data-aos-delay="0">
-            <div class="svc-test-card__rating" aria-label="5 out of 5 stars">
-              <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-            </div>
-            <blockquote>
-              "When our basement flooded, I was devastated. I called Ventus and within an hour
-              someone was helping me file the claim. They handled everything with the carrier
-              and we were fully compensated faster than I thought possible. Truly exceptional service."
-            </blockquote>
-            <footer>
-              <div class="svc-test-card__avatar">
-                <img src="assets/images/testimonial-4.webp" alt="Ana L., client" width="52" height="52" loading="lazy" />
-              </div>
-              <div>
-                <strong>Ana L.</strong>
-                <span>Homeowner — Astoria, Queens</span>
-              </div>
-            </footer>
-          </article>
+          <!-- Flecha izquierda -->
+          <button class="testimonials__arrow testimonials__arrow--prev" id="test-prev" aria-label="Previous review">
+            <i class="ri-arrow-left-s-line" aria-hidden="true"></i>
+          </button>
 
-          <article class="svc-test-card svc-test-card--featured" data-aos="fade-up" data-aos-delay="150">
-            <div class="svc-test-card__rating" aria-label="5 out of 5 stars">
-              <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-            </div>
-            <blockquote>
-              "I've been a client for 8 years. Every year, they review my policies without
-              me even asking. Last year they found me $400 in savings just by restructuring
-              my home and auto bundle. That's the kind of proactive service that keeps me loyal."
-            </blockquote>
-            <footer>
-              <div class="svc-test-card__avatar">
-                <img src="assets/images/testimonial-5.webp" alt="Robert P., client" width="52" height="52" loading="lazy" />
-              </div>
-              <div>
-                <strong>Robert P.</strong>
-                <span>Small Business Owner — Long Island City</span>
-              </div>
-            </footer>
-          </article>
+          <!-- Flecha derecha -->
+          <button class="testimonials__arrow testimonials__arrow--next" id="test-next" aria-label="Next review">
+            <i class="ri-arrow-right-s-line" aria-hidden="true"></i>
+          </button>
 
-          <article class="svc-test-card" data-aos="fade-up" data-aos-delay="300">
-            <div class="svc-test-card__rating" aria-label="5 out of 5 stars">
-              <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-              <i class="ri-star-fill"></i><i class="ri-star-fill"></i>
-            </div>
-            <blockquote>
-              "The bilingual service is what won me over. Sofia explained every detail of my
-              policy in Spanish so clearly. I finally felt like I actually understood what
-              I was buying. My whole family now uses Ventus for everything."
-            </blockquote>
-            <footer>
-              <div class="svc-test-card__avatar">
-                <img src="assets/images/testimonial-6.webp" alt="Daniela R., client" width="52" height="52" loading="lazy" />
-              </div>
-              <div>
-                <strong>Daniela R.</strong>
-                <span>Family Client — Brooklyn, NY</span>
-              </div>
-            </footer>
-          </article>
+          <div class="testimonials__track-outer" id="testimonials-outer">
+            <div class="testimonials__track" id="testimonials-track" role="list">
 
-        </div>
+              <!-- Reseña 1 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Muy atentos y serviciales. Me ayudaron a mejorar el precio del seguro.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">MR</div>
+                  <div class="author__info">
+                    <strong>Maria Rivera</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Dallas, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 2 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Gracias a mi agente Lorena que estuvo en todo el proceso, me ayudó con los papeles que pedían y con muy buenas ofertas para mi aseguranza.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">JV</div>
+                  <div class="author__info">
+                    <strong>Juan Carlos Vera</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Amarillo, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 3 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Hacen buen trabajo, siempre contestan cuando uno llama y envían rápido los que piden los brokers para que den las cargas.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">MA</div>
+                  <div class="author__info">
+                    <strong>Miguel Arias</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Houston, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 4 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Les recomiendo trabajar con Lorena que me ayudó con el seguro de mis trocas.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">LH</div>
+                  <div class="author__info">
+                    <strong>Luis Herrera</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Texas</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 5 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Excelente servicio por parte de mi agente Lorena, me consiguió un buen precio para el seguro de mis trocas.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">AC</div>
+                  <div class="author__info">
+                    <strong>Alejandro Cruz</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Waco, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 6 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Quiero agradecer a Lorena por ayudarme siempre a conseguir los mejores precios para el seguro de mis trailas.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">OM</div>
+                  <div class="author__info">
+                    <strong>Orlando Mena</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Houston, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 7 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Excelente, no solo los precios sino también la atención de Lorena, también me ayuda con todos los permisos del DOT y del TXDOT.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">JG</div>
+                  <div class="author__info">
+                    <strong>Jesse Gonzalez</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Houston, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 8 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">Si quieren conseguir buenos precios, contacten a Lorena.</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">CH</div>
+                  <div class="author__info">
+                    <strong>Carlos Hernandez</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Austin, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+              <!-- Reseña 9 -->
+              <article class="testimonial-card" role="listitem">
+                <div class="testimonial-card__stars" aria-label="5 out of 5 stars">
+                  <i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i><i class="ri-star-fill"></i>
+                </div>
+                <blockquote class="testimonial-card__quote">La recomiendo, en especial mi agente Lorena — ¡10 de 10!</blockquote>
+                <footer class="testimonial-card__author">
+                  <div class="author__avatar author__avatar--initials" aria-hidden="true">RF</div>
+                  <div class="author__info">
+                    <strong>Roberto F.</strong>
+                    <span><i class="ri-map-pin-line" aria-hidden="true"></i> Fort Worth, TX</span>
+                  </div>
+                </footer>
+              </article>
+
+            </div><!-- /testimonials__track -->
+          </div><!-- /testimonials__track-outer -->
+        </div><!-- /testimonials__carousel-wrapper -->
+
+        <!-- Puntos de navegación — generados por JS -->
+        <div class="testimonials__dots" id="testimonials-dots" role="tablist" aria-label="Review navigation"></div>
+
       </div>
     </section>
 
