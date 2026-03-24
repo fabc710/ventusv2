@@ -9,12 +9,14 @@
    1.  Blog Page Hero
    2.  Posts Section & 3-Card Grid
    3.  Blog Card
-   4.  Category Color Variants
-   5.  "More Coming" Banner
-   6.  Newsletter Section
-   7.  Responsive — Tablet  (max 1024px)
-   8.  Responsive — Mobile  (max 768px)
-   9.  Responsive — Small   (max 480px)
+   4.  Blog Card — Featured Variant (Trucking / New)
+   5.  NEW Badge & Discount Highlight Pill
+   6.  Category Color Variants
+   7.  "More Coming" Banner
+   8.  Newsletter Section
+   9.  Responsive — Tablet  (max 1024px)
+   10. Responsive — Mobile  (max 768px)
+   11. Responsive — Small   (max 480px)
 ---------------------------------------------------------------- */
 
 
@@ -31,15 +33,19 @@
   padding-block: var(--space-20) var(--space-16);
 }
 
+/* Background layer: real photo + gradient overlays on top */
 .blog-hero__bg {
   position: absolute;
   inset: 0;
   z-index: 0;
   background:
-    radial-gradient(ellipse 65% 80% at 0% 50%,   rgba(30,56,104,0.55) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 60% at 100% 20%,  rgba(0,97,158,0.25) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 50% 100%,  rgba(197,171,98,0.07) 0%, transparent 70%),
-    linear-gradient(155deg, #08122a 0%, #122147 45%, #1b3162 100%);
+    /* Gradient overlays — keep text readable */
+    radial-gradient(ellipse 65% 80% at 0% 50%,   rgba(8,18,42,0.72) 0%,    transparent 65%),
+    radial-gradient(ellipse 45% 60% at 100% 20%,  rgba(0,97,158,0.30) 0%,  transparent 65%),
+    radial-gradient(ellipse 50% 40% at 50% 100%,  rgba(197,171,98,0.08) 0%, transparent 70%),
+    linear-gradient(155deg, rgba(8,18,42,0.82) 0%, rgba(18,33,71,0.70) 45%, rgba(27,49,98,0.60) 100%),
+    /* Hero photo */
+    url('../assets/images/hero-blog.webp') center center / cover no-repeat;
 }
 
 .blog-hero__dots {
@@ -108,7 +114,7 @@
 
 .blog-hero__desc {
   font-size: clamp(var(--fs-base), 2vw, var(--fs-lg));
-  color: rgba(255,255,255,0.70);
+  color: rgba(255,255,255,0.75);
   line-height: var(--lh-loose);
   max-width: 560px;
 }
@@ -143,6 +149,12 @@
     box-shadow var(--transition-normal);
 }
 
+/* Hidden state for entrance animation (used by blog.js) */
+.blog-card--hidden {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
 .blog-card:hover {
   transform: translateY(-8px);
   box-shadow: var(--shadow-xl);
@@ -174,7 +186,7 @@
   transform: scale(1.06);
 }
 
-/* Category pill — same style as screenshot (gold) */
+/* Category pill */
 .blog-card__cat {
   position: absolute;
   top: var(--space-4);
@@ -188,7 +200,6 @@
   border-radius: var(--radius-full);
   color: var(--color-white);
   z-index: 1;
-  /* Slight shadow so it reads on any image */
   box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
 
@@ -247,7 +258,6 @@
   color: var(--color-text-light);
   line-height: var(--lh-loose);
   flex: 1;
-  /* clamp to 3 lines */
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -285,7 +295,7 @@
   flex-shrink: 0;
 }
 
-/* "Read Article →" link — matches screenshot style */
+/* "Read Article →" link */
 .blog-card__link {
   display: inline-flex;
   align-items: center;
@@ -309,7 +319,84 @@
 
 
 /* ================================================================
-   4. CATEGORY COLOR VARIANTS
+   4. BLOG CARD — FEATURED VARIANT (first post / trucking)
+================================================================ */
+.blog-card--featured {
+  border-color: rgba(197,171,98,0.35);
+  box-shadow: 0 4px 24px rgba(197,171,98,0.10);
+  /* Subtle gold top accent line */
+  border-top: 3px solid var(--color-gold);
+}
+
+.blog-card--featured:hover {
+  box-shadow: 0 12px 40px rgba(197,171,98,0.22), var(--shadow-xl);
+}
+
+/* Featured card: allow excerpt to show 4 lines instead of 3 */
+.blog-card--featured .blog-card__excerpt {
+  -webkit-line-clamp: 4;
+}
+
+
+/* ================================================================
+   5. NEW BADGE & DISCOUNT HIGHLIGHT PILL
+================================================================ */
+
+/* "NEW" badge — top-right corner of image */
+.blog-card__new-badge {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  font-family: var(--font-secondary);
+  font-size: 0.60rem;
+  font-weight: var(--fw-black);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  color: var(--color-navy-darkest);
+  background: var(--gradient-gold);
+  box-shadow: 0 2px 10px rgba(197,171,98,0.45);
+  z-index: 2;
+  /* Subtle pulse to draw attention */
+  animation: newBadgePulse 2.4s ease-in-out infinite;
+}
+
+@keyframes newBadgePulse {
+  0%, 100% { box-shadow: 0 2px 10px rgba(197,171,98,0.45); }
+  50%       { box-shadow: 0 2px 18px rgba(197,171,98,0.75); }
+}
+
+/* Discount highlight pill — inside the card body */
+.blog-card__highlight {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: linear-gradient(135deg, rgba(122,79,18,0.08) 0%, rgba(197,171,98,0.12) 100%);
+  border: 1.5px solid rgba(197,171,98,0.40);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-secondary);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-navy-darkest);
+  width: fit-content;
+}
+
+.blog-card__highlight i {
+  color: var(--color-gold-dark);
+  font-size: var(--fs-md);
+  flex-shrink: 0;
+}
+
+.blog-card__highlight strong {
+  font-weight: var(--fw-black);
+  color: #7b4f12;
+}
+
+
+/* ================================================================
+   6. CATEGORY COLOR VARIANTS
 ================================================================ */
 .blog-card__cat--home     { background: linear-gradient(135deg, #1a5fa8, #2575c4); }
 .blog-card__cat--auto     { background: linear-gradient(135deg, #1a7a56, #22a070); }
@@ -320,7 +407,7 @@
 
 
 /* ================================================================
-   5. "MORE COMING SOON" BANNER
+   7. "MORE COMING SOON" BANNER
 ================================================================ */
 .blog-more {
   margin-top: var(--space-10);
@@ -363,7 +450,7 @@
 
 
 /* ================================================================
-   6. NEWSLETTER SECTION
+   8. NEWSLETTER SECTION
 ================================================================ */
 .blog-newsletter {
   background: var(--gradient-navy);
@@ -546,7 +633,7 @@
 
 
 /* ================================================================
-   7. RESPONSIVE — TABLET (max-width: 1024px)
+   9. RESPONSIVE — TABLET (max-width: 1024px)
 ================================================================ */
 @media (max-width: 1024px) {
 
@@ -578,7 +665,7 @@
 
 
 /* ================================================================
-   8. RESPONSIVE — MOBILE (max-width: 768px)
+   10. RESPONSIVE — MOBILE (max-width: 768px)
 ================================================================ */
 @media (max-width: 768px) {
 
@@ -652,7 +739,7 @@
 
 
 /* ================================================================
-   9. RESPONSIVE — SMALL MOBILE (max-width: 480px)
+   11. RESPONSIVE — SMALL MOBILE (max-width: 480px)
 ================================================================ */
 @media (max-width: 480px) {
 
@@ -678,5 +765,12 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: var(--space-2) var(--space-4);
+  }
+
+  /* Highlight pill: full width on very small screens */
+  .blog-card__highlight {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 }

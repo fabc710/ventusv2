@@ -161,8 +161,56 @@
 
         <div class="blog-grid">
 
-          <!-- ── POST 1 ── Home Insurance ── -->
-          <article class="blog-card" data-aos="fade-up" data-aos-delay="0">
+          <!-- ── POST 1 ── Truck / Telematics ── FEATURED (NEW — FIRST) ── -->
+          <article class="blog-card blog-card--featured" data-aos="fade-up" data-aos-delay="0">
+            <a href="blog/truck-telematics-discount.html" class="blog-card__img-link" aria-hidden="true" tabindex="-1">
+              <div class="blog-card__img-wrap">
+                <img src="assets/images/blog/post-truck.webp"
+                     alt="Commercial truck driver installing a telematics device in the cab"
+                     width="480" height="300" loading="lazy" />
+              </div>
+              <span class="blog-card__cat blog-card__cat--truck">Truck Insurance</span>
+              <!-- NEW badge -->
+              <span class="blog-card__new-badge" aria-label="New article">NEW</span>
+            </a>
+            <div class="blog-card__body">
+              <div class="blog-card__meta">
+                <time datetime="2025-04-22">
+                  <i class="ri-calendar-line" aria-hidden="true"></i> April 22, 2025
+                </time>
+                <span><i class="ri-time-line" aria-hidden="true"></i> 5 min read</span>
+              </div>
+              <h3 class="blog-card__title">
+                <a href="blog/truck-telematics-discount.html">
+                  Save Up to 10% on Your Truck Insurance by Installing a Telematics Device
+                </a>
+              </h3>
+              <p class="blog-card__excerpt">
+                Smart telematics devices monitor driving behavior, mileage, and routes — and
+                carriers reward safe fleets with real discounts. Find out how a small device
+                can trim up to 10% off your commercial truck premium.
+              </p>
+
+              <!-- Discount highlight pill — unique to this card -->
+              <div class="blog-card__highlight">
+                <i class="ri-percent-line" aria-hidden="true"></i>
+                <span>Up to <strong>10% discount</strong> available for qualifying fleets</span>
+              </div>
+
+              <div class="blog-card__footer">
+                <div class="blog-card__author">
+                  <img src="assets/images/team-2.webp" alt="James Carter" width="32" height="32" loading="lazy" />
+                  <span>James Carter</span>
+                </div>
+                <a href="blog/truck-telematics-discount.html" class="blog-card__link">
+                  Read Article <i class="ri-arrow-right-line" aria-hidden="true"></i>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- ── POST 2 ── Home Insurance ── -->
+          <article class="blog-card" data-aos="fade-up" data-aos-delay="120">
             <a href="blog/home-insurance-tips.html" class="blog-card__img-link" aria-hidden="true" tabindex="-1">
               <div class="blog-card__img-wrap">
                 <img src="assets/images/blog/post-1.webp"
@@ -193,44 +241,6 @@
                   <span>Sofia Mendez</span>
                 </div>
                 <a href="blog/home-insurance-tips.html" class="blog-card__link">
-                  Read Article <i class="ri-arrow-right-line" aria-hidden="true"></i>
-                </a>
-              </div>
-            </div>
-          </article>
-
-          <!-- ── POST 2 ── Business Insurance ── -->
-          <article class="blog-card" data-aos="fade-up" data-aos-delay="120">
-            <a href="blog/business-insurance-guide.html" class="blog-card__img-link" aria-hidden="true" tabindex="-1">
-              <div class="blog-card__img-wrap">
-                <img src="assets/images/blog/post-2.webp"
-                     alt="Small business owner at his desk in New York"
-                     width="480" height="300" loading="lazy" />
-              </div>
-              <span class="blog-card__cat blog-card__cat--business">Business</span>
-            </a>
-            <div class="blog-card__body">
-              <div class="blog-card__meta">
-                <time datetime="2025-02-03">
-                  <i class="ri-calendar-line" aria-hidden="true"></i> February 03, 2025
-                </time>
-                <span><i class="ri-time-line" aria-hidden="true"></i> 6 min read</span>
-              </div>
-              <h3 class="blog-card__title">
-                <a href="blog/business-insurance-guide.html">
-                  The Complete Small Business Insurance Guide for NY Entrepreneurs
-                </a>
-              </h3>
-              <p class="blog-card__excerpt">
-                Everything you need to know about protecting your business —
-                from general liability to commercial property and workers' comp.
-              </p>
-              <div class="blog-card__footer">
-                <div class="blog-card__author">
-                  <img src="assets/images/team-2.webp" alt="James Carter" width="32" height="32" loading="lazy" />
-                  <span>James Carter</span>
-                </div>
-                <a href="blog/business-insurance-guide.html" class="blog-card__link">
                   Read Article <i class="ri-arrow-right-line" aria-hidden="true"></i>
                 </a>
               </div>
@@ -325,7 +335,7 @@
                 <i class="ri-mail-send-line" aria-hidden="true"></i> Subscribe Free
               </h3>
 
-              <div class="newsletter__field">
+              <div class="newsletter__field" data-nl-field="name">
                 <label for="nl-name" class="visually-hidden">Your first name</label>
                 <div class="newsletter__input-wrap">
                   <i class="ri-user-line" aria-hidden="true"></i>
@@ -337,7 +347,7 @@
                 <span class="newsletter__error" id="nl-name-error" role="alert" hidden></span>
               </div>
 
-              <div class="newsletter__field">
+              <div class="newsletter__field" data-nl-field="email">
                 <label for="nl-email" class="visually-hidden">Your email address</label>
                 <div class="newsletter__input-wrap">
                   <i class="ri-mail-line" aria-hidden="true"></i>
